@@ -1,15 +1,16 @@
 import {Component} from "@angular/core";
 import {AlertController, App, NavController, NavParams} from "ionic-angular";
-import {LogoutProvider} from "../../providers/logout";
-import {LoadingProvider} from "../../providers/loading";
-import {AlertProvider} from "../../providers/alert";
+import {LogoutProvider} from "../../services/logout";
+import {LoadingProvider} from "../../services/loading";
+import {AlertProvider} from "../../services/alert";
 import {AngularFireDatabase} from "angularfire2/database";
 import {Validator} from "../../validator";
 import * as firebase from "firebase";
 
 @Component({
   selector: "page-verification",
-  templateUrl: "verification.html"
+  templateUrl: "verification.html",
+  styleUrls: ['verification.scss']
 })
 export class VerificationPage {
   // VerificationPage

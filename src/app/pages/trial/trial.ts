@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
-import {AlertController, App, NavController, NavParams} from 'ionic-angular';
-import {LogoutProvider} from '../../providers/logout';
-import {LoadingProvider} from '../../providers/loading';
-import {AlertProvider} from '../../providers/alert';
+import {AlertController, App, NavController, NavParams} from '@ionic/angular';
+import {LogoutProvider} from '../../services/logout';
+import {LoadingProvider} from '../../services/loading';
+import {AlertProvider} from '../../services/alert';
 import * as firebase from 'firebase';
 import {Facebook} from 'ng2-cordova-oauth/core';
 import {OauthCordova} from 'ng2-cordova-oauth/platform/cordova';
@@ -12,7 +12,8 @@ import {LoginPage} from '../login/login';
 
 @Component({
   selector: 'page-trial',
-  templateUrl: 'trial.html'
+  templateUrl: 'trial.html',
+  styleUrls:['trial.scss']
 })
 export class TrialPage {
   // TrialPage

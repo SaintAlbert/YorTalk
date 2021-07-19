@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
-import {ActionSheetController, AlertController, ModalController, NavController, NavParams} from 'ionic-angular';
-import {DataProvider} from '../../providers/data';
-import {LoadingProvider} from '../../providers/loading';
-import {ImageProvider} from '../../providers/image';
-import {AlertProvider} from '../../providers/alert';
+import { ActionSheetController, AlertController, ModalController, NavController, NavParams } from '@ionic/angular';
+import {DataProvider} from '../../services/data';
+import {LoadingProvider} from '../../services/loading';
+import {ImageProvider} from '../../services/image';
+import {AlertProvider} from '../../services/alert';
 import {ImageModalPage} from '../image-modal/image-modal';
 import {AddMembersPage} from '../add-members/add-members';
 import {UserInfoPage} from '../user-info/user-info';
@@ -14,7 +14,8 @@ import _ from 'lodash'
 
 @Component({
   selector: 'page-group-info',
-  templateUrl: 'group-info.html'
+  templateUrl: 'group-info.html',
+  styleUrls: ['group-info.scss']
 })
 export class GroupInfoPage {
   private groupId: any;

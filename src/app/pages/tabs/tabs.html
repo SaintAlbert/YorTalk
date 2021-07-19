@@ -1,7 +1,34 @@
-<ion-tabs selectedIndex="0">
+<!--<ion-tabs selectedIndex="0">
   <ion-tab [root]="timeline" tabIcon="md-home" tabBadgeStyle="danger" ></ion-tab>
   <ion-tab [root]="messages" tabIcon="md-text" tabBadgeStyle="danger" tabBadge="{{getUnreadMessagesCount()}}"></ion-tab>
   <ion-tab [root]="groups" tabIcon="md-chatbubbles" tabBadgeStyle="danger" tabBadge="{{getUnreadGroupMessagesCount()}}"></ion-tab>
   <ion-tab [root]="friends" tabIcon="md-contacts" tabBadgeStyle="danger" tabBadge="{{friendRequestCount}}"></ion-tab>
   <ion-tab [root]="profile" tabIcon="md-contact"></ion-tab>
+</ion-tabs>-->
+
+<ion-tabs>
+  <ion-tab-bar slot="bottom" >
+    <ion-tab-button tab="timeline">
+      <ion-icon name="md-home"></ion-icon>
+    </ion-tab-button>
+
+    <ion-tab-button tab="messages">
+      <ion-icon name="md-text"></ion-icon>
+      <ion-badge>{{getUnreadMessagesCount()}}</ion-badge>
+    </ion-tab-button>
+
+    <ion-tab-button tab="groups">
+      <ion-icon name="md-chatbubbles"></ion-icon>
+      <ion-badge>{{getUnreadGroupMessagesCount()}}</ion-badge>
+    </ion-tab-button>
+
+    <ion-tab-button tab="friends">
+      <ion-icon name="md-contacts"></ion-icon>
+      <ion-badge>{{friendRequestCount()}}</ion-badge>
+    </ion-tab-button>
+
+    <ion-tab-button tab="profile">
+      <ion-icon name="md-contact"></ion-icon>
+    </ion-tab-button>
+  </ion-tab-bar>
 </ion-tabs>

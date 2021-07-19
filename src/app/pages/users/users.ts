@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
-import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
-import {DataProvider} from '../../providers/data';
-import {LoadingProvider} from '../../providers/loading';
+import {AlertController,  NavController, NavParams} from '@ionic/angular';
+import {DataProvider} from '../../services/data';
+import {LoadingProvider} from '../../services/loading';
 import {AngularFireDatabase} from 'angularfire2/database';
-import {AlertProvider} from '../../providers/alert';
+import {AlertProvider} from '../../services/alert';
 
 /**
  * Generated class for the UsersPage page.
@@ -11,10 +11,11 @@ import {AlertProvider} from '../../providers/alert';
  * See http://ionicframework.com/docs/components/#navigation for more info
  * on Ionic pages and navigation.
  */
-@IonicPage()
+//@IonicPage()
 @Component({
   selector: 'page-users',
   templateUrl: 'users.html',
+  styleUrls: ['users.scss']
 })
 export class UsersPage {
   private users: any;

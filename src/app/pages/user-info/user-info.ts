@@ -1,15 +1,16 @@
 import {Component} from '@angular/core';
-import {AlertController, ModalController, NavController, NavParams} from 'ionic-angular';
-import {DataProvider} from '../../providers/data';
-import {LoadingProvider} from '../../providers/loading';
-import {FirebaseProvider} from '../../providers/firebase';
+import {AlertController, ModalController, NavController, NavParams} from '@ionic/angular';
+import {DataProvider} from '../../services/data';
+import {LoadingProvider} from '../../services/loading';
+import {FirebaseProvider} from '../../services/firebase';
 import {MessagePage} from '../message/message';
 import {ImageModalPage} from '../image-modal/image-modal';
 import * as firebase from 'firebase';
 
 @Component({
   selector: 'page-user-info',
-  templateUrl: 'user-info.html'
+  templateUrl: 'user-info.html',
+  styleUrls: ['user-info.scss']
 })
 export class UserInfoPage {
   private user: any;

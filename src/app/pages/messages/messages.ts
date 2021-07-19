@@ -1,15 +1,16 @@
 import {Component} from '@angular/core';
-import {App, NavController, NavParams} from 'ionic-angular';
+import {App, NavController, NavParams} from '@ionic/angular';
 import {AngularFireDatabase} from 'angularfire2/database';
-import {LoadingProvider} from '../../providers/loading';
-import {DataProvider} from '../../providers/data';
+import {LoadingProvider} from '../../services/loading';
+import {DataProvider} from '../../services/data';
 import {NewMessagePage} from '../new-message/new-message';
 import {MessagePage} from '../message/message';
 import * as firebase from 'firebase';
 
 @Component({
   selector: 'page-messages',
-  templateUrl: 'messages.html'
+  templateUrl: 'messages.html',
+  styleUrls: ['messages.scss']
 })
 export class MessagesPage {
   private conversations: any;

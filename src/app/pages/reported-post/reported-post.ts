@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ActionSheetController, IonicPage, NavController, NavParams} from 'ionic-angular';
+import {ActionSheetController, NavController, NavParams} from '@ionic/angular';
 import {DataProvider} from '../../providers/data';
 import {LoadingProvider} from '../../providers/loading';
 
@@ -9,10 +9,11 @@ import {LoadingProvider} from '../../providers/loading';
  * See http://ionicframework.com/docs/components/#navigation for more info
  * on Ionic pages and navigation.
  */
-@IonicPage()
+//@IonicPage()
 @Component({
   selector: 'page-reported-post',
   templateUrl: 'reported-post.html',
+  styleUrls: ['reported-post.scss']
 })
 export class ReportedPostPage {
   reportedPost = []

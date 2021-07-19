@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {IonicPageModule} from 'ionic-angular';
+import {IonicModule} from '@ionic/angular';
 import {CommentsPage} from './comments';
 
 @NgModule({
@@ -7,7 +7,7 @@ import {CommentsPage} from './comments';
     CommentsPage,
   ],
   imports: [
-    IonicPageModule.forChild(CommentsPage),
+    IonicModule,
   ],
   exports: [
     CommentsPage

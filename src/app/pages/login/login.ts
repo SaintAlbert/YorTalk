@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
-import {LoginProvider} from '../../providers/login';
+import {NavController} from '@ionic/angular';
+import {LoginProvider} from '../../services/login';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Validator} from '../../validator';
 import {InAppBrowser} from '@ionic-native/in-app-browser';
@@ -10,7 +10,8 @@ declare var AccountKitPlugin;
 
 @Component({
   selector: 'page-login',
-  templateUrl: 'login.html'
+  templateUrl: 'login.html',
+  styleUrls: ['login.scss']
 })
 export class LoginPage {
   private mode: string;

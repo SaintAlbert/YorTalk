@@ -1,13 +1,14 @@
 import {Component} from '@angular/core';
-import {App, NavController, NavParams} from 'ionic-angular';
+import {App, NavController, NavParams} from '@ionic/angular';
 import {NewGroupPage} from '../new-group/new-group';
-import {DataProvider} from '../../providers/data';
-import {LoadingProvider} from '../../providers/loading';
+import {DataProvider} from '../../services/data';
+import {LoadingProvider} from '../../services/loading';
 import {GroupPage} from '../group/group';
 
 @Component({
   selector: 'page-groups',
-  templateUrl: 'groups.html'
+  templateUrl: 'groups.html',
+  styleUrls: ['groups.scss']
 })
 export class GroupsPage {
   private groups: any;

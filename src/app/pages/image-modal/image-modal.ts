@@ -1,9 +1,10 @@
 import {Component} from '@angular/core';
-import {NavController, NavParams} from 'ionic-angular';
+import {NavController, NavParams} from '@ionic/angular';
 
 @Component({
   selector: 'page-image-modal',
-  templateUrl: 'image-modal.html'
+  templateUrl: 'image-modal.html',
+  styleUrls: ['image-modal.scss']
 })
 export class ImageModalPage {
   // ImageModalPage

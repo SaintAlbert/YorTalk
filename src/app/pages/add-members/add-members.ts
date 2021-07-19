@@ -1,14 +1,15 @@
 import {Component} from '@angular/core';
-import {AlertController, NavController, NavParams} from 'ionic-angular';
-import {DataProvider} from '../../providers/data';
-import {LoadingProvider} from '../../providers/loading';
+import { AlertController, NavController, NavParams } from '@ionic/angular';
+import {DataProvider} from '../../services/data';
+import {LoadingProvider} from '../../services/loading';
 import {AngularFireModule} from 'angularfire2';
-import {AlertProvider} from '../../providers/alert';
+import {AlertProvider} from '../../services/alert';
 import {AngularFireDatabase} from 'angularfire2/database';
 
 @Component({
   selector: 'page-add-members',
-  templateUrl: 'add-members.html'
+  templateUrl: 'add-members.html',
+  styleUrls: ['add-members.scss']
 })
 export class AddMembersPage {
   private groupId: any;

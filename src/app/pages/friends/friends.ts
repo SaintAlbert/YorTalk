@@ -1,11 +1,11 @@
 import {Component} from "@angular/core";
-import {App, ModalController, NavController, NavParams} from "ionic-angular";
+import { App, ModalController, NavController, NavParams } from "@ionic/angular";
 import {SearchPeoplePage} from "../search-people/search-people";
 import {UserInfoPage} from "../user-info/user-info";
 import {MessagePage} from "../message/message";
 import {RequestsPage} from "../requests/requests";
-import {DataProvider} from "../../providers/data";
-import {LoadingProvider} from "../../providers/loading";
+import {DataProvider} from "../../services/data";
+import {LoadingProvider} from "../../services/loading";
 import * as firebase from "firebase";
 import _ from "lodash";
 import {SocialSharing} from "@ionic-native/social-sharing";
@@ -15,7 +15,8 @@ import {Contacts} from "@ionic-native/contacts";
 
 @Component({
   selector: "page-friends",
-  templateUrl: "friends.html"
+  templateUrl: "friends.html",
+  styleUrls: ['friends.scss']
 })
 export class FriendsPage {
   private friends: any;
@@ -105,11 +106,11 @@ export class FriendsPage {
   }
 
   // update contact number
-  updateContact() {
+  async updateContact() {
     let modal = this.modalCtrl.create(UpdateContactPage, {
       userData: this.account
     });
-    modal.present();
+    (await modal).present();
   }
 
   // Proceed to searchPeople page.

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AlertController, Events, ModalController, Platform} from 'ionic-angular';
+import {AlertController, Events, ModalController, Platform} from '@ionic/angular';
 import {NativeAudio} from '@ionic-native/native-audio';
 
 import 'rxjs/add/operator/map';

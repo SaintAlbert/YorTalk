@@ -1,13 +1,14 @@
 import {Component} from '@angular/core';
-import {App, NavController, NavParams} from 'ionic-angular';
+import {App, NavController, NavParams} from '@ionic/angular';
 import {SearchPeoplePage} from '../search-people/search-people';
 import {MessagePage} from '../message/message';
-import {DataProvider} from '../../providers/data';
-import {LoadingProvider} from '../../providers/loading';
+import {DataProvider} from '../../services/data';
+import {LoadingProvider} from '../../services/loading';
 
 @Component({
   selector: 'page-new-message',
-  templateUrl: 'new-message.html'
+  templateUrl: 'new-message.html',
+  styleUrls: ['new-message.scss']
 })
 export class NewMessagePage {
   private friends: any;

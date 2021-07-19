@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
-import {AlertController, App, NavController, NavParams} from 'ionic-angular';
+import {AlertController, App, NavController, NavParams} from '@ionic/angular';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {ImageProvider} from '../../providers/image';
-import {LoadingProvider} from '../../providers/loading';
-import {DataProvider} from '../../providers/data';
-import {AlertProvider} from '../../providers/alert';
+import {ImageProvider} from '../../services/image';
+import {LoadingProvider} from '../../services/loading';
+import {DataProvider} from '../../services/data';
+import {AlertProvider} from '../../services/alert';
 import {Validator} from '../../validator';
 import {Camera} from '@ionic-native/camera';
 import {AngularFireDatabase} from 'angularfire2/database';
@@ -14,7 +14,8 @@ import {SearchPeoplePage} from '../search-people/search-people';
 
 @Component({
   selector: 'page-new-group',
-  templateUrl: 'new-group.html'
+  templateUrl: 'new-group.html',
+  styleUrls: ['new-group.scss']
 })
 export class NewGroupPage {
   private group: any;

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {App} from 'ionic-angular';
+import {App} from '@ionic/angular';
 
 import {LoadingProvider} from './loading';
 import {DataProvider} from './data';

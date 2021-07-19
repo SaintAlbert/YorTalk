@@ -1,15 +1,16 @@
 import {Component, NgZone} from '@angular/core';
-import {NavParams, Platform, ViewController} from 'ionic-angular';
-import {CountryCodeProvider} from '../../providers/country-code';
+import {NavParams, Platform, ViewController} from '@ionic/angular';
+import {CountryCodeProvider} from '../../services/country-code';
 import {AngularFireDatabase} from 'angularfire2/database';
-import {AlertProvider} from '../../providers/alert';
-import {LoadingProvider} from '../../providers/loading';
+import {AlertProvider} from '../../services/alert';
+import {LoadingProvider} from '../../services/loading';
 
-import {DataProvider} from '../../providers/data';
+import {DataProvider} from '../../services/data';
 
 @Component({
   selector: 'page-update-contact',
-  templateUrl: 'update-contact.html'
+  templateUrl: 'update-contact.html',
+  styleUrls: ['update-contact.scss']
 })
 
 export class UpdateContactPage {

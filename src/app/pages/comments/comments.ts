@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
-import {FirebaseProvider} from '../../providers/firebase';
-import {DataProvider} from '../../providers/data';
+import { NavController, NavParams, ModalController  } from '@ionic/angular';
+import {FirebaseProvider} from '../../services/firebase';
+import {DataProvider} from '../../services/data';
 import * as firebase from 'firebase';
 
 /**
@@ -10,10 +10,11 @@ import * as firebase from 'firebase';
  * See http://ionicframework.com/docs/components/#navigation for more info
  * on Ionic pages and navigation.
  */
-@IonicPage()
+//@IonicPage()
 @Component({
   selector: 'page-comments',
   templateUrl: 'comments.html',
+  styleUrls: ['comments.scss']
 })
 export class CommentsPage {
   postKey;
@@ -21,7 +22,7 @@ export class CommentsPage {
   comments:any;
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
-    public viewCtrl: ViewController,
+    public viewCtrl: ModalController ,
     public firebaseProvider:FirebaseProvider,
     public dataProvider : DataProvider) {
       this.postKey = this.navParams.get('postKey')

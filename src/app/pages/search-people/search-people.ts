@@ -1,15 +1,16 @@
 import {Component} from '@angular/core';
-import {AlertController, NavController, NavParams} from 'ionic-angular';
-import {DataProvider} from '../../providers/data';
-import {LoadingProvider} from '../../providers/loading';
-import {AlertProvider} from '../../providers/alert';
-import {FirebaseProvider} from '../../providers/firebase';
+import {AlertController, NavController, NavParams} from '@ionic/angular';
+import {DataProvider} from '../../services/data';
+import {LoadingProvider} from '../../services/loading';
+import {AlertProvider} from '../../services/alert';
+import {FirebaseProvider} from '../../services/firebase';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {UserInfoPage} from '../user-info/user-info';
 
 @Component({
   selector: 'page-search-people',
-  templateUrl: 'search-people.html'
+  templateUrl: 'search-people.html',
+  styleUrls: ['search-people.scss']
 })
 export class SearchPeoplePage {
   private accounts: any;

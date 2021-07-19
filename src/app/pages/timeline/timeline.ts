@@ -1,21 +1,21 @@
 import {Component} from "@angular/core";
 import {
-  ActionSheetController, AlertController, IonicPage, ModalController, NavController, NavParams,
+  ActionSheetController, AlertController, ModalController, NavController, NavParams,
   Platform
-} from "ionic-angular";
+} from "@ionic/angular";
 import {AddPostPage} from "../add-post/add-post";
-import {LoadingProvider} from "../../providers/loading";
-import {DataProvider} from "../../providers/data";
+import {LoadingProvider} from "../../services/loading";
+import {DataProvider} from "../../services/data";
 import {AngularFireDatabase} from "angularfire2/database";
 import * as firebase from "firebase";
-import {FirebaseProvider} from "../../providers/firebase";
+import {FirebaseProvider} from "../../services/firebase";
 import * as _ from "lodash";
 import {CommentsPage} from "../comments/comments";
 import {ImageModalPage} from "../image-modal/image-modal";
-import {AlertProvider} from "../../providers/alert";
+import {AlertProvider} from "../../services/alert";
 import {UpdateContactPage} from "../update-contact/update-contact";
 import {LoginPage} from "../login/login";
-import {LogoutProvider} from "../../providers/logout";
+import {LogoutProvider} from "../../services/logout";
 
 declare var AccountKitPlugin: any;
 
@@ -25,10 +25,11 @@ declare var AccountKitPlugin: any;
  * See http://ionicframework.com/docs/components/#navigation for more info
  * on Ionic pages and navigation.
  */
-@IonicPage()
+//@IonicPage()
 @Component({
   selector: "page-timeline",
-  templateUrl: "timeline.html"
+  templateUrl: "timeline.html",
+  styleUrls: ['timeline.scss']
 })
 export class TimelinePage {
   private user: any;
@@ -82,12 +83,12 @@ export class TimelinePage {
         }
       });
 
-      this.dataProvider.getData("userData").then(data => {
+      this.dataProvider.getData("userData").then(async data => {
         if (data.phoneNumber == "") {
           let modal = this.modalCtrl.create(UpdateContactPage, {
             userData: data
           });
-          modal.present();
+          (await modal).present();
         }
       });
     });
@@ -351,9 +352,9 @@ export class TimelinePage {
   }
 
   // report to admin
-  reportPost(item) {
+  async reportPost(item) {
     let actionSheet = this.actionSheetCtrl.create({
-      title: "Report post to admin",
+      header: "Report post to admin",
       buttons: [
         {
           text: "Report",
@@ -382,7 +383,7 @@ export class TimelinePage {
       ]
     });
 
-    actionSheet.present();
+    (await actionSheet).present();
   }
 
   // Create userData on the database if it doesn't exist yet.
@@ -569,9 +570,9 @@ export class TimelinePage {
     this.firebaseProvider.dedislikePost(post.$key);
   }
 
-  commentPost(post) {
+  async commentPost(post) {
     let modal = this.modalCtrl.create(CommentsPage, { postKey: post.$key });
-    modal.present();
+    (await modal).present();
   }
 
   openMap(lat, long) {
@@ -583,8 +584,8 @@ export class TimelinePage {
   }
 
   // Enlarge image messages.
-  enlargeImage(img) {
+  async enlargeImage(img) {
     let imageModal = this.modalCtrl.create(ImageModalPage, { img: img });
-    imageModal.present();
+    (await imageModal).present();
   }
 }

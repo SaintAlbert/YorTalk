@@ -1,12 +1,12 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
-import {LoadingProvider} from '../../providers/loading';
-import {DataProvider} from '../../providers/data';
+import { AlertController, NavController, NavParams } from '@ionic/angular';
+import {LoadingProvider} from '../../services/loading';
+import {DataProvider} from '../../services/data';
 import {AngularFireDatabase} from 'angularfire2/database';
 import * as firebase from 'firebase';
-import {FirebaseProvider} from '../../providers/firebase';
-import {ImageProvider} from '../../providers/image';
-import {AlertProvider} from '../../providers/alert';
+import {FirebaseProvider} from '../../services/firebase';
+import {ImageProvider} from '../../services/image';
+import {AlertProvider} from '../../services/alert';
 import {GoogleMaps} from '@ionic-native/google-maps';
 import {Geolocation} from '@ionic-native/geolocation';
 
@@ -18,10 +18,11 @@ declare var google:any;
  * See http://ionicframework.com/docs/components/#navigation for more info
  * on Ionic pages and navigation.
  */
-@IonicPage()
+//@IonicPage()
 @Component({
   selector: 'page-add-post',
   templateUrl: 'add-post.html',
+  styleUrls: ['add-post.scss']
 })
 export class AddPostPage {
   private user: any;

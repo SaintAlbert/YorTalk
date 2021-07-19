@@ -1,19 +1,19 @@
 import {Component, ViewChild} from '@angular/core';
 import {
-  ActionSheetController, AlertController, Content, ModalController, NavController,
+  ActionSheetController, AlertController,IonContent, ModalController, NavController,
   NavParams
-} from 'ionic-angular';
-import {DataProvider} from '../../providers/data';
-import {LoadingProvider} from '../../providers/loading';
-import {ImageProvider} from '../../providers/image';
+} from '@ionic/angular';
+import {DataProvider} from '../../services/data';
+import {LoadingProvider} from '../../services/loading';
+import {ImageProvider} from '../../services/image';
 import {AngularFireDatabase} from 'angularfire2/database';
 import * as firebase from 'firebase';
 import {UserInfoPage} from '../user-info/user-info';
 import {ImageModalPage} from '../image-modal/image-modal';
-import {AlertProvider} from '../../providers/alert';
+import {AlertProvider} from '../../services/alert';
 import {Camera} from '@ionic-native/camera';
 import {Keyboard} from '@ionic-native/keyboard';
-import {VideoProvider} from '../../providers/video';
+import {VideoProvider} from '../../services/video';
 import {AdMobFree, AdMobFreeInterstitialConfig} from '@ionic-native/admob-free';
 import {SocialSharing} from '@ionic-native/social-sharing';
 import {CaptureError, CaptureImageOptions, MediaCapture, MediaFile} from '@ionic-native/media-capture';
@@ -24,10 +24,11 @@ import _ from 'lodash';
 
 @Component({
   selector: 'page-message',
-  templateUrl: 'message.html'
+  templateUrl: 'message.html',
+  styleUrls: ['message.scss']
 })
 export class MessagePage {
-  @ViewChild(Content) content: Content;
+  @ViewChild(IonContent) content: IonContent;
   private userId: any;
   private title: any;
   private message: any;

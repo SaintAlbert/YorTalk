@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AlertController, NavController, NavParams} from 'ionic-angular';
+import {AlertController, NavController, NavParams} from '@ionic/angular';
 import {DataProvider} from '../../providers/data';
 import {FirebaseProvider} from '../../providers/firebase';
 import {AngularFireDatabase} from 'angularfire2/database';
@@ -9,7 +9,8 @@ import {UserInfoPage} from '../user-info/user-info';
 
 @Component({
   selector: 'page-requests',
-  templateUrl: 'requests.html'
+  templateUrl: 'requests.html',
+  styleUrls: ['requests.scss']
 })
 export class RequestsPage {
   private friendRequests: any;

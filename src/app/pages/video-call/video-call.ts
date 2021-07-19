@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {Events, NavController, NavParams, ViewController} from 'ionic-angular';
-import {DataProvider} from '../../providers/data'
+import {Events, NavController, NavParams, ViewController} from '@ionic/angular';
+import {DataProvider} from '../../services/data'
 
 /**
  * Generated class for the VideoCallPage page.
@@ -12,6 +12,7 @@ import {DataProvider} from '../../providers/data'
 @Component({
   selector: 'page-video-call',
   templateUrl: 'video-call.html',
+  styleUrls: ['video-call.scss']
 })
 export class VideoCallPage {
   webRTCClient;

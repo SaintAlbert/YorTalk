@@ -1,25 +1,23 @@
 import {Component} from '@angular/core';
-import {NavController, NavParams} from 'ionic-angular';
-import {HomePage} from '../home/home';
-import {MessagesPage} from '../messages/messages';
-import {GroupsPage} from '../groups/groups';
-import {FriendsPage} from '../friends/friends';
-import {DataProvider} from '../../providers/data';
-import {TimelinePage} from '../timeline/timeline';
+import {NavController, NavParams} from '@ionic/angular';
+
+import {DataProvider} from '../../services/data';
+
 import {Badge} from '@ionic-native/badge';
 
 import * as firebase from 'firebase';
 
 @Component({
   selector: 'page-tabs',
-  templateUrl: 'tabs.html'
+  templateUrl: 'tabs.html',
+  styleUrls:['tabs.scss']
 })
 export class TabsPage {
-  messages: any = MessagesPage;
-  groups: any = GroupsPage;
-  friends: any = FriendsPage;
-  profile: any = HomePage;
-  timeline: any = TimelinePage;
+  //messages: any = MessagesPage;
+  //groups: any = GroupsPage;
+  //friends: any = FriendsPage;
+  //profile: any = HomePage;
+  //timeline: any = TimelinePage;
   private unreadMessagesCount: any;
   private friendRequestCount: any;
   private unreadGroupMessagesCount: any;

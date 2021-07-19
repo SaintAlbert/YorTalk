@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {IonicPageModule} from 'ionic-angular';
+import { IonicModule} from '@ionic/angular';
 import {ReportedPostPage} from './reported-post';
 
 @NgModule({
@@ -7,7 +7,7 @@ import {ReportedPostPage} from './reported-post';
     ReportedPostPage,
   ],
   imports: [
-    IonicPageModule.forChild(ReportedPostPage),
+    IonicModule,
   ],
   exports: [
     ReportedPostPage

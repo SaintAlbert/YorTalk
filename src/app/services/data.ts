@@ -49,7 +49,7 @@ export class DataProvider {
   }
 
   // Get all users
-  getUsers() {
+  getUsers(): any  {
     return this.angularDb.list("/accounts", {
       query: {
         orderByChild: "name"
@@ -58,7 +58,7 @@ export class DataProvider {
   }
 
   // Get user with username
-  getUserWithUsername(username) {
+  getUserWithUsername(username): any  {
     return this.angularDb.list("/accounts", {
       query: {
         orderByChild: "username",
@@ -68,7 +68,7 @@ export class DataProvider {
   }
 
   // Get user with phonenumber
-  getUserWithPhonenumber(phoneNumber) {
+  getUserWithPhonenumber(phoneNumber): any  {
     return this.angularDb.list("/accounts", {
       query: {
         orderByChild: "phoneNumber",
@@ -78,25 +78,25 @@ export class DataProvider {
   }
 
   // Get logged in user data
-  getCurrentUser() {
+  getCurrentUser():any  {
     return this.angularDb.object(
       "/accounts/" + firebase.auth().currentUser.uid
     );
   }
 
   // Get user by their userId
-  getUser(userId) {
+  getUser(userId):any {
     return this.angularDb.object("/accounts/" + userId);
   }
 
 
   // Get requests given the userId.
-  getRequests(userId) {
+  getRequests(userId): any  {
     return this.angularDb.object("/requests/" + userId);
   }
 
   // Get friend requests given the userId.
-  getFriendRequests(userId) {
+  getFriendRequests(userId): any  {
     return this.angularDb.list("/requests", {
       query: {
         orderByChild: "receiver",
@@ -106,97 +106,97 @@ export class DataProvider {
   }
 
   // Get conversation given the conversationId.
-  getConversation(conversationId) {
+  getConversation(conversationId): any  {
     return this.angularDb.object("/conversations/" + conversationId);
   }
 
   // Get conversations of the current logged in user.
-  getConversations() {
+  getConversations(): any {
     return this.angularDb.list(
       "/accounts/" + firebase.auth().currentUser.uid + "/conversations"
     );
   }
 
   // Get messages of the conversation given the Id.
-  getConversationMessages(conversationId) {
+  getConversationMessages(conversationId): any  {
     return this.angularDb.object(
       "/conversations/" + conversationId + "/messages"
     );
   }
 
   // Get messages of the group given the Id.
-  getGroupMessages(groupId) {
+  getGroupMessages(groupId): any  {
     return this.angularDb.object("/groups/" + groupId + "/messages");
   }
 
   // Get groups of the logged in user.
-  getGroups() {
+  getGroups(): any  {
     return this.angularDb.list(
       "/accounts/" + firebase.auth().currentUser.uid + "/groups"
     );
   }
 
   // Get group info given the groupId.
-  getGroup(groupId) {
+  getGroup(groupId): any  {
     return this.angularDb.object("/groups/" + groupId);
   }
 
   // Get Timeline of user
-  getTimelines() {
+  getTimelines(): any  {
     return this.angularDb.list(
       "/accounts/" + firebase.auth().currentUser.uid + "/timeline"
     );
   }
 
   // Get Timeline by user id
-  getTimelineByUid(id) {
+  getTimelineByUid(id): any  {
     return this.angularDb.object(
       "/accounts/" + id + "/timeline"
     );
   }
 
   // Get Timeline post
-  getTimelinePost() {
+  getTimelinePost(): any  {
     return this.angularDb.list("/timeline");
   }
 
-  getAllReportedPost() {
+  getAllReportedPost(): any  {
     return this.angularDb.list("/reportPost");
 
   }
 
   // Get time line by id
-  getTimeline(timelineId) {
+  getTimeline(timelineId): any  {
     return this.angularDb.object("/timeline/" + timelineId);
   }
 
   // Get Friend List
-  getFriends() {
+  getFriends(): any {
     return this.angularDb.list(
       "/accounts/" + firebase.auth().currentUser.uid + "/friends"
     );
   }
 
   // Get comments list
-  getComments(postId) {
+  getComments(postId): any  {
     return this.angularDb.list("/comments/" + postId);
   }
 
   // Get likes
-  getLike(postId) {
+  getLike(postId): any  {
     return this.angularDb.list("/likes/" + postId);
   }
 
-  postLike(postId) {
+  postLike(postId): any  {
     return this.angularDb.object("/likes/" + postId);
   }
 
   // Get likes
-  getdisLike(postId) {
+  getdisLike(postId): any  {
     return this.angularDb.list("/dislikes/" + postId);
   }
 
-  postdisLike(postId) {
+  postdisLike(postId): any  {
     return this.angularDb.object("/dislikes/" + postId);
   }
   // post Comments
@@ -205,13 +205,13 @@ export class DataProvider {
   }
 
   // report post to admin
-  getReportPost(postId) {
+  getReportPost(postId): any  {
     console.log("postId", postId)
     return this.angularDb.object("/reportPost/" + postId);
   }
 
   // read contact
-  getContact() {
+  getContact(): any {
     return new Promise((resolve, reject) => {
       if (!this.isContactGet) {
         this.contacts.find(["*"], {}).then(
