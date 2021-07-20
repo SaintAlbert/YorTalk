@@ -7,7 +7,7 @@ import {LoadingProvider} from '../../services/loading';
 import {ImageProvider} from '../../services/image';
 import {AngularFireDatabase} from 'angularfire2/database';
 import * as firebase from 'firebase';
-import {UserInfoPage} from '../user-info/user-info';
+//import {UserInfoPage} from '../user-info/user-info';
 import {ImageModalPage} from '../image-modal/image-modal';
 import {AlertProvider} from '../../services/alert';
 import {Camera} from '@ionic-native/camera';
@@ -16,7 +16,8 @@ import {VideoProvider} from '../../services/video';
 import {AdMobFree, AdMobFreeInterstitialConfig} from '@ionic-native/admob-free';
 import {SocialSharing} from '@ionic-native/social-sharing';
 import {CaptureError, CaptureImageOptions, MediaCapture, MediaFile} from '@ionic-native/media-capture';
-import {AudioProvider} from 'ionic-audio';
+//import {AudioProvider} from 'ionic-audio';
+import { NativeAudio } from '@ionic-native/native-audio';
 import {File} from '@ionic-native/file';
 import _ from 'lodash';
 import { Nav } from '../../services/nav';
@@ -55,7 +56,7 @@ export class MessagePage {
     public dataProvider: DataProvider, public angularDb: AngularFireDatabase, public admob: AdMobFree,
     public alertProvider: AlertProvider,
     public loadingProvider: LoadingProvider, public alertCtrl: AlertController, public imageProvider: ImageProvider, public camera: Camera,
-    public keyboard: Keyboard, public videoProvider: VideoProvider, private _audioProvider: AudioProvider) {
+    public keyboard: Keyboard, public videoProvider: VideoProvider, private _audioProvider: NativeAudio) {
     // this.myTracks = [{
     //    src: 'https://archive.org/download/JM2013-10-05.flac16/V0/jm2013-10-05-t12-MP3-V0.mp3',
     //  },
@@ -542,7 +543,7 @@ export class MessagePage {
 
   pauseSelectedTrack() {
     // use AudioProvider to control selected track
-    this._audioProvider.pause(this.selectedTrack);
+    this._audioProvider.stop(this.selectedTrack);
   }
 
   onTrackFinished(track: any) {

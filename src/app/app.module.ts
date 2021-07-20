@@ -26,10 +26,11 @@ import { NativeAudio } from "@ionic-native/native-audio";
 import { AdMobFree } from "@ionic-native/admob-free";
 import { SocialSharing } from "@ionic-native/social-sharing";
 import { Contacts } from "@ionic-native/contacts";
-import { IonicStorageModule } from "@ionic/storage";
+import { IonicStorageModule } from '@ionic/storage-angular';
+import { Drivers, Storage } from '@ionic/storage';
 import { File } from "@ionic-native/file";
 import { MediaCapture } from "@ionic-native/media-capture";
-import { CordovaMediaProvider, defaultAudioProviderFactory, IonicAudioModule, WebAudioProvider } from "ionic-audio";
+//import { CordovaMediaProvider, defaultAudioProviderFactory, IonicAudioModule, WebAudioProvider } from "ionic-audio";
 import { InAppBrowser } from "@ionic-native/in-app-browser";
 
 import { Badge } from "@ionic-native/badge";
@@ -41,6 +42,9 @@ import { SearchPipe } from "./pipes/search";
 import { ConversationPipe } from "./pipes/conversation";
 import { DateFormatPipe } from "./pipes/date";
 import { GroupPipe } from "./pipes/group";
+
+
+
 import { VideoProvider } from "./services/video";
 import { CountryCodeProvider } from './services/country-code';
 import { LoginProvider } from './services/login';
@@ -50,26 +54,30 @@ import { AlertProvider } from './services/alert';
 import { ImageProvider } from './services/image';
 import { DataProvider } from './services/data';
 import { FirebaseProvider } from './services/firebase';
+import { Nav } from './services/nav';
 
-export function myCustomAudioProviderFactory() {
-  return window.hasOwnProperty("cordova")
-    ? new CordovaMediaProvider()
-    : new WebAudioProvider();
-}
+//export function myCustomAudioProviderFactory() {
+//  return window.hasOwnProperty("cordova")
+//    ? new CordovaMediaProvider()
+//    : new WebAudioProvider();
+//}
 
 firebase.initializeApp(Login.firebaseConfig);
 
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, FriendPipe, SearchPipe, ConversationPipe, DateFormatPipe, GroupPipe],
   entryComponents: [],
   imports: [BrowserModule,
-    IonicAudioModule.forRoot(defaultAudioProviderFactory),
+   // IonicAudioModule.forRoot(defaultAudioProviderFactory),
     IonicModule.forRoot({
       mode: "ios",
       scrollAssist: false,
     }),
-    IonicStorageModule.forRoot(),
+    IonicStorageModule.forRoot({
+      name: '__mydb',
+      driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage]
+    }),
     AngularFireModule.initializeApp(Login.firebaseConfig),
     AngularFireDatabaseModule,
     //IonicModule.forRoot(),
@@ -98,6 +106,7 @@ firebase.initializeApp(Login.firebaseConfig);
     LoadingProvider,
     AlertProvider,
     ImageProvider,
+    Nav,
     DataProvider,
     FirebaseProvider,
     NativeAudio,

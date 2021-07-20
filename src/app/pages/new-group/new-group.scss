@@ -1,4 +1,4 @@
-page-new-group {
+:host {
   img {
     width: 100vw;
     height: 50vw;
@@ -25,7 +25,7 @@ page-new-group {
 
     ion-item {
       background: transparent;
-      color: $primary;
+      color: var(--ion-color-primary);
 
       ion-label {
         width: 28vw;
@@ -50,7 +50,7 @@ page-new-group {
 
     h1,
     p {
-      color: $gray;
+      color: var(--ion-color-medium);
     }
 
     h1 {
@@ -65,12 +65,12 @@ page-new-group {
     }
 
     button {
-      background: $dark;
+      background: var(--ion-color-medium);
     }
 
     button.activated,
     button:active {
-      background: $dark-active;
+      background: var(--ion-color-medium);
     }
   }
 }

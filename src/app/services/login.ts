@@ -10,7 +10,7 @@ import {GooglePlus} from "@ionic-native/google-plus";
 import {AngularFireDatabase} from "angularfire2/database";
 import {DataProvider} from "./data";
 import {VideoProvider} from "./video";
-import {asYouType, format, getPhoneCode, parse} from "libphonenumber-js";
+import {AsYouType, format, getPhoneCode, parse} from "libphonenumber-js";
 import { Nav } from "./nav";
 
 // import { Diagnostic } from '@ionic-native/diagnostic';

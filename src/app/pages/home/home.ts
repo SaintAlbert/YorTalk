@@ -7,14 +7,14 @@ import {ImageProvider} from "../../services/image";
 import {DataProvider} from "../../services/data";
 import {AngularFireDatabase} from "angularfire2/database";
 import {Validator} from "../../validator";
-import {LoginPage} from "../login/login";
+//import {LoginPage} from "../login/login";
 import {UpdateContactPage} from "../update-contact/update-contact";
-import {UsersPage} from "../users/users";
+//import {UsersPage} from "../users/users";
 
 import {Login} from "../../login";
 import * as firebase from "firebase";
 import {Camera} from "@ionic-native/camera";
-import {ReportedPostPage} from "../reported-post/reported-post";
+//import {ReportedPostPage} from "../reported-post/reported-post";
 import { Nav } from "../../services/nav";
 
 declare var AccountKitPlugin: any;
@@ -22,7 +22,7 @@ declare var AccountKitPlugin: any;
 @Component({
   selector: "page-home",
   templateUrl: "home.html",
-  styleUrls:['']
+  styleUrls: ['home.scss']
 })
 export class HomePage {
   private user: any;

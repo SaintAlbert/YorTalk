@@ -1,4 +1,4 @@
-page-add-members {
+:host {
   .members {
     text-align: center;
     padding-top: 1em;
@@ -19,7 +19,7 @@ page-add-members {
 
   .divider {
     width: 12vw;
-    border-bottom: solid 0.2em $primary;
+    border-bottom: solid 0.2em var(--ion-color-primary);
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 1em;

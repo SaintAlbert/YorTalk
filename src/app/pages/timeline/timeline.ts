@@ -3,7 +3,7 @@ import {
   ActionSheetController, AlertController, 
   Platform
 } from "@ionic/angular";
-import {AddPostPage} from "../add-post/add-post";
+//import {AddPostPage} from "../add-post/add-post";
 import {LoadingProvider} from "../../services/loading";
 import {DataProvider} from "../../services/data";
 import {AngularFireDatabase} from "angularfire2/database";
@@ -14,7 +14,7 @@ import {CommentsPage} from "../comments/comments";
 import {ImageModalPage} from "../image-modal/image-modal";
 import {AlertProvider} from "../../services/alert";
 import {UpdateContactPage} from "../update-contact/update-contact";
-import {LoginPage} from "../login/login";
+//import {LoginPage} from "../login/login";
 import {LogoutProvider} from "../../services/logout";
 import { Nav } from "../../services/nav";
 

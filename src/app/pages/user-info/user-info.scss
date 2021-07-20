@@ -1,4 +1,4 @@
-page-user-info {
+:host {
   .profile {
     position: relative;
     overflow: hidden;
@@ -35,7 +35,7 @@ page-user-info {
   }
 
   p.username {
-    color: $primary;
+    color: var(--ion-color-primary);
     margin-bottom: -6px !important;
     margin-top: 6px !important;
     font-size: 115%;
@@ -48,7 +48,7 @@ page-user-info {
   }
 
   p {
-    color: $gray;
+    color: var(--ion-color-medium);
   }
 
   h4 span.activated,
@@ -58,7 +58,7 @@ page-user-info {
 
   .divider {
     width: 12vw;
-    border-bottom: solid 0.2em $primary;
+    border-bottom: solid 0.2em var(--ion-color-primary);
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 1em;
@@ -70,15 +70,15 @@ page-user-info {
   }
 
   ion-icon.facebook {
-    color: $facebook;
+    color: var(--ion-color-facebook);
   }
 
   ion-icon.google {
-    color: $google;
+    color: var(--ion-color-google);
   }
 
   ion-icon.firebase {
-    color: $primary;
+    color: var(--ion-color-primary);
   }
 
   button {
@@ -86,21 +86,21 @@ page-user-info {
   }
 
   button.danger {
-    background: color($colors, danger);
+    background: var(--ion-color-danger);
   }
 
   button.danger.activated,
   button.danger:active {
-    background: color($colors, danger);
+    background: var(--ion-color-danger);
   }
 
   button.success {
-    background: color($colors, balanced);
+    background: var(--ion-color-success);
   }
 
   button.success.activated,
   button.success:active {
-    background: color($colors, balanced);
+    background: var(--ion-color-success);
   }
 
   button.danger.activated,
@@ -111,21 +111,21 @@ page-user-info {
   }
 
   button.primary {
-    background: $primary;
+    background: var(--ion-color-primary);
   }
 
   button.primary.activated,
   button.primary:active {
-    background: $primary-active;
+    background: var(--ion-color-primary);
   }
 
   button.dark {
-    background: $dark;
+    background: var(--ion-color-dark);
   }
 
   button.dark.activated,
   button.dark:active {
-    background: $dark-active;
+    background: var(--ion-color-dark);
   }
 
   p.info {

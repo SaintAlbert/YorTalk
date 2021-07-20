@@ -1,8 +1,9 @@
-page-login {
-  .scroll-content{
-  background:url('../assets/images/background.png') !important;
-  background-size: 100%
+:host {
+  .scroll-content {
+    background: url('/assets/images/background.png') !important;
+    background-size: 100%
   }
+
   div {
     text-align: center;
 
@@ -16,13 +17,16 @@ page-login {
         width: 45vw;
       }
     }
-    .item-md{
-    padding-left:0px;
+
+    .item-md {
+      padding-left: 0px;
     }
+
     .bottom {
       height: 64%;
-      width:100%;
-      padding:0px 18px !important;
+      width: 100%;
+      padding: 0px 18px !important;
+
       .buttons {
         height: 100%;
         display: flex;
@@ -37,58 +41,63 @@ page-login {
 
       p.activated,
       p:active {
-        color: $primary;
+        color: var(--ion-color-primary);
       }
-      .item-ios{
-       padding-left:0px !important;
+
+      .item-ios {
+        padding-left: 0px !important;
       }
+
       button {
         width: 100%;
-        height:55px;
+        height: 55px;
       }
 
       button.facebook {
-        background: $facebook;
+        background: var(--ion-color-primary)var(--ion-color-facebook);
       }
 
       button.facebook.activated,
       button.facebook:active {
-        background: $facebook-active;
+        background: var(--ion-color-facebook);
       }
 
       button.google {
-        background: $google;
+        background: var(--ion-color-google);
       }
 
       button.google.activated,
       button.google:active {
-        background: $google-active;
+        background: var(--ion-color-google);
       }
 
       button.secondary {
-        background: $secondary;
+        background: var(--ion-color-secondary);
       }
 
       button.secondary.activated,
       button.secondary:active {
-        background: $secondary-active;
+        background: var(--ion-color-secondary);
       }
 
       button.dark {
-        background: $dark;
+        background: var(--ion-color-dark);
       }
 
       button.dark.activated,
       button.dark:active {
-        background: $dark-active;
+        background: var(--ion-color-dark);
       }
-      ion-input{
-        background-color:rgba(0, 0, 0, 0.5);
-        padding:10px;
+
+      ion-input {
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 10px;
       }
-      .item-inner{
-      padding-right:0px !important;
+
+      .item-inner {
+        padding-right: 0px !important;
       }
+
       .form {
         width: 100%;
         height: 100%;
@@ -105,7 +114,7 @@ page-login {
 
           ion-item {
             background: transparent;
-            color: $primary;
+            color: var(--ion-color-primary);
 
             ion-label {
               text-align: left;
@@ -122,11 +131,11 @@ page-login {
           margin: 0;
           width: auto !important;
           background: transparent !important;
-          float:right;
+          float: right;
         }
 
         button.clear.activated {
-          color: $primary;
+          color: var(--ion-color-primary);
         }
       }
     }

@@ -4,7 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { GroupsPage } from './groups';
 
-import { GroupsPageRoutingModule } from './groups-routing.module';
+//import { GroupsPageRoutingModule } from './groups-routing.module';
 
 
 @NgModule({
@@ -12,7 +12,7 @@ import { GroupsPageRoutingModule } from './groups-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    GroupsPageRoutingModule
+    //GroupsPageRoutingModule
   ],
   declarations: [GroupsPage]
 })

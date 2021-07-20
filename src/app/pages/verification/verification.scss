@@ -1,4 +1,4 @@
-page-verification {
+:host {
   .profile {
     position: relative;
     overflow: hidden;
@@ -31,16 +31,16 @@ page-verification {
   }
 
   p {
-    color: $gray;
+    color: var(--ion-color-medium);
   }
 
   p span {
-    color: $primary;
+    color: var(--ion-color-primary);
   }
 
   .divider {
     width: 12vw;
-    border-bottom: solid 0.2em $primary;
+    border-bottom: solid 0.2em var(--ion-color-primary);
     margin-left: auto;
     margin-right: auto;
   }
@@ -51,15 +51,15 @@ page-verification {
   }
 
   ion-icon.facebook {
-    color: $facebook;
+    color: var(--ion-color-facebook);
   }
 
   ion-icon.google {
-    color: $google;
+    color: var(--ion-color-google);
   }
 
   ion-icon.firebase {
-    color: $primary;
+    color: var(--ion-color-primary);
   }
 
   ion-list {
@@ -72,11 +72,11 @@ page-verification {
 
     ion-item.activated {
       background: rgba(0, 0, 0, 0.5) !important;
-      color: $primary !important;
+      color: var(--ion-color-primary) !important;
     }
 
     ion-item.activated ion-icon {
-      color: $primary;
+      color: var(--ion-color-primary);
     }
   }
 }

@@ -1,10 +1,11 @@
 import {Component} from '@angular/core';
 //import {App, NavController, NavParams} from '@ionic/angular';
-import {NewGroupPage} from '../new-group/new-group';
+//import {NewGroupPage} from '../new-group/new-group';
 import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
-import {GroupPage} from '../group/group';
+//import {GroupPage} from '../group/group';
 import { Nav } from '../../services/nav';
+//import * from '../../../assets'
 
 @Component({
   selector: 'page-groups',

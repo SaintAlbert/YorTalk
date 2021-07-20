@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import { ViewController} from '@ionic/angular';
+//import { ViewController} from '@ionic/angular';
 import {DataProvider} from '../../services/data'
 import { Events } from '../../services/events';
 import { Nav } from '../../services/nav';

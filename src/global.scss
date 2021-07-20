@@ -76,7 +76,7 @@ ion-header {
 
   h1,
   p {
-    color: $gray;
+    color: var(--ion-color-medium);
   }
 
   h1 {
@@ -91,12 +91,12 @@ ion-header {
   }
 
   button {
-    background: $dark;
+    background: var(--ion-color-dark);
   }
 
   button.activated,
   button:active {
-    background: $dark-active;
+    background: var(--ion-color-medium) ;
   }
 }
 
@@ -110,15 +110,15 @@ ion-list.avatar-list {
     }
 
     h3 {
-      color: $dark-active;
+      color: var(--ion-color-medium);
 
       ion-icon.selected {
-        color: $primary;
+        color: var(--ion-color-primary);
       }
     }
 
     p {
-      color: $primary !important;
+      color: var(--ion-color-primary) !important;
       max-width: 68vw;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -149,15 +149,15 @@ ion-list.avatar-list {
 
   ion-fab button ion-icon {
     font-size: 2em !important;
-    color: $primary;
+    color: var(--ion-color-primary);
   }
 
   ion-icon.success {
-    color: $primary;
+    color: var(--ion-color-primary);
   }
 
   ion-icon.danger {
-    color: color($colors, danger);
+    color: var(--ion-color-danger);
   }
 }
 
@@ -169,7 +169,7 @@ div.messages {
 
     span {
       padding: 0.25em 0.5em;
-      background: $secondary;
+      background: var(--ion-color-secondary);
       color: #fff;
       border-radius: 0.4em;
     }
@@ -178,7 +178,7 @@ div.messages {
   p.center.activated,
   p.center:active {
     span {
-      background: $secondary-active;
+      background: var(--ion-color-secondary);
     }
   }
 
@@ -189,7 +189,7 @@ div.messages {
     p {
       background: transparent !important;
       max-width: 90vw;
-      color: $primary;
+      color: var(--ion-color-primary);
     }
 
     span {
@@ -221,14 +221,14 @@ div.messages {
       padding: 0.5em;
       border-radius: 0.5em;
       margin-bottom: 0.5em;
-      background: $dark-active;
+      background: var(--ion-color-dark);
       display: block;
     }
 
     span {
       display: block;
       text-align: left;
-      color: $gray;
+      color: var(--ion-color-medium);
       font-size: 85%;
       padding-left: 0.5em;
     }
@@ -236,7 +236,7 @@ div.messages {
 
   ion-col.sender {
     p {
-      background: $primary;
+      background: var(--ion-color-primary);
     }
 
     span {
@@ -276,7 +276,8 @@ div.messages {
 
 //Footer Bar for message.html and group.html
 ion-footer.footer {
-  background-image: url('../assets/images/background.png');
+
+  background-image: url('/assets/images/background.png');
   background-position: initial initial;
   background-repeat: initial initial;
 }
@@ -306,7 +307,7 @@ ion-footer.footer {
 
   ion-fab button ion-icon {
     font-size: 2em !important;
-    color: $primary;
+    color: var(--ion-color-primary);
   }
 }
 
@@ -341,7 +342,7 @@ ion-footer.footer {
 
   .alert-button {
     width: 100%;
-    background-color: map-get($colors, primary);
+    background-color: var(--ion-color-primary);
     color: #fff;
   }
 }

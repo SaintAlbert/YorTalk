@@ -4,7 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { MessagesPage } from './messages';
 
-import { MessagesPageRoutingModule } from './messages-routing.module';
+//import { MessagesPageRoutingModule } from './messages-routing.module';
 
 
 @NgModule({
@@ -12,7 +12,7 @@ import { MessagesPageRoutingModule } from './messages-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    MessagesPageRoutingModule
+    //MessagesPageRoutingModule
   ],
   declarations: [MessagesPage]
 })

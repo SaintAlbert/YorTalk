@@ -1,4 +1,4 @@
-page-group-info {
+:host {
   .members {
     text-align: center;
 
@@ -25,11 +25,11 @@ page-group-info {
 
     ion-item.activated {
       background: rgba(0, 0, 0, 0.5) !important;
-      color: $primary !important;
+      color: var(--ion-color-primary) !important;
     }
 
     ion-item.activated ion-icon {
-      color: $primary;
+      color: var(--ion-color-primary);
     }
   }
 
@@ -69,7 +69,7 @@ page-group-info {
   }
 
   p.username {
-    color: $primary;
+    color: var(--ion-color-primary);
     margin-bottom: -6px !important;
     margin-top: 6px !important;
     font-size: 115%;
@@ -82,7 +82,7 @@ page-group-info {
   }
 
   p {
-    color: $gray;
+    color: var(--ion-color-danger);
   }
 
   h4 span.activated,
@@ -92,7 +92,7 @@ page-group-info {
 
   .divider {
     width: 12vw;
-    border-bottom: solid 0.2em $primary;
+    border-bottom: solid 0.2em var(--ion-color-medium);
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 1em;
@@ -104,15 +104,15 @@ page-group-info {
   }
 
   ion-icon.facebook {
-    color: $facebook;
+    color: var(--ion-color-facebook);
   }
 
   ion-icon.google {
-    color: $google;
+    color: var(--ion-color-google);
   }
 
   ion-icon.firebase {
-    color: $primary;
+    color: var(--ion-color-primary);
   }
 
   button {
@@ -120,21 +120,22 @@ page-group-info {
   }
 
   button.danger {
-    background: color($colors, danger);
+    background: var(--ion-color-danger);
   }
 
   button.danger.activated,
   button.danger:active {
-    background: color($colors, danger);
+    background: var(--ion-color-danger);
   }
 
   button.success {
-    background: color($colors, balanced);
+    background: var(--ion-color-success);
   }
 
   button.success.activated,
   button.success:active {
-    background: color($colors, balanced);
+    background: var(--ion-color-success);
+    /* color($colors, balanced);*/
   }
 
   button.danger.activated,
@@ -145,21 +146,21 @@ page-group-info {
   }
 
   button.primary {
-    background: $primary;
+    background: var(--ion-color-primary);
   }
 
   button.primary.activated,
   button.primary:active {
-    background: $primary-active;
+    background: var(--ion-color-primary);
   }
 
   button.dark {
-    background: $dark;
+    background: var(--ion-color-dark);
   }
 
   button.dark.activated,
   button.dark:active {
-    background: $dark-active;
+    background: var(--ion-color-dark);
   }
 
   p.info {

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 //import {App, NavController, NavParams} from '@ionic/angular';
-import {SearchPeoplePage} from '../search-people/search-people';
-import {MessagePage} from '../message/message';
+//import {SearchPeoplePage} from '../search-people/search-people';
+//import {MessagePage} from '../message/message';
 import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
 import { Nav } from '../../services/nav';

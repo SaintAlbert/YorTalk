@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import {
-  ActionSheetController, AlertController, IonContent, ModalController, NavController,
-  NavParams
+  ActionSheetController, AlertController, IonContent
 } from '@ionic/angular';
 import { DataProvider } from '../../services/data';
 import { ImageProvider } from '../../services/image';
@@ -16,11 +15,12 @@ import { Keyboard } from '@ionic-native/keyboard';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import _ from 'lodash'
-import { AudioProvider } from 'ionic-audio';
+//import { AudioProvider } from 'ionic-audio';
 import { CaptureError, CaptureImageOptions, MediaCapture, MediaFile } from '@ionic-native/media-capture';
 import { File } from '@ionic-native/file';
 import { Router } from '@angular/router';
 import { Nav } from '../../services/nav';
+import { NativeAudio } from '@ionic-native/native-audio';
 
 @Component({
   selector: 'page-group',
@@ -51,7 +51,7 @@ export class GroupPage {
   constructor(public navCtrl: Nav, public dataProvider: DataProvider,
      public angularfire: AngularFireModule, public angularDb: AngularFireDatabase, public alertCtrl: AlertController,
     public imageProvider: ImageProvider, public loadingProvider: LoadingProvider, public camera: Camera, public keyboard: Keyboard,
-    private socialSharing: SocialSharing, public actionSheetCtrl: ActionSheetController, private _audioProvider: AudioProvider,
+    private socialSharing: SocialSharing, public actionSheetCtrl: ActionSheetController, private _audioProvider: NativeAudio,
     private mediaCapture: MediaCapture, private file: File, private router: Router,private nav:Nav ) {
     this.myTracks = [{
       src: 'https://archive.org/download/JM2013-10-05.flac16/V0/jm2013-10-05-t12-MP3-V0.mp3',
@@ -475,7 +475,8 @@ export class GroupPage {
 
   pauseSelectedTrack() {
     // use AudioProvider to control selected track
-    this._audioProvider.pause(this.selectedTrack);
+    this._audioProvider.stop(this.selectedTrack)
+    //this._audioProvider.pause(this.selectedTrack);
   }
 
   onTrackFinished(track: any) {

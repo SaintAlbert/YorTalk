@@ -1,6 +1,6 @@
-page-messages {
+:host {
   ion-item span {
-    color: $primary;
+    color: var(--ion-color-primary);
     font-size: 75%;
     position: absolute;
     top: 0;
@@ -17,7 +17,7 @@ page-messages {
     h2 {
       font-weight: bold !important;
     }
+
     font-weight: bold;
   }
-  
 }
