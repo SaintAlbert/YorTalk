@@ -1,9 +1,9 @@
 import {Component} from "@angular/core";
-import { App, ModalController, NavController, NavParams } from "@ionic/angular";
-import {SearchPeoplePage} from "../search-people/search-people";
-import {UserInfoPage} from "../user-info/user-info";
-import {MessagePage} from "../message/message";
-import {RequestsPage} from "../requests/requests";
+//import {  ModalController, NavController, NavParams } from "@ionic/angular";
+//import {SearchPeoplePage} from "../search-people/search-people";
+//import {UserInfoPage} from "../user-info/user-info";
+//import {MessagePage} from "../message/message";
+//import {RequestsPage} from "../requests/requests";
 import {DataProvider} from "../../services/data";
 import {LoadingProvider} from "../../services/loading";
 import * as firebase from "firebase";
@@ -12,6 +12,7 @@ import {SocialSharing} from "@ionic-native/social-sharing";
 import {UpdateContactPage} from "../update-contact/update-contact";
 
 import {Contacts} from "@ionic-native/contacts";
+import { Nav } from "../../services/nav";
 
 @Component({
   selector: "page-friends",
@@ -30,14 +31,15 @@ export class FriendsPage {
   // FriendsPage
   // This is the page where the user can search, view, and initiate a chat with their friends.
   constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
-    public app: App,
+    //public navCtrl: Nav,
+    //public navParams: NavParams,
+    //public app: App,
     public dataProvider: DataProvider,
     public loadingProvider: LoadingProvider,
     private contacts: Contacts,
-    public modalCtrl: ModalController,
-    public socialsharing: SocialSharing
+   // public modalCtrl: ModalController,
+    public socialsharing: SocialSharing,
+    private nav:Nav
   ) {}
 
   ionViewDidLoad() {
@@ -107,30 +109,33 @@ export class FriendsPage {
 
   // update contact number
   async updateContact() {
-    let modal = this.modalCtrl.create(UpdateContactPage, {
+    this.nav.openModal(UpdateContactPage, {
       userData: this.account
-    });
-    (await modal).present();
+    })
   }
 
   // Proceed to searchPeople page.
   searchPeople() {
-    this.app.getRootNav().push(SearchPeoplePage);
+    this.nav.push('searchpeople');
+   // this.app.getRootNav().push(SearchPeoplePage);
   }
 
   // Proceed to requests page.
   manageRequests() {
-    this.app.getRootNav().push(RequestsPage);
+    this.nav.push('frendrequests');
+    //this.app.getRootNav().push(RequestsPage);
   }
 
   // Proceed to userInfo page.
   viewUser(userId) {
-    this.app.getRootNav().push(UserInfoPage, { userId: userId });
+    this.nav.push('userinfo', { userId: userId });
+    //this.app.getRootNav().push(UserInfoPage, { userId: userId });
   }
 
   // Proceed to chat page.
   message(userId) {
-    this.app.getRootNav().push(MessagePage, { userId: userId });
+    this.nav.push('message', { userId: userId });
+    //this.app.getRootNav().push(MessagePage, { userId: userId });
   }
 
   // get Contact number

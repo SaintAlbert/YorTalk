@@ -264,35 +264,35 @@ export class ImageProvider {
 
   // ======== set post image ========
   setImage(){
-    return new Promise((resolve,reject)=>{
-      this.alert = this.alertCtrl.create({
-        title: 'Send Photo Message',
-        message: 'Do you want to take a photo or choose from your photo gallery?',
-        buttons: [
-          {
-            text: 'Cancel',
-            handler: data => { }
-          },
-          {
-            text: 'Choose from Gallery',
-            handler: () => {
-              this.photoMessageOptions.sourceType =  this.camera.PictureSourceType.PHOTOLIBRARY;
-              this.camera.getPicture(this.photoMessageOptions).then((imageData) => {
-                resolve("data:image/jpeg;base64," + imageData)
-              })
-            }
-          },
-          {
-            text: 'Take Photo',
-            handler: () => {
-              this.photoMessageOptions.sourceType =  this.camera.PictureSourceType.CAMERA;
-              this.camera.getPicture(this.photoMessageOptions).then((imageData) => {
-                resolve("data:image/jpeg;base64," + imageData)
-              })
-            }
-          }
-        ]
-      }).present();
+    return new Promise(async (resolve,reject)=>{
+      this.alert = (await this.alertCtrl.create({
+          header: 'Send Photo Message',
+          message: 'Do you want to take a photo or choose from your photo gallery?',
+          buttons: [
+              {
+                  text: 'Cancel',
+                  handler: data => { }
+              },
+              {
+                  text: 'Choose from Gallery',
+                  handler: () => {
+                      this.photoMessageOptions.sourceType = this.camera.PictureSourceType.PHOTOLIBRARY;
+                      this.camera.getPicture(this.photoMessageOptions).then((imageData) => {
+                          resolve("data:image/jpeg;base64," + imageData);
+                      });
+                  }
+              },
+              {
+                  text: 'Take Photo',
+                  handler: () => {
+                      this.photoMessageOptions.sourceType = this.camera.PictureSourceType.CAMERA;
+                      this.camera.getPicture(this.photoMessageOptions).then((imageData) => {
+                          resolve("data:image/jpeg;base64," + imageData);
+                      });
+                  }
+              }
+          ]
+      })).present();
     })
   }
 

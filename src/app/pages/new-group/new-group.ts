@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AlertController, App, NavController, NavParams} from '@ionic/angular';
+import {AlertController, } from '@ionic/angular';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ImageProvider} from '../../services/image';
 import {LoadingProvider} from '../../services/loading';
@@ -11,6 +11,7 @@ import {AngularFireDatabase} from 'angularfire2/database';
 import {GroupPage} from '../group/group';
 import * as firebase from 'firebase';
 import {SearchPeoplePage} from '../search-people/search-people';
+import { Nav } from '../../services/nav';
 
 @Component({
   selector: 'page-new-group',
@@ -26,8 +27,8 @@ export class NewGroupPage {
   private alert: any;
   // NewGroupPage
   // This is the page where the user can start a new group chat with their friends.
-  constructor(public navCtrl: NavController, public navParams: NavParams, public imageProvider: ImageProvider, public dataProvider: DataProvider, public formBuilder: FormBuilder,
-    public alertProvider: AlertProvider, public alertCtrl: AlertController, public angularDb:AngularFireDatabase, public app: App, public loadingProvider: LoadingProvider, public camera: Camera) {
+  constructor(public navCtrl: Nav,public imageProvider: ImageProvider, public dataProvider: DataProvider, public formBuilder: FormBuilder,
+    public alertProvider: AlertProvider, public alertCtrl: AlertController, public angularDb:AngularFireDatabase,  public loadingProvider: LoadingProvider, public camera: Camera) {
     // Create our groupForm based on Validator.ts
     this.groupForm = formBuilder.group({
       name: Validator.groupNameValidator,
@@ -82,7 +83,7 @@ export class NewGroupPage {
   back() {
     if (this.group)
       this.imageProvider.deleteImageFile(this.group.img);
-    this.navCtrl.pop();
+    this.navCtrl.pop('groups');
   }
 
   // Proceed with group creation.
@@ -122,10 +123,13 @@ export class NewGroupPage {
         });
       }
       // Open the group chat of the just created group.
-      this.navCtrl.popToRoot().then(() => {
-        this.loadingProvider.hide();
-        this.app.getRootNav().push(GroupPage, { groupId: groupId });
-      });
+      this.navCtrl.setRoot('groups')
+      this.navCtrl.push('groups/group', { groupId: groupId })
+      this.loadingProvider.hide();
+      //this.navCtrl.popToRoot().then(() => {
+      //  this.loadingProvider.hide();
+      //  this.app.getRootNav().push(GroupPage, { groupId: groupId });
+      //});
     });
   }
 
@@ -167,33 +171,34 @@ export class NewGroupPage {
   }
 
   // Set group photo.
-  setGroupPhoto() {
-    this.alert = this.alertCtrl.create({
-      title: 'Set Group Photo',
-      message: 'Do you want to take a photo or choose from your photo gallery?',
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => { }
-        },
-        {
-          text: 'Choose from Gallery',
-          handler: () => {
-            this.imageProvider.setGroupPhoto(this.group, this.camera.PictureSourceType.PHOTOLIBRARY);
-          }
-        },
-        {
-          text: 'Take Photo',
-          handler: () => {
-            this.imageProvider.setGroupPhoto(this.group, this.camera.PictureSourceType.CAMERA);
-          }
-        }
-      ]
-    }).present();
+  async setGroupPhoto() {
+    this.alert = (await this.alertCtrl.create({
+        header: 'Set Group Photo',
+        message: 'Do you want to take a photo or choose from your photo gallery?',
+        buttons: [
+            {
+                text: 'Cancel',
+                handler: data => { }
+            },
+            {
+                text: 'Choose from Gallery',
+                handler: () => {
+                    this.imageProvider.setGroupPhoto(this.group, this.camera.PictureSourceType.PHOTOLIBRARY);
+                }
+            },
+            {
+                text: 'Take Photo',
+                handler: () => {
+                    this.imageProvider.setGroupPhoto(this.group, this.camera.PictureSourceType.CAMERA);
+                }
+            }
+        ]
+    })).present();
   }
 
   // Search people to add as friend.
   searchPeople() {
-    this.navCtrl.push(SearchPeoplePage);
+    this.navCtrl.push('searchpeople');
+    //this.navCtrl.push(SearchPeoplePage);
   }
 }

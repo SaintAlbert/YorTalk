@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import { ActionSheetController, AlertController, ModalController, NavController, NavParams } from '@ionic/angular';
+import { ActionSheetController, AlertController} from '@ionic/angular';
 import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
 import {ImageProvider} from '../../services/image';
@@ -11,6 +11,7 @@ import * as firebase from 'firebase';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {Camera} from '@ionic-native/camera';
 import _ from 'lodash'
+import { Nav } from '../../services/nav';
 
 @Component({
   selector: 'page-group-info',
@@ -27,14 +28,14 @@ export class GroupInfoPage {
   isAdmin:any;
   // GroupInfoPage
   // This is the page where the user can view group information, change group information, add members, and leave/delete group.
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dataProvider: DataProvider,
-    public loadingProvider: LoadingProvider, public modalCtrl: ModalController, public alertCtrl: AlertController,
+  constructor(public dataProvider: DataProvider,
+    public loadingProvider: LoadingProvider, public nav: Nav, public alertCtrl: AlertController,
     public alertProvider: AlertProvider,public angularDb:AngularFireDatabase, public imageProvider: ImageProvider, public camera: Camera,
      public actionSheetCtrl: ActionSheetController) { }
 
   ionViewDidLoad() {
     // Initialize
-    this.groupId = this.navParams.get('groupId');
+    this.groupId = this.nav.get('groupId');
 
     // Get group details.
     this.subscription = this.dataProvider.getGroup(this.groupId).subscribe((group) => {
@@ -57,7 +58,8 @@ export class GroupInfoPage {
         this.loadingProvider.hide();
       } else {
         // Group is deleted, go back.
-        this.navCtrl.popToRoot();
+        this.nav.pop('groups')
+        //this.navCtrl.popToRoot();
       }
     });
 
@@ -84,12 +86,12 @@ export class GroupInfoPage {
   }
 
   // Assign new addmin 
-  assignNewAdmin(member){
+  async assignNewAdmin(member){
     if(this.isAdmin && this.user.userId !== member.userId){
 
       if(this.isAdminOrNot(member)){
-       let actionSheet = this.actionSheetCtrl.create({
-         title: 'Remove Admin',
+        let actionSheet = this.actionSheetCtrl.create({
+          header: 'Remove Admin',
          buttons: [
            {
              text: 'Remove Admin',
@@ -115,7 +117,7 @@ export class GroupInfoPage {
                   }).then(() => {
                   // Back.
                   this.loadingProvider.hide();
-                  this.navCtrl.pop();
+                    this.nav.pop('groups');
                 });
                 }else{
                   this.loadingProvider.hide();
@@ -133,10 +135,10 @@ export class GroupInfoPage {
            }
          ]
        });
-       actionSheet.present();
+       (await actionSheet).present();
       }else{
        let actionSheet = this.actionSheetCtrl.create({
-           title: 'Assign New Admin',
+           header: 'Assign New Admin',
            buttons: [
              {
                text: 'Make Admin',
@@ -163,7 +165,7 @@ export class GroupInfoPage {
                     }).then(() => {
                     // Back.
                     this.loadingProvider.hide();
-                    this.navCtrl.pop();
+                      this.nav.pop('groups');
                   });
                   }else{
                     this.loadingProvider.hide();
@@ -181,7 +183,7 @@ export class GroupInfoPage {
              }
            ]
          });
-         actionSheet.present();
+         (await actionSheet).present();
       }
     }
      
@@ -229,267 +231,271 @@ export class GroupInfoPage {
   // View user info.
   viewUser(userId) {
     if (firebase.auth().currentUser.uid != userId)
-      this.navCtrl.push(UserInfoPage, { userId: userId });
+      this.nav.push('groups/group-info', { userId: userId })
+      //this.navCtrl.push(UserInfoPage, { userId: userId });
   }
 
   // Back
   back() {
     this.subscription.unsubscribe();
-    this.navCtrl.pop();
+    this.nav.pop('groups');
   }
 
   // Enlarge group image.
   enlargeImage(img) {
-    let imageModal = this.modalCtrl.create(ImageModalPage, { img: img });
-    imageModal.present();
+    this.nav.openModal(ImageModalPage, { img: img });
+    //let imageModal = this.modalCtrl.create(ImageModalPage, { img: img });
+    //imageModal.present();
   }
 
   // Change group name.
-  setName() {
-    this.alert = this.alertCtrl.create({
-      title: 'Change Group Name',
-      message: "Please enter a new group name.",
-      inputs: [
-        {
-          name: 'name',
-          placeholder: 'Group Name',
-          value: this.group.name
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => { }
-        },
-        {
-          text: 'Save',
-          handler: data => {
-            let name = data["name"];
-            if (this.group.name != name) {
-              this.loadingProvider.show();
-              // Add system message.
-              this.group.messages.push({
-                date: new Date().toString(),
-                sender: this.user.$key,
-                type: 'system',
-                message: this.user.name + ' has changed the group name to: ' + name + '.',
-                icon: 'md-create'
-              });
-              // Update group on database.
-              this.dataProvider.getGroup(this.groupId).update({
-                name: name,
-                messages: this.group.messages
-              }).then((success) => {
-                this.loadingProvider.hide();
-                this.alertProvider.showGroupUpdatedMessage();
-              }).catch((error) => {
-                this.loadingProvider.hide();
-                this.alertProvider.showErrorMessage('group/error-update-group');
-              });
+  async setName() {
+    this.alert = (await this.alertCtrl.create({
+        header: 'Change Group Name',
+        message: "Please enter a new group name.",
+        inputs: [
+            {
+                name: 'name',
+                placeholder: 'Group Name',
+                value: this.group.name
             }
-          }
-        }
-      ]
-    }).present();
+        ],
+        buttons: [
+            {
+                text: 'Cancel',
+                handler: data => { }
+            },
+            {
+                text: 'Save',
+                handler: data => {
+                    let name = data["name"];
+                    if (this.group.name != name) {
+                        this.loadingProvider.show();
+                        // Add system message.
+                        this.group.messages.push({
+                            date: new Date().toString(),
+                            sender: this.user.$key,
+                            type: 'system',
+                            message: this.user.name + ' has changed the group name to: ' + name + '.',
+                            icon: 'md-create'
+                        });
+                        // Update group on database.
+                        this.dataProvider.getGroup(this.groupId).update({
+                            name: name,
+                            messages: this.group.messages
+                        }).then((success) => {
+                            this.loadingProvider.hide();
+                            this.alertProvider.showGroupUpdatedMessage();
+                        }).catch((error) => {
+                            this.loadingProvider.hide();
+                            this.alertProvider.showErrorMessage('group/error-update-group');
+                        });
+                    }
+                }
+            }
+        ]
+    })).present();
   }
 
   // Change group image, the user is asked if they want to take a photo or choose from gallery.
-  setPhoto() {
-    this.alert = this.alertCtrl.create({
-      title: 'Set Group Photo',
-      message: 'Do you want to take a photo or choose from your photo gallery?',
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => { }
-        },
-        {
-          text: 'Choose from Gallery',
-          handler: () => {
-            this.loadingProvider.show();
-            // Upload photo and set to group photo, afterwards, return the group object as promise.
-            this.imageProvider.setGroupPhotoPromise(this.group, this.camera.PictureSourceType.PHOTOLIBRARY).then((group) => {
-              // Add system message.
-              this.group.messages.push({
-                date: new Date().toString(),
-                sender: this.user.$key,
-                type: 'system',
-                message: this.user.name + ' has changed the group photo.',
-                icon: 'ios-camera'
-              });
-              // Update group image on database.
-              this.dataProvider.getGroup(this.groupId).update({
-                img: group.img,
-                messages: this.group.messages
-              }).then((success) => {
-                this.loadingProvider.hide();
-                this.alertProvider.showGroupUpdatedMessage();
-              }).catch((error) => {
-                this.loadingProvider.hide();
-                this.alertProvider.showErrorMessage('group/error-update-group');
-              });
-            });
-          }
-        },
-        {
-          text: 'Take Photo',
-          handler: () => {
-            this.loadingProvider.show();
-            // Upload photo and set to group photo, afterwwards, return the group object as promise.
-            this.imageProvider.setGroupPhotoPromise(this.group, this.camera.PictureSourceType.CAMERA).then((group) => {
-              // Add system message.
-              this.group.messages.push({
-                date: new Date().toString(),
-                sender: this.user.$key,
-                type: 'system',
-                message: this.user.name + ' has changed the group photo.',
-                icon: 'ios-camera'
-              });
-              // Update group image on database.
-              this.dataProvider.getGroup(this.groupId).update({
-                img: group.img,
-                messages: this.group.messages
-              }).then((success) => {
-                this.loadingProvider.hide();
-                this.alertProvider.showGroupUpdatedMessage();
-              }).catch((error) => {
-                this.loadingProvider.hide();
-                this.alertProvider.showErrorMessage('group/error-update-group');
-              });
-            });
-          }
-        }
-      ]
-    }).present();
+  async setPhoto() {
+    this.alert = (await this.alertCtrl.create({
+        header: 'Set Group Photo',
+        message: 'Do you want to take a photo or choose from your photo gallery?',
+        buttons: [
+            {
+                text: 'Cancel',
+                handler: data => { }
+            },
+            {
+                text: 'Choose from Gallery',
+                handler: () => {
+                    this.loadingProvider.show();
+                    // Upload photo and set to group photo, afterwards, return the group object as promise.
+                    this.imageProvider.setGroupPhotoPromise(this.group, this.camera.PictureSourceType.PHOTOLIBRARY).then((group) => {
+                        // Add system message.
+                        this.group.messages.push({
+                            date: new Date().toString(),
+                            sender: this.user.$key,
+                            type: 'system',
+                            message: this.user.name + ' has changed the group photo.',
+                            icon: 'ios-camera'
+                        });
+                        // Update group image on database.
+                        this.dataProvider.getGroup(this.groupId).update({
+                            img: group.img,
+                            messages: this.group.messages
+                        }).then((success) => {
+                            this.loadingProvider.hide();
+                            this.alertProvider.showGroupUpdatedMessage();
+                        }).catch((error) => {
+                            this.loadingProvider.hide();
+                            this.alertProvider.showErrorMessage('group/error-update-group');
+                        });
+                    });
+                }
+            },
+            {
+                text: 'Take Photo',
+                handler: () => {
+                    this.loadingProvider.show();
+                    // Upload photo and set to group photo, afterwwards, return the group object as promise.
+                    this.imageProvider.setGroupPhotoPromise(this.group, this.camera.PictureSourceType.CAMERA).then((group) => {
+                        // Add system message.
+                        this.group.messages.push({
+                            date: new Date().toString(),
+                            sender: this.user.$key,
+                            type: 'system',
+                            message: this.user.name + ' has changed the group photo.',
+                            icon: 'ios-camera'
+                        });
+                        // Update group image on database.
+                        this.dataProvider.getGroup(this.groupId).update({
+                            img: group.img,
+                            messages: this.group.messages
+                        }).then((success) => {
+                            this.loadingProvider.hide();
+                            this.alertProvider.showGroupUpdatedMessage();
+                        }).catch((error) => {
+                            this.loadingProvider.hide();
+                            this.alertProvider.showErrorMessage('group/error-update-group');
+                        });
+                    });
+                }
+            }
+        ]
+    })).present();
   }
 
   // Change group description.
-  setDescription() {
-    this.alert = this.alertCtrl.create({
-      title: 'Change Group Description',
-      message: "Please enter a new group description.",
-      inputs: [
-        {
-          name: 'description',
-          placeholder: 'Group Description',
-          value: this.group.description
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => { }
-        },
-        {
-          text: 'Save',
-          handler: data => {
-            let description = data["description"];
-            if (this.group.description != description) {
-              this.loadingProvider.show();
-              // Add system message.
-              this.group.messages.push({
-                date: new Date().toString(),
-                sender: this.user.$key,
-                type: 'system',
-                message: this.user.name + ' has changed the group description.',
-                icon: 'md-clipboard'
-              });
-              // Update group on database.
-              this.dataProvider.getGroup(this.groupId).update({
-                description: description,
-                messages: this.group.messages
-              }).then((success) => {
-                this.loadingProvider.hide();
-                this.alertProvider.showGroupUpdatedMessage();
-              }).catch((error) => {
-                this.loadingProvider.hide();
-                this.alertProvider.showErrorMessage('group/error-update-group');
-              });
+  async setDescription() {
+    this.alert = (await this.alertCtrl.create({
+        header: 'Change Group Description',
+        message: "Please enter a new group description.",
+        inputs: [
+            {
+                name: 'description',
+                placeholder: 'Group Description',
+                value: this.group.description
             }
-          }
-        }
-      ]
-    }).present();
+        ],
+        buttons: [
+            {
+                text: 'Cancel',
+                handler: data => { }
+            },
+            {
+                text: 'Save',
+                handler: data => {
+                    let description = data["description"];
+                    if (this.group.description != description) {
+                        this.loadingProvider.show();
+                        // Add system message.
+                        this.group.messages.push({
+                            date: new Date().toString(),
+                            sender: this.user.$key,
+                            type: 'system',
+                            message: this.user.name + ' has changed the group description.',
+                            icon: 'md-clipboard'
+                        });
+                        // Update group on database.
+                        this.dataProvider.getGroup(this.groupId).update({
+                            description: description,
+                            messages: this.group.messages
+                        }).then((success) => {
+                            this.loadingProvider.hide();
+                            this.alertProvider.showGroupUpdatedMessage();
+                        }).catch((error) => {
+                            this.loadingProvider.hide();
+                            this.alertProvider.showErrorMessage('group/error-update-group');
+                        });
+                    }
+                }
+            }
+        ]
+    })).present();
   }
 
   // Leave group.
-  leaveGroup() {
-    this.alert = this.alertCtrl.create({
-      title: 'Confirm Leave',
-      message: 'Are you sure you want to leave this group?',
-      buttons: [
-        {
-          text: 'Cancel'
-        },
-        {
-          text: 'Leave',
-          handler: data => {
-            this.loadingProvider.show();
-            // Remove member from group.
-            this.group.members.splice(this.group.members.indexOf(this.user.$key), 1);
-            // Add system message.
-            this.group.messages.push({
-              date: new Date().toString(),
-              sender: this.user.$key,
-              type: 'system',
-              message: this.user.name + ' has left this group.',
-              icon: 'md-log-out'
-            });
-            // Update group on database.
-            this.dataProvider.getGroup(this.groupId).update({
-              members: this.group.members,
-              messages: this.group.messages
-            }).then((success) => {
-              // Remove group from user's group list.
-              this.angularDb.object('/accounts/' + firebase.auth().currentUser.uid + '/groups/' + this.groupId).remove().then(() => {
-                // Pop this view because user already has left this group.
-                this.group = null;
-                setTimeout(() => {
-                  this.loadingProvider.hide();
-                  this.navCtrl.popToRoot();
-                }, 300);
-              });
-            }).catch((error) => {
-              this.alertProvider.showErrorMessage('group/error-leave-group');
-            });
-          }
-        }
-      ]
-    }).present();
+  async leaveGroup() {
+    this.alert = (await this.alertCtrl.create({
+        header: 'Confirm Leave',
+        message: 'Are you sure you want to leave this group?',
+        buttons: [
+            {
+                text: 'Cancel'
+            },
+            {
+                text: 'Leave',
+                handler: data => {
+                    this.loadingProvider.show();
+                    // Remove member from group.
+                    this.group.members.splice(this.group.members.indexOf(this.user.$key), 1);
+                    // Add system message.
+                    this.group.messages.push({
+                        date: new Date().toString(),
+                        sender: this.user.$key,
+                        type: 'system',
+                        message: this.user.name + ' has left this group.',
+                        icon: 'md-log-out'
+                    });
+                    // Update group on database.
+                    this.dataProvider.getGroup(this.groupId).update({
+                        members: this.group.members,
+                        messages: this.group.messages
+                    }).then((success) => {
+                        // Remove group from user's group list.
+                        this.angularDb.object('/accounts/' + firebase.auth().currentUser.uid + '/groups/' + this.groupId).remove().then(() => {
+                            // Pop this view because user already has left this group.
+                            this.group = null;
+                            setTimeout(() => {
+                                this.loadingProvider.hide();
+                                //this.navCtrl.popToRoot();
+                                this.nav.pop('groups');
+                            }, 300);
+                        });
+                    }).catch((error) => {
+                        this.alertProvider.showErrorMessage('group/error-leave-group');
+                    });
+                }
+            }
+        ]
+    })).present();
   }
 
   // Delete group.
-  deleteGroup() {
-    this.alert = this.alertCtrl.create({
-      title: 'Confirm Delete',
-      message: 'Are you sure you want to delete this group?',
-      buttons: [
-        {
-          text: 'Cancel'
-        },
-        {
-          text: 'Delete',
-          handler: data => {
-            let group = JSON.parse(JSON.stringify(this.group));
-            // Delete all images of image messages.
-            group.messages.forEach((message) => {
-              if (message.type == 'image') {
-                this.imageProvider.deleteGroupImageFile(group.$key, message.url);
-              }
-            });
-            // Delete group image.
-            this.imageProvider.deleteImageFile(group.img);
-            this.angularDb.object('/accounts/' + firebase.auth().currentUser.uid + '/groups/' + group.$key).remove().then(() => {
-              this.dataProvider.getGroup(group.$key).remove();
-            });
-          }
-        }
-      ]
-    }).present();
+  async deleteGroup() {
+    this.alert = (await this.alertCtrl.create({
+        header: 'Confirm Delete',
+        message: 'Are you sure you want to delete this group?',
+        buttons: [
+            {
+                text: 'Cancel'
+            },
+            {
+                text: 'Delete',
+                handler: data => {
+                    let group = JSON.parse(JSON.stringify(this.group));
+                    // Delete all images of image messages.
+                    group.messages.forEach((message) => {
+                        if (message.type == 'image') {
+                            this.imageProvider.deleteGroupImageFile(group.$key, message.url);
+                        }
+                    });
+                    // Delete group image.
+                    this.imageProvider.deleteImageFile(group.img);
+                    this.angularDb.object('/accounts/' + firebase.auth().currentUser.uid + '/groups/' + group.$key).remove().then(() => {
+                        this.dataProvider.getGroup(group.$key).remove();
+                    });
+                }
+            }
+        ]
+    })).present();
   }
 
   // Add members.
   addMembers() {
-    this.navCtrl.push(AddMembersPage, { groupId: this.groupId });
+    this.nav.push('groups/addmember', { groupId: this.groupId })
+    //this.navCtrl.push(AddMembersPage, { groupId: this.groupId });
   }
 }

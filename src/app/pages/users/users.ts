@@ -1,9 +1,10 @@
 import {Component} from '@angular/core';
-import {AlertController,  NavController, NavParams} from '@ionic/angular';
+import {AlertController} from '@ionic/angular';
 import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {AlertProvider} from '../../services/alert';
+import { Nav } from '../../services/nav';
 
 /**
  * Generated class for the UsersPage page.
@@ -21,8 +22,8 @@ export class UsersPage {
   private users: any;
   private alert;
 
-  constructor(public navCtrl: NavController,
-    public navParams: NavParams,
+  constructor(public navCtrl: Nav,
+   // public navParams: NavParams,
     public loadingProvider: LoadingProvider,
     public alertCtrl: AlertController, 
     public angularDb:AngularFireDatabase, 
@@ -39,46 +40,46 @@ export class UsersPage {
     });
   }
 
-  blockUser(user){
-    this.alert = this.alertCtrl.create({
-      title: 'Confirm to Block this user',
-      message: 'Are you sure you want to block user?',
-      buttons: [
-        {
-          text: 'No'
-        },
-        {
-          text: 'Yes',
-          handler: data => {
-            this.angularDb.object('/accounts/' + user.userId).update({
-              isBlock: true
-            }).then((success) => {
-            })
-           }
-        }
-      ]
-    }).present();
+  async blockUser(user){
+    this.alert = (await this.alertCtrl.create({
+        header: 'Confirm to Block this user',
+        message: 'Are you sure you want to block user?',
+        buttons: [
+            {
+                text: 'No'
+            },
+            {
+                text: 'Yes',
+                handler: data => {
+                    this.angularDb.object('/accounts/' + user.userId).update({
+                        isBlock: true
+                    }).then((success) => {
+                    });
+                }
+            }
+        ]
+    })).present();
   }
-  unblockUser(user){
-    this.alert = this.alertCtrl.create({
-      title: 'Confirm to unBlock this user',
-      message: 'Are you sure you want to unblock user?',
-      buttons: [
-        {
-          text: 'No'
-        },
-        {
-          text: 'Yes',
-          handler: data => {
-            this.angularDb.object('/accounts/' + user.userId).update({
-              isBlock: false
-            }).then((success) => {
-            })
+  async unblockUser(user){
+    this.alert = (await this.alertCtrl.create({
+        header: 'Confirm to unBlock this user',
+        message: 'Are you sure you want to unblock user?',
+        buttons: [
+            {
+                text: 'No'
+            },
+            {
+                text: 'Yes',
+                handler: data => {
+                    this.angularDb.object('/accounts/' + user.userId).update({
+                        isBlock: false
+                    }).then((success) => {
+                    });
 
-           }
-        }
-      ]
-    }).present();
+                }
+            }
+        ]
+    })).present();
   }
 
  

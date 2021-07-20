@@ -1,11 +1,12 @@
 import {Component} from '@angular/core';
-import {AlertController, NavController, NavParams} from '@ionic/angular';
+import {AlertController} from '@ionic/angular';
 import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
 import {AlertProvider} from '../../services/alert';
 import {FirebaseProvider} from '../../services/firebase';
 import {AngularFireDatabase} from 'angularfire2/database';
-import {UserInfoPage} from '../user-info/user-info';
+
+import { Nav } from '../../services/nav';
 
 @Component({
   selector: 'page-search-people',
@@ -22,7 +23,7 @@ export class SearchPeoplePage {
   private searchUser: any;
   // SearchPeoplePage
   // This is the page where the user can search for other users and send a friend request.
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dataProvider: DataProvider, public loadingProvider: LoadingProvider,
+  constructor(public navCtrl: Nav, public dataProvider: DataProvider, public loadingProvider: LoadingProvider,
     public alertCtrl: AlertController, public angularDb:AngularFireDatabase, public alertProvider: AlertProvider, public firebaseProvider: FirebaseProvider) { }
 
   ionViewDidLoad() {
@@ -59,7 +60,7 @@ export class SearchPeoplePage {
 
   // Back
   back() {
-    this.navCtrl.pop();
+    this.navCtrl.popToRoot();
   }
 
   // Get the status of the user in relation to the logged in user.
@@ -86,74 +87,74 @@ export class SearchPeoplePage {
   }
 
   // Send friend request.
-  sendFriendRequest(user) {
-    this.alert = this.alertCtrl.create({
-      title: 'Send Friend Request',
-      message: 'Do you want to send friend request to <b>' + user.name + '</b>?',
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => { }
-        },
-        {
-          text: 'Send',
-          handler: () => {
-            this.firebaseProvider.sendFriendRequest(user.$key);
-          }
-        }
-      ]
-    }).present();
+  async sendFriendRequest(user) {
+    this.alert = (await this.alertCtrl.create({
+        header: 'Send Friend Request',
+        message: 'Do you want to send friend request to <b>' + user.name + '</b>?',
+        buttons: [
+            {
+                text: 'Cancel',
+                handler: data => { }
+            },
+            {
+                text: 'Send',
+                handler: () => {
+                    this.firebaseProvider.sendFriendRequest(user.$key);
+                }
+            }
+        ]
+    })).present();
   }
 
   // Cancel friend request sent.
-  cancelFriendRequest(user) {
-    this.alert = this.alertCtrl.create({
-      title: 'Friend Request Pending',
-      message: 'Do you want to delete your friend request to <b>' + user.name + '</b>?',
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => { }
-        },
-        {
-          text: 'Delete',
-          handler: () => {
-            this.firebaseProvider.cancelFriendRequest(user.$key);
-          }
-        }
-      ]
-    }).present();
+  async cancelFriendRequest(user) {
+    this.alert = (await this.alertCtrl.create({
+        header: 'Friend Request Pending',
+        message: 'Do you want to delete your friend request to <b>' + user.name + '</b>?',
+        buttons: [
+            {
+                text: 'Cancel',
+                handler: data => { }
+            },
+            {
+                text: 'Delete',
+                handler: () => {
+                    this.firebaseProvider.cancelFriendRequest(user.$key);
+                }
+            }
+        ]
+    })).present();
   }
 
   // Accept friend request.
-  acceptFriendRequest(user) {
-    this.alert = this.alertCtrl.create({
-      title: 'Confirm Friend Request',
-      message: 'Do you want to accept <b>' + user.name + '</b> as your friend?',
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => { }
-        },
-        {
-          text: 'Reject Request',
-          handler: () => {
-            this.firebaseProvider.deleteFriendRequest(user.$key);
-          }
-        },
-        {
-          text: 'Accept Request',
-          handler: () => {
-            this.firebaseProvider.acceptFriendRequest(user.$key);
-          }
-        }
-      ]
-    }).present();
+  async acceptFriendRequest(user) {
+    this.alert = (await this.alertCtrl.create({
+        header: 'Confirm Friend Request',
+        message: 'Do you want to accept <b>' + user.name + '</b> as your friend?',
+        buttons: [
+            {
+                text: 'Cancel',
+                handler: data => { }
+            },
+            {
+                text: 'Reject Request',
+                handler: () => {
+                    this.firebaseProvider.deleteFriendRequest(user.$key);
+                }
+            },
+            {
+                text: 'Accept Request',
+                handler: () => {
+                    this.firebaseProvider.acceptFriendRequest(user.$key);
+                }
+            }
+        ]
+    })).present();
   }
 
   // View user.
 viewUser(userId) {
-    this.navCtrl.push(UserInfoPage, {userId: userId});
+  this.navCtrl.push('userinfo', {userId: userId});
   }
 
 }

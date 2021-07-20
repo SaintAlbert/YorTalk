@@ -1,7 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {
-  ActionSheetController, AlertController,IonContent, ModalController, NavController,
-  NavParams
+  ActionSheetController, AlertController,IonContent
 } from '@ionic/angular';
 import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
@@ -20,6 +19,8 @@ import {CaptureError, CaptureImageOptions, MediaCapture, MediaFile} from '@ionic
 import {AudioProvider} from 'ionic-audio';
 import {File} from '@ionic-native/file';
 import _ from 'lodash';
+import { Nav } from '../../services/nav';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -49,11 +50,11 @@ export class MessagePage {
   selectedTrack: any;
   // MessagePage
   // This is the page where the user can chat with a friend.
-  constructor(public navCtrl: NavController, public navParams: NavParams, public actionSheetCtrl: ActionSheetController,
+  constructor(public navCtrl: Nav, public actionSheetCtrl: ActionSheetController, private router: Router,
     private socialSharing: SocialSharing, private mediaCapture: MediaCapture, private file: File,
     public dataProvider: DataProvider, public angularDb: AngularFireDatabase, public admob: AdMobFree,
     public alertProvider: AlertProvider,
-    public loadingProvider: LoadingProvider, public alertCtrl: AlertController, public imageProvider: ImageProvider, public modalCtrl: ModalController, public camera: Camera,
+    public loadingProvider: LoadingProvider, public alertCtrl: AlertController, public imageProvider: ImageProvider, public camera: Camera,
     public keyboard: Keyboard, public videoProvider: VideoProvider, private _audioProvider: AudioProvider) {
     // this.myTracks = [{
     //    src: 'https://archive.org/download/JM2013-10-05.flac16/V0/jm2013-10-05-t12-MP3-V0.mp3',
@@ -64,7 +65,7 @@ export class MessagePage {
   }
 
   ionViewDidLoad() {
-    this.userId = this.navParams.get('userId');
+    this.userId = this.navCtrl.get('userId');
     this.launchInterstitial()
     // Get friend details.
     this.dataProvider.getUser(this.userId).subscribe((user) => {
@@ -188,7 +189,8 @@ export class MessagePage {
 
   // Check if currentPage is active, then update user's messagesRead.
   setMessagesRead(messages) {
-    if (this.navCtrl.getActive().instance instanceof MessagePage) {
+    //if (this.navCtrl.getActive().instance instanceof MessagePage) {
+    if (this.router.url !== "/home") {
       // Update user's messagesRead on database.
       var totalMessagesCount;
       this.dataProvider.getConversationMessages(this.conversationId).subscribe((messages) => {
@@ -244,7 +246,7 @@ export class MessagePage {
 
   // Back
   back() {
-    this.navCtrl.pop();
+    this.navCtrl.pop("messages");
   }
 
   // Send message, if there's no conversation yet, create a new conversation.
@@ -306,41 +308,41 @@ export class MessagePage {
 
   // View user info
   viewUser(userId) {
-    this.navCtrl.push(UserInfoPage, { userId: userId });
+    this.navCtrl.push('userinfo', { userId: userId });
   }
 
   // Send photoMessage.
-  sendPhoto() {
-    this.alert = this.alertCtrl.create({
-      title: 'Send Photo Message',
-      message: 'Do you want to take a photo or choose from your photo gallery?',
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => { }
-        },
-        {
-          text: 'Choose from Gallery',
-          handler: () => {
-            // Upload image then return the url.
-            this.imageProvider.uploadPhotoMessage(this.conversationId, this.camera.PictureSourceType.PHOTOLIBRARY).then((url) => {
-              // Process image message.
-              this.sendPhotoMessage(url);
-            });
-          }
-        },
-        {
-          text: 'Take Photo',
-          handler: () => {
-            // Upload image then return the url.
-            this.imageProvider.uploadPhotoMessage(this.conversationId, this.camera.PictureSourceType.CAMERA).then((url) => {
-              // Process image message.
-              this.sendPhotoMessage(url);
-            });
-          }
-        }
-      ]
-    }).present();
+  async sendPhoto() {
+    this.alert = (await this.alertCtrl.create({
+        header: 'Send Photo Message',
+        message: 'Do you want to take a photo or choose from your photo gallery?',
+        buttons: [
+            {
+                text: 'Cancel',
+                handler: data => { }
+            },
+            {
+                text: 'Choose from Gallery',
+                handler: () => {
+                    // Upload image then return the url.
+                    this.imageProvider.uploadPhotoMessage(this.conversationId, this.camera.PictureSourceType.PHOTOLIBRARY).then((url) => {
+                        // Process image message.
+                        this.sendPhotoMessage(url);
+                    });
+                }
+            },
+            {
+                text: 'Take Photo',
+                handler: () => {
+                    // Upload image then return the url.
+                    this.imageProvider.uploadPhotoMessage(this.conversationId, this.camera.PictureSourceType.CAMERA).then((url) => {
+                        // Process image message.
+                        this.sendPhotoMessage(url);
+                    });
+                }
+            }
+        ]
+    })).present();
   }
 
   // Process photoMessage on database.
@@ -394,17 +396,17 @@ export class MessagePage {
 
   // Enlarge image messages.
   enlargeImage(img) {
-    let imageModal = this.modalCtrl.create(ImageModalPage, { img: img });
-    imageModal.present();
+    this.navCtrl.openModal(ImageModalPage, { img: img });
+   
   }
 
   videoCall() {
     this.videoProvider.MakeCall(this.toUserUniqueId)
   }
 
-  share(message) {
+  async share(message) {
     let actionSheet = this.actionSheetCtrl.create({
-      title: 'Share Message',
+      header: 'Share Message',
       buttons: [
         {
           text: 'Share',
@@ -444,7 +446,7 @@ export class MessagePage {
       ]
     });
 
-    actionSheet.present();
+    (await actionSheet).present();
   }
 
   audioRec() {

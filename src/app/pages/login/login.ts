@@ -4,6 +4,7 @@ import {LoginProvider} from '../../services/login';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Validator} from '../../validator';
 import {InAppBrowser} from '@ionic-native/in-app-browser';
+import { Nav } from '../../services/nav';
 
 
 declare var AccountKitPlugin;
@@ -20,7 +21,7 @@ export class LoginPage {
   // LoginPage
   // This is the page where the user can register and login to our app.
   // It's important to initialize the loginProvider here and setNavController as it will direct the routes of our app.
-  constructor(public navCtrl: NavController, 
+  constructor(public navCtrl: Nav, 
     public loginProvider: LoginProvider, 
     private iab: InAppBrowser,
     public formBuilder: FormBuilder) {

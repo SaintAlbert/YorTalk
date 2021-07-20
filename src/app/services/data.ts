@@ -1,9 +1,10 @@
 import {Injectable} from "@angular/core";
-import {AngularFireDatabase} from "angularfire2/database";
+import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
 import * as firebase from "firebase";
 import {Contacts} from "@ionic-native/contacts";
 import {Storage} from "@ionic/storage";
 import async from "async";
+import { map } from 'rxjs/operators';
 import _ from 'lodash';
 
 @Injectable({
@@ -78,25 +79,25 @@ export class DataProvider {
   }
 
   // Get logged in user data
-  getCurrentUser():any  {
+  getCurrentUser():FirebaseObjectObservable<any>  {
     return this.angularDb.object(
       "/accounts/" + firebase.auth().currentUser.uid
     );
   }
 
   // Get user by their userId
-  getUser(userId):any {
+  getUser(userId):FirebaseObjectObservable<any> {
     return this.angularDb.object("/accounts/" + userId);
   }
 
 
   // Get requests given the userId.
-  getRequests(userId): any  {
+  getRequests(userId): FirebaseObjectObservable<any>  {
     return this.angularDb.object("/requests/" + userId);
   }
 
   // Get friend requests given the userId.
-  getFriendRequests(userId): any  {
+  getFriendRequests(userId): FirebaseListObservable<any[]>  {
     return this.angularDb.list("/requests", {
       query: {
         orderByChild: "receiver",
@@ -106,106 +107,106 @@ export class DataProvider {
   }
 
   // Get conversation given the conversationId.
-  getConversation(conversationId): any  {
+  getConversation(conversationId): FirebaseObjectObservable<any>  {
     return this.angularDb.object("/conversations/" + conversationId);
   }
 
   // Get conversations of the current logged in user.
-  getConversations(): any {
+  getConversations(): FirebaseListObservable<any[]> {
     return this.angularDb.list(
       "/accounts/" + firebase.auth().currentUser.uid + "/conversations"
     );
   }
 
   // Get messages of the conversation given the Id.
-  getConversationMessages(conversationId): any  {
+  getConversationMessages(conversationId): FirebaseObjectObservable<any>  {
     return this.angularDb.object(
       "/conversations/" + conversationId + "/messages"
     );
   }
 
   // Get messages of the group given the Id.
-  getGroupMessages(groupId): any  {
+  getGroupMessages(groupId): FirebaseObjectObservable<any>  {
     return this.angularDb.object("/groups/" + groupId + "/messages");
   }
 
   // Get groups of the logged in user.
-  getGroups(): any  {
+  getGroups(): FirebaseListObservable<any[]>  {
     return this.angularDb.list(
       "/accounts/" + firebase.auth().currentUser.uid + "/groups"
     );
   }
 
   // Get group info given the groupId.
-  getGroup(groupId): any  {
+  getGroup(groupId): FirebaseObjectObservable<any>  {
     return this.angularDb.object("/groups/" + groupId);
   }
 
   // Get Timeline of user
-  getTimelines(): any  {
+  getTimelines(): FirebaseListObservable<any[]>  {
     return this.angularDb.list(
       "/accounts/" + firebase.auth().currentUser.uid + "/timeline"
     );
   }
 
   // Get Timeline by user id
-  getTimelineByUid(id): any  {
+  getTimelineByUid(id): FirebaseObjectObservable<any>  {
     return this.angularDb.object(
       "/accounts/" + id + "/timeline"
     );
   }
 
   // Get Timeline post
-  getTimelinePost(): any  {
+  getTimelinePost(): FirebaseListObservable<any[]>  {
     return this.angularDb.list("/timeline");
   }
 
-  getAllReportedPost(): any  {
+  getAllReportedPost(): FirebaseListObservable<any[]>  {
     return this.angularDb.list("/reportPost");
 
   }
 
   // Get time line by id
-  getTimeline(timelineId): any  {
+  getTimeline(timelineId): FirebaseObjectObservable<any>  {
     return this.angularDb.object("/timeline/" + timelineId);
   }
 
   // Get Friend List
-  getFriends(): any {
+  getFriends(): FirebaseListObservable<any> {
     return this.angularDb.list(
       "/accounts/" + firebase.auth().currentUser.uid + "/friends"
     );
   }
 
   // Get comments list
-  getComments(postId): any  {
+  getComments(postId): FirebaseListObservable<any>  {
     return this.angularDb.list("/comments/" + postId);
   }
 
   // Get likes
-  getLike(postId): any  {
+  getLike(postId): FirebaseListObservable<any>  {
     return this.angularDb.list("/likes/" + postId);
   }
 
-  postLike(postId): any  {
+  postLike(postId): FirebaseObjectObservable<any>  {
     return this.angularDb.object("/likes/" + postId);
   }
 
   // Get likes
-  getdisLike(postId): any  {
+  getdisLike(postId): FirebaseListObservable<any>  {
     return this.angularDb.list("/dislikes/" + postId);
   }
 
-  postdisLike(postId): any  {
+  postdisLike(postId): FirebaseObjectObservable<any>  {
     return this.angularDb.object("/dislikes/" + postId);
   }
   // post Comments
-  postComments(postId) {
+  postComments(postId): FirebaseObjectObservable<any>{
     return this.angularDb.object("/comments/" + postId);
   }
 
   // report post to admin
-  getReportPost(postId): any  {
+  getReportPost(postId): FirebaseObjectObservable<any>  {
     console.log("postId", postId)
     return this.angularDb.object("/reportPost/" + postId);
   }
@@ -271,6 +272,7 @@ export class DataProvider {
   setContactWithCountryCode(countryCode) {
     this.countryCode = countryCode;
     return new Promise((resolve, reject) => {
+     
       async.map(
         this.userContactsList,
         (item, CB) => {
@@ -375,7 +377,7 @@ export class DataProvider {
   }
 
   removePost(post) {
-    this.getUser(post.postBy).take(1).subscribe((account) => {
+    this.getUser(post.postBy).take(1).subscribe((account:any) => {
       console.log("before timeline", timeline)
       var timeline = account.timeline;
 
@@ -408,7 +410,7 @@ export class DataProvider {
     /**
      * Remove friend id from friend account
      */
-    this.getUser(userId).take(1).subscribe((account) => {
+    this.getUser(userId).take(1).subscribe((account:any) => {
       var friends = account.friends;
       console.log("==friend List before", friends)
       if(friends){
@@ -426,7 +428,7 @@ export class DataProvider {
    /**
     * Remove friend id from login user account
     */
-    this.getUser(firebase.auth().currentUser.uid).take(1).subscribe((account) => {
+    this.getUser(firebase.auth().currentUser.uid).take(1).subscribe((account:any) => {
       var friends = account.friends;
       console.log("==user List before", friends)
       if(friends){

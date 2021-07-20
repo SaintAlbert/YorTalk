@@ -1,10 +1,11 @@
 import {Component} from '@angular/core';
-import { AlertController, NavController, NavParams } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
 import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
 import {AngularFireModule} from 'angularfire2';
 import {AlertProvider} from '../../services/alert';
 import {AngularFireDatabase} from 'angularfire2/database';
+import { Nav } from '../../services/nav';
 
 @Component({
   selector: 'page-add-members',
@@ -23,8 +24,10 @@ export class AddMembersPage {
   // AddMemberPage
   // This is the page where the user can add their friends to an existing group.
   // The user can only add their friends to the group.
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dataProvider: DataProvider,
-    public loadingProvider: LoadingProvider, public angularfire: AngularFireModule,public angularDb:AngularFireDatabase, public alertCtrl: AlertController,
+  constructor( public navParams: Nav, public dataProvider: DataProvider,
+    public loadingProvider: LoadingProvider,
+    public angularfire: AngularFireModule,
+    public angularDb: AngularFireDatabase, public alertCtrl: AlertController,
     public alertProvider: AlertProvider) { }
 
   ionViewDidLoad() {
@@ -155,7 +158,8 @@ export class AddMembersPage {
 
   // Back
   back() {
-    this.navCtrl.pop();
+    //this.navCtrl.pop();
+    this.navParams.pop('groups');
   }
 
   // Get names of the members to be added to the group.
@@ -168,48 +172,48 @@ export class AddMembersPage {
   }
 
   // Confirm adding of new members, afterwards add the members.
-  done() {
-    this.alert = this.alertCtrl.create({
-      title: 'Add Members',
-      message: 'Are you sure you want to add <b>' + this.getNames() + '</b> to the group?',
-      buttons: [
-        {
-          text: 'Cancel'
-        },
-        {
-          text: 'Add',
-          handler: data => {
-            // Proceed
-            this.loadingProvider.show();
-            this.toAdd.forEach((friend) => {
-              // Add groupInfo to each friend added to the group.
-              this.angularDb.object('/accounts/' + friend.$key + '/groups/' + this.groupId).update({
-                messagesRead: 0
-              });
-              // Add friend as members of the group.
-              this.group.members.push(friend.$key);
-              // Add system message that the members are added to the group.
-              this.group.messages.push({
-                date: new Date().toString(),
-                sender: this.user.$key,
-                type: 'system',
-                message: this.user.name + ' has added ' + this.getNames() + ' to the group.',
-                icon: 'md-contacts'
-              });
-            });
-            // Update group data on the database.
-            this.dataProvider.getGroup(this.groupId).update({
-              members: this.group.members,
-              messages: this.group.messages
-            }).then(() => {
-              // Back.
-              this.loadingProvider.hide();
-              this.navCtrl.pop();
-            });
-          }
-        }
-      ]
-    }).present();
+  async done() {
+    this.alert = (await this.alertCtrl.create({
+        header: 'Add Members',
+        message: 'Are you sure you want to add <b>' + this.getNames() + '</b> to the group?',
+        buttons: [
+            {
+                text: 'Cancel'
+            },
+            {
+                text: 'Add',
+                handler: data => {
+                    // Proceed
+                    this.loadingProvider.show();
+                    this.toAdd.forEach((friend) => {
+                        // Add groupInfo to each friend added to the group.
+                        this.angularDb.object('/accounts/' + friend.$key + '/groups/' + this.groupId).update({
+                            messagesRead: 0
+                        });
+                        // Add friend as members of the group.
+                        this.group.members.push(friend.$key);
+                        // Add system message that the members are added to the group.
+                        this.group.messages.push({
+                            date: new Date().toString(),
+                            sender: this.user.$key,
+                            type: 'system',
+                            message: this.user.name + ' has added ' + this.getNames() + ' to the group.',
+                            icon: 'md-contacts'
+                        });
+                    });
+                    // Update group data on the database.
+                    this.dataProvider.getGroup(this.groupId).update({
+                        members: this.group.members,
+                        messages: this.group.messages
+                    }).then(() => {
+                        // Back.
+                        this.loadingProvider.hide();
+                      this.navParams.pop('groups');
+                    });
+                }
+            }
+        ]
+    })).present();
   }
 
 }

@@ -7,8 +7,8 @@ import { DataProvider } from '../../services/data';
 import { ImageProvider } from '../../services/image';
 import { LoadingProvider } from '../../services/loading';
 import * as firebase from 'firebase';
-import { UserInfoPage } from '../user-info/user-info';
-import { GroupInfoPage } from '../group-info/group-info';
+//import { UserInfoPage } from '../user-info/user-info';
+//import { GroupInfoPage } from '../group-info/group-info';
 import { ImageModalPage } from '../image-modal/image-modal';
 import { AngularFireModule } from 'angularfire2';
 import { Camera } from '@ionic-native/camera';
@@ -19,6 +19,8 @@ import _ from 'lodash'
 import { AudioProvider } from 'ionic-audio';
 import { CaptureError, CaptureImageOptions, MediaCapture, MediaFile } from '@ionic-native/media-capture';
 import { File } from '@ionic-native/file';
+import { Router } from '@angular/router';
+import { Nav } from '../../services/nav';
 
 @Component({
   selector: 'page-group',
@@ -46,11 +48,11 @@ export class GroupPage {
   userId;
   // GroupPage
   // This is the page where the user can chat with other group members and view group info.
-  constructor(public navCtrl: NavController, public navParams: NavParams, public dataProvider: DataProvider,
-    public modalCtrl: ModalController, public angularfire: AngularFireModule, public angularDb: AngularFireDatabase, public alertCtrl: AlertController,
+  constructor(public navCtrl: Nav, public dataProvider: DataProvider,
+     public angularfire: AngularFireModule, public angularDb: AngularFireDatabase, public alertCtrl: AlertController,
     public imageProvider: ImageProvider, public loadingProvider: LoadingProvider, public camera: Camera, public keyboard: Keyboard,
     private socialSharing: SocialSharing, public actionSheetCtrl: ActionSheetController, private _audioProvider: AudioProvider,
-    private mediaCapture: MediaCapture, private file: File, ) {
+    private mediaCapture: MediaCapture, private file: File, private router: Router,private nav:Nav ) {
     this.myTracks = [{
       src: 'https://archive.org/download/JM2013-10-05.flac16/V0/jm2013-10-05-t12-MP3-V0.mp3',
     },
@@ -61,7 +63,7 @@ export class GroupPage {
 
   ionViewDidLoad() {
     // Get group details
-    this.groupId = this.navParams.get('groupId');
+    this.groupId = this.navCtrl.get('groupId');
     this.userId = firebase.auth().currentUser.uid;
     this.subscription = this.dataProvider.getGroup(this.groupId).subscribe((group) => {
       if (group.$exists()) {
@@ -262,7 +264,8 @@ export class GroupPage {
 
   // Check if currentPage is active, then update user's messagesRead.
   setMessagesRead(messages) {
-    if (this.navCtrl..getActive().instance instanceof GroupPage) {
+    //if ( this.navCtrl.getActive().instance instanceof GroupPage) {
+    if (this.router.url === "/groups") {
       // Update user's messagesRead on database.
       this.angularDb.object('/accounts/' + firebase.auth().currentUser.uid + '/groups/' + this.groupId).update({
         messagesRead: this.messages.length
@@ -281,7 +284,7 @@ export class GroupPage {
   // Back
   back() {
     this.subscription.unsubscribe();
-    this.navCtrl.pop();
+    this.navCtrl.pop('groups');
   }
 
   // Scroll to bottom of page after a short delay.
@@ -329,7 +332,8 @@ export class GroupPage {
 
   // View user info
   viewUser(userId) {
-    this.navCtrl.push(UserInfoPage, { userId: userId });
+    this.nav.push('userinfo', { userId: userId })
+    //this.navCtrl.push(UserInfoPage, { userId: userId });
   }
 
   // Send text message to the group.
@@ -353,8 +357,9 @@ export class GroupPage {
 
   // Enlarge image messages.
   async enlargeImage(img) {
-    let imageModal = await this.modalCtrl.create(ImageModalPage, { img: img });
-    imageModal.present();
+    this.nav.openModal(ImageModalPage, { img: img })
+    //let imageModal = await this.modalCtrl.create(ImageModalPage, { img: img });
+    //imageModal.present();
   }
 
   // Send photoMessage.
@@ -409,7 +414,8 @@ export class GroupPage {
 
   // View group info.
   groupInfo() {
-    this.navCtrl.push(GroupInfoPage, { groupId: this.groupId });
+    this.nav.push('groups/group-info', { groupId: this.groupId });
+    //this.navCtrl.push(GroupInfoPage, { groupId: this.groupId });
   }
 
   audioRec() {

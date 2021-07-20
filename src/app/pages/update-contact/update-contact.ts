@@ -1,11 +1,12 @@
 import {Component, NgZone} from '@angular/core';
-import {NavParams, Platform, ViewController} from '@ionic/angular';
+import {Platform} from '@ionic/angular';
 import {CountryCodeProvider} from '../../services/country-code';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {AlertProvider} from '../../services/alert';
 import {LoadingProvider} from '../../services/loading';
 
 import {DataProvider} from '../../services/data';
+import { Nav } from '../../services/nav';
 
 @Component({
   selector: 'page-update-contact',
@@ -21,9 +22,8 @@ export class UpdateContactPage {
 	constructor(
 	    public zone: NgZone,
 		public platform: Platform,
-	    public params: NavParams,
 	    public loadingProvider: LoadingProvider,
-	    public viewCtrl: ViewController,
+	    public viewCtrl: Nav,
 	    public dataProvider: DataProvider,
 	    public alertProvider: AlertProvider,
         public angularDb:AngularFireDatabase,
@@ -42,7 +42,7 @@ export class UpdateContactPage {
 	}
 
 	dismiss() {
-	    this.viewCtrl.dismiss();
+	    this.viewCtrl.closeModal();
 	}
 
 	updateContact(){
@@ -61,7 +61,7 @@ export class UpdateContactPage {
 	            phoneNumber: phoneNumber
 	          }).then((success) => {
 	            this.alertProvider.showPhoneNumberUpdatedMessage();
-	            this.viewCtrl.dismiss();
+	            this.viewCtrl.closeModal();
 	          }).catch((error) => {
 	            this.alertProvider.showErrorMessage('profile/error-update-profile');
 	          });

@@ -1,9 +1,10 @@
 import {Component} from '@angular/core';
-import {App, NavController, NavParams} from '@ionic/angular';
+//import {App, NavController, NavParams} from '@ionic/angular';
 import {SearchPeoplePage} from '../search-people/search-people';
 import {MessagePage} from '../message/message';
 import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
+import { Nav } from '../../services/nav';
 
 @Component({
   selector: 'page-new-message',
@@ -16,7 +17,7 @@ export class NewMessagePage {
 
   // NewMessagePage
   // This is the page where the user are asked to select a friend whom they want to start a conversation with.
-  constructor(public navCtrl: NavController, public navParams: NavParams, public app: App, public dataProvider: DataProvider,
+  constructor(public navCtrl: Nav,  public dataProvider: DataProvider,
     public loadingProvider: LoadingProvider) { }
 
   ionViewDidLoad() {
@@ -41,7 +42,7 @@ export class NewMessagePage {
 
   // Back
   back() {
-    this.navCtrl.pop();
+    this.navCtrl.pop("messages");
   }
 
   // Add or update friend for real-time sync.
@@ -65,11 +66,12 @@ export class NewMessagePage {
 
   // Search people.
   searchPeople() {
-    this.navCtrl.push(SearchPeoplePage);
+    //this.navCtrl.push(SearchPeoplePage);
+    this.navCtrl.push('searchpeople');
   }
 
   // Open chat with this user.
   message(userId) {
-    this.navCtrl.push(MessagePage, { userId: userId });
+    this.navCtrl.push('messages/message', { userId: userId });
   }
 }

@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AlertController, App, NavController, NavParams} from '@ionic/angular';
+import {AlertController} from '@ionic/angular';
 import {LogoutProvider} from '../../services/logout';
 import {LoadingProvider} from '../../services/loading';
 import {AlertProvider} from '../../services/alert';
@@ -9,6 +9,7 @@ import {OauthCordova} from 'ng2-cordova-oauth/platform/cordova';
 import {Login} from '../../login';
 import {GooglePlus} from '@ionic-native/google-plus';
 import {LoginPage} from '../login/login';
+import { Nav } from '../../services/nav';
 
 @Component({
   selector: 'page-trial',
@@ -26,10 +27,10 @@ export class TrialPage {
     appScope: ["email"]
   });
 
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public navParams: NavParams, public app: App,
+  constructor(public navCtrl: Nav, public alertCtrl: AlertController, 
     public logoutProvider: LogoutProvider, public loadingProvider: LoadingProvider, public alertProvider: AlertProvider, public googlePlus: GooglePlus) {
     // Hook our logout provider with the app.
-    this.logoutProvider.setApp(this.app);
+    this.logoutProvider.setApp(this.navCtrl);
     this.oauth = new OauthCordova();
   }
 
@@ -44,12 +45,12 @@ export class TrialPage {
           // Check if emailVerification is enabled, if enabled, check and redirect to verificationPage
           if (Login.emailVerification) {
             if (firebase.auth().currentUser.emailVerified) {
-              this.navCtrl.setRoot(Login.homePage);
+              this.navCtrl.setRoot('tabs');
             } else {
-              this.navCtrl.setRoot(Login.verificationPage);
+              this.navCtrl.setRoot('verification');
             }
           } else {
-            this.navCtrl.setRoot(Login.homePage);
+            this.navCtrl.setRoot('tabs');
           }
         })
         .catch((error) => {
@@ -74,12 +75,12 @@ export class TrialPage {
           // Check if emailVerification is enabled, if enabled, check and redirect to verificationPage
           if (Login.emailVerification) {
             if (firebase.auth().currentUser.emailVerified) {
-              this.navCtrl.setRoot(Login.homePage);
+              this.navCtrl.setRoot('tabs');
             } else {
-              this.navCtrl.setRoot(Login.verificationPage);
+              this.navCtrl.setRoot('verification');
             }
           } else {
-            this.navCtrl.setRoot(Login.homePage);
+            this.navCtrl.setRoot('tabs');
           }
         })
         .catch((error) => {
@@ -92,21 +93,23 @@ export class TrialPage {
   }
 
   // Log the user out.
-  logout() {
-    this.alert = this.alertCtrl.create({
-      title: 'Confirm Logout',
-      message: 'Are you sure you want to logout?',
-      buttons: [
-        {
-          text: 'Cancel'
-        },
-        {
-          text: 'Logout',
-          handler: data => { this.logoutProvider.logout().then(res=>{
-              this.navCtrl.setRoot(LoginPage)
-          }); }
-        }
-      ]
-    }).present();
+  async logout() {
+    this.alert = (await this.alertCtrl.create({
+        header: 'Confirm Logout',
+        message: 'Are you sure you want to logout?',
+        buttons: [
+            {
+                text: 'Cancel'
+            },
+            {
+                text: 'Logout',
+                handler: data => {
+                    this.logoutProvider.logout().then(res => {
+                        this.navCtrl.setRoot('login');
+                    });
+                }
+            }
+        ]
+    })).present();
   }
 }

@@ -3,7 +3,7 @@ import {Facebook} from "ng2-cordova-oauth/core";
 import {OauthCordova} from "ng2-cordova-oauth/platform/cordova";
 import * as firebase from "firebase";
 import {Login} from "../login";
-import {NavController} from "ionic-angular";
+//import {NavController} from "ionic-angular";
 import {LoadingProvider} from "./loading";
 import {AlertProvider} from "./alert";
 import {GooglePlus} from "@ionic-native/google-plus";
@@ -11,6 +11,7 @@ import {AngularFireDatabase} from "angularfire2/database";
 import {DataProvider} from "./data";
 import {VideoProvider} from "./video";
 import {asYouType, format, getPhoneCode, parse} from "libphonenumber-js";
+import { Nav } from "./nav";
 
 // import { Diagnostic } from '@ionic-native/diagnostic';
 
@@ -27,7 +28,7 @@ export class LoginProvider {
   // It's important to hook this provider up with your navCtrl
   // In the constructor of the controller that uses this provider, call setNavController(navCtrl).
   private oauth: OauthCordova;
-  private navCtrl: NavController;
+  private navCtrl: Nav;
   private facebookProvider = new Facebook({
     clientId: Login.facebookAppId,
     appScope: ["email"]
@@ -358,7 +359,8 @@ export class LoginProvider {
               this.loadingProvider.hide();
               this.videoProvider.InitializingRTC(tempData);
               this.dataProvider.setData("userData", tempData);
-              this.navCtrl.setRoot(Login.homePage, { animate: false });
+              //this.navCtrl.setRoot(Login.homePage, { animate: false });
+              this.navCtrl.setRoot('tabs');
             });
         } else {
           let _userData = account.val();
@@ -376,7 +378,8 @@ export class LoginProvider {
           if (!_userData.isBlock) {
             this.videoProvider.InitializingRTC(account.val());
             this.dataProvider.setData("userData", account.val());
-            this.navCtrl.setRoot(Login.homePage, { animate: false });
+            //this.navCtrl.setRoot(Login.homePage, { animate: false });
+            this.navCtrl.setRoot('tabs');
           } else {
             this.alertProvider.showAlert(
               "Login Failed",

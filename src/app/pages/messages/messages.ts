@@ -1,11 +1,12 @@
 import {Component} from '@angular/core';
-import {App, NavController, NavParams} from '@ionic/angular';
+//import {App, NavController, NavParams} from '@ionic/angular';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {LoadingProvider} from '../../services/loading';
 import {DataProvider} from '../../services/data';
 import {NewMessagePage} from '../new-message/new-message';
 import {MessagePage} from '../message/message';
 import * as firebase from 'firebase';
+import { Nav } from '../../services/nav';
 
 @Component({
   selector: 'page-messages',
@@ -19,7 +20,7 @@ export class MessagesPage {
   // MessagesPage
   // This is the page where the user can see their current conversations with their friends.
   // The user can also start a new conversation.
-  constructor(public navCtrl: NavController, public navParams: NavParams, public angularDb:AngularFireDatabase, public loadingProvider: LoadingProvider, public app: App, public dataProvider: DataProvider) { }
+  constructor(public navCtrl: Nav,  public angularDb:AngularFireDatabase, public loadingProvider: LoadingProvider, public dataProvider: DataProvider) { }
 
   ionViewDidLoad() {
     // Create userData on the database if it doesn't exist yet.
@@ -124,12 +125,14 @@ export class MessagesPage {
 
   // New conversation.
   newMessage() {
-    this.app.getRootNav().push(NewMessagePage);
+    //this.app.getRootNav().push(NewMessagePage);
+    this.navCtrl.push('messages/new-message')
   }
 
   // Open chat with friend.
   message(userId) {
-    this.app.getRootNav().push(MessagePage, { userId: userId });
+    this.navCtrl.push('messages/message', { userId: userId })
+    //this.app.getRootNav().push(MessagePage, { userId: userId });
   }
 
   // Return class based if conversation has unreadMessages or not.

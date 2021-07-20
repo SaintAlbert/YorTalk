@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
-import { FriendsPage } from './friends';
-
-import { FriendsPageRoutingModule } from './friends-routing.module';
+import { NewGroupPage } from './new-group';
 
 
 @NgModule({
@@ -12,8 +10,8 @@ import { FriendsPageRoutingModule } from './friends-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    FriendsPageRoutingModule
+  
   ],
-  declarations: [FriendsPage]
+  declarations: [NewGroupPage]
 })
-export class FriendsPageModule {}
+export class NewGroupPageModule {}

@@ -1,10 +1,12 @@
 import {Injectable} from '@angular/core';
-import {AlertController, Events, ModalController, Platform} from '@ionic/angular';
+import {AlertController, Platform} from '@ionic/angular';
 import {NativeAudio} from '@ionic-native/native-audio';
 
 import 'rxjs/add/operator/map';
 import {DataProvider} from './data';
 import {AlertProvider} from './alert';
+import { Events } from './events';
+import { Nav } from './nav';
 
 declare var apiRTC: any;
 declare var cordova:any;
@@ -23,7 +25,7 @@ export class VideoProvider {
   alert;
   constructor(public platform: Platform,
     public alertCtrl:AlertController,
-    public modalCtrl:ModalController,
+    public modalCtrl:Nav,
     public events:Events,
     public dataProvider:DataProvider,
     public alertProvider:AlertProvider,
@@ -124,11 +126,12 @@ export class VideoProvider {
         }, (err)=>{
         });
         this.alert = this.alertCtrl.create({
-        title: 'INCOMING CALL ',
-        // subTitle: '<img src="assets/calling.gif"><br><p>Call from 96325 ...</p>',
-        subTitle: '<img src="assets/call-me.gif"><br><p>Call from '+e.detail.callerNickname+' ...</p>',
-        cssClass:'outgoingcall incomingcall',
-        enableBackdropDismiss:false,
+          header: 'INCOMING CALL ',
+          // subTitle: '<img src="assets/calling.gif"><br><p>Call from 96325 ...</p>',
+          subHeader: '<img src="assets/call-me.gif"><br><p>Call from ' + e.detail.callerNickname + ' ...</p>',
+          cssClass: 'outgoingcall incomingcall',
+          backdropDismiss: false,
+        //enableBackdropDismiss:false,
         buttons: [
           {
             text: 'Reject',
@@ -177,8 +180,8 @@ export class VideoProvider {
       //this.incomingCallId = callId;
       this.dataProvider.setIncomingCallId(callId)
       this.alert = this.alertCtrl.create({
-          title:"OUTGOING CALL",
-          subTitle: '<img src="assets/call-me.gif"><br><p>Call to '+callId+'</p>',
+        header: "OUTGOING CALL",
+        subHeader: '<img src="assets/call-me.gif"><br><p>Call to ' + callId + '</p>',
           buttons: [ {
             text: 'Dismiss',
             role: 'cancel',
@@ -186,8 +189,9 @@ export class VideoProvider {
               this.RejectCall(callId)
             }
           }],
-          cssClass:'outgoingcall ',
-          enableBackdropDismiss:false
+        cssClass: 'outgoingcall ',
+        backdropDismiss: false
+          //enableBackdropDismiss:false
         });
       this.alert.present();
 

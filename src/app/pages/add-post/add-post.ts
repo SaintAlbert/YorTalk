@@ -9,6 +9,7 @@ import {ImageProvider} from '../../services/image';
 import {AlertProvider} from '../../services/alert';
 import {GoogleMaps} from '@ionic-native/google-maps';
 import {Geolocation} from '@ionic-native/geolocation';
+import { Nav } from '../../services/nav';
 
 declare var google:any;
 
@@ -33,8 +34,9 @@ export class AddPostPage {
   @ViewChild('map') mapElement: ElementRef;
   map: any;
 
-  constructor(public navCtrl: NavController,
-    public navParams: NavParams,
+  constructor(
+    public navCtrl: Nav,
+    //public navParams: NavParams,
     public loadingProvider: LoadingProvider,
     public dataProvider: DataProvider,
     public angularDb:AngularFireDatabase,
@@ -71,7 +73,7 @@ export class AddPostPage {
           this.firebaseProvider.timeline(timelineId);
           this.alertProvider.showToast('Add post successfully ..');
           this.loadingProvider.hide();
-          this.navCtrl.pop();
+          this.navCtrl.pop('timeline');
 
         })
       })
@@ -89,7 +91,8 @@ export class AddPostPage {
         this.firebaseProvider.timeline(timelineId);
         this.alertProvider.showToast('Add post successfully ..');
         this.loadingProvider.hide();
-        this.navCtrl.pop();
+        //this.navCtrl.pop();
+        this.navCtrl.pop('timeline');
 
       })
     }else{
@@ -105,7 +108,8 @@ export class AddPostPage {
         this.firebaseProvider.timeline(timelineId);
         this.alertProvider.showToast('Add post successfully ..')
         this.loadingProvider.hide();
-        this.navCtrl.pop();
+        //this.navCtrl.pop();
+        this.navCtrl.pop('timeline');
       })
     }
   }

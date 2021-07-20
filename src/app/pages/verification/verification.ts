@@ -1,11 +1,12 @@
 import {Component} from "@angular/core";
-import {AlertController, App, NavController, NavParams} from "ionic-angular";
+import { AlertController} from "@ionic/angular";
 import {LogoutProvider} from "../../services/logout";
 import {LoadingProvider} from "../../services/loading";
 import {AlertProvider} from "../../services/alert";
 import {AngularFireDatabase} from "angularfire2/database";
 import {Validator} from "../../validator";
 import * as firebase from "firebase";
+import { Nav } from "../../services/nav";
 
 @Component({
   selector: "page-verification",
@@ -24,17 +25,15 @@ export class VerificationPage {
   private isLoggingOut;
 
   constructor(
-    public navCtrl: NavController,
+    public navCtrl: Nav,
     public alertCtrl: AlertController,
-    public navParams: NavParams,
-    public app: App,
     public logoutProvider: LogoutProvider,
     public loadingProvider: LoadingProvider,
     public angularDb: AngularFireDatabase,
     public alertProvider: AlertProvider
   ) {
     // Hook our logout provider with the app.
-    this.logoutProvider.setApp(this.app);
+    this.logoutProvider.setApp(this.navCtrl);
   }
 
   ionViewDidLoad() {
@@ -126,103 +125,103 @@ export class VerificationPage {
   }
 
   // Set the user email
-  setEmail() {
-    this.alert = this.alertCtrl
-      .create({
-        title: "Change Email Address",
-        message: "Please enter a new email address.",
-        inputs: [
-          {
-            name: "email",
-            placeholder: "Your Email Address",
-            value: firebase.auth().currentUser.email
-          }
-        ],
-        buttons: [
-          {
-            text: "Cancel",
-            handler: data => {}
-          },
-          {
-            text: "Save",
-            handler: data => {
-              let email = data["email"];
-              // Check if entered email is different from the current email
-              if (firebase.auth().currentUser.email != email) {
-                // Check if email is valid.
-                if (Validator.profileEmailValidator.pattern.test(email)) {
-                  this.loadingProvider.show();
-                  // Update email on Firebase
-                  firebase
-                    .auth()
-                    .currentUser.updateEmail(email)
-                    .then(success => {
-                      Validator.profileEmailValidator.pattern.test(email);
-                      this.loadingProvider.hide();
-                      // Clear the existing interval because when we call ionViewDidLoad, another interval will be created.
-                      clearInterval(this.checkVerified);
-                      // Call ionViewDidLoad again to update user on the markup and automatically send verification mail.
-                      this.ionViewDidLoad();
-                      // Update the user data on the database if it exists.
-                      firebase
-                        .database()
-                        .ref("accounts/" + firebase.auth().currentUser.uid)
-                        .once("value")
-                        .then(account => {
-                          if (account.val()) {
-                            this.angularDb
-                              .object(
-                                "/accounts/" + firebase.auth().currentUser.uid
-                              )
-                              .update({
-                                email: email
-                              });
-                          }
-                        });
-                    })
-                    .catch(error => {
-                      //Show error
-                      this.loadingProvider.hide();
-                      let code = error["code"];
-                      this.alertProvider.showErrorMessage(code);
-                      if (code == "auth/requires-recent-login") {
-                        this.logoutProvider.logout();
-                      }
-                    });
-                } else {
-                  this.alertProvider.showErrorMessage("profile/invalid-email");
+  async setEmail() {
+    this.alert = (await this.alertCtrl
+        .create({
+            header: "Change Email Address",
+            message: "Please enter a new email address.",
+            inputs: [
+                {
+                    name: "email",
+                    placeholder: "Your Email Address",
+                    value: firebase.auth().currentUser.email
                 }
-              }
-            }
-          }
-        ]
-      })
+            ],
+            buttons: [
+                {
+                    text: "Cancel",
+                    handler: data => { }
+                },
+                {
+                    text: "Save",
+                    handler: data => {
+                        let email = data["email"];
+                        // Check if entered email is different from the current email
+                        if (firebase.auth().currentUser.email != email) {
+                            // Check if email is valid.
+                            if (Validator.profileEmailValidator.pattern.test(email)) {
+                                this.loadingProvider.show();
+                                // Update email on Firebase
+                                firebase
+                                    .auth()
+                                    .currentUser.updateEmail(email)
+                                    .then(success => {
+                                        Validator.profileEmailValidator.pattern.test(email);
+                                        this.loadingProvider.hide();
+                                        // Clear the existing interval because when we call ionViewDidLoad, another interval will be created.
+                                        clearInterval(this.checkVerified);
+                                        // Call ionViewDidLoad again to update user on the markup and automatically send verification mail.
+                                        this.ionViewDidLoad();
+                                        // Update the user data on the database if it exists.
+                                        firebase
+                                            .database()
+                                            .ref("accounts/" + firebase.auth().currentUser.uid)
+                                            .once("value")
+                                            .then(account => {
+                                                if (account.val()) {
+                                                    this.angularDb
+                                                        .object(
+                                                            "/accounts/" + firebase.auth().currentUser.uid
+                                                        )
+                                                        .update({
+                                                            email: email
+                                                        });
+                                                }
+                                            });
+                                    })
+                                    .catch(error => {
+                                        //Show error
+                                        this.loadingProvider.hide();
+                                        let code = error["code"];
+                                        this.alertProvider.showErrorMessage(code);
+                                        if (code == "auth/requires-recent-login") {
+                                            this.logoutProvider.logout();
+                                        }
+                                    });
+                            } else {
+                                this.alertProvider.showErrorMessage("profile/invalid-email");
+                            }
+                        }
+                    }
+                }
+            ]
+        }))
       .present();
   }
 
   // Clear the interval, and log the user out.
-  logout() {
-    this.alert = this.alertCtrl
-      .create({
-        title: "Confirm Logout",
-        message: "Are you sure you want to logout?",
-        buttons: [
-          {
-            text: "Cancel"
-          },
-          {
-            text: "Logout",
-            handler: data => {
-              // Clear the verification check interval.
-              clearInterval(this.checkVerified);
-              // Set our routeGuard to true, to enable changing views.
-              this.isLoggingOut = true;
-              // Log the user out.
-              this.logoutProvider.logout();
-            }
-          }
-        ]
-      })
+  async logout() {
+    this.alert = (await this.alertCtrl
+        .create({
+            header: "Confirm Logout",
+            message: "Are you sure you want to logout?",
+            buttons: [
+                {
+                    text: "Cancel"
+                },
+                {
+                    text: "Logout",
+                    handler: data => {
+                        // Clear the verification check interval.
+                        clearInterval(this.checkVerified);
+                        // Set our routeGuard to true, to enable changing views.
+                        this.isLoggingOut = true;
+                        // Log the user out.
+                        this.logoutProvider.logout();
+                    }
+                }
+            ]
+        }))
       .present();
   }
 }

@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {AlertController} from "ionic-angular";
+import { AlertController } from "@ionic/angular";
 import {Validator} from "../validator";
 import {LogoutProvider} from "./logout";
 import {Toast} from "@ionic-native/toast";
@@ -11,158 +11,158 @@ const errorMessages = {
 
   // Firebase Error Messages
   accountExistsWithDifferentCredential: {
-    title: "Account Exists!",
-    subTitle: "An account with the same credential already exists."
+    header: "Account Exists!",
+    subHeader: "An account with the same credential already exists."
   },
   invalidCredential: {
-    title: "Invalid Credential!",
-    subTitle: "An error occured logging in with this credential."
+    header: "Invalid Credential!",
+    subHeader: "An error occured logging in with this credential."
   },
   operationNotAllowed: {
-    title: "Login Failed!",
-    subTitle:
+    header: "Login Failed!",
+    subHeader:
       "Logging in with this provider is not allowed! Please contact support."
   },
   userDisabled: {
-    title: "Account Disabled!",
-    subTitle:
+    header: "Account Disabled!",
+    subHeader:
       "Sorry! But this account has been suspended! Please contact support."
   },
   userNotFound: {
-    title: "Account Not Found!",
-    subTitle: "Sorry, but an account with this credential could not be found."
+    header: "Account Not Found!",
+    subHeader: "Sorry, but an account with this credential could not be found."
   },
   wrongPassword: {
-    title: "Incorrect Password!",
-    subTitle: "Sorry, but the password you have entered is incorrect."
+    header: "Incorrect Password!",
+    subHeader: "Sorry, but the password you have entered is incorrect."
   },
   invalidEmail: {
-    title: "Invalid Email!",
-    subTitle: "Sorry, but you have entered an invalid email address."
+    header: "Invalid Email!",
+    subHeader: "Sorry, but you have entered an invalid email address."
   },
   emailAlreadyInUse: {
-    title: "Email Not Available!",
-    subTitle: "Sorry, but this email is already in use."
+    header: "Email Not Available!",
+    subHeader: "Sorry, but this email is already in use."
   },
   weakPassword: {
-    title: "Weak Password!",
-    subTitle: "Sorry, but you have entered a weak password."
+    header: "Weak Password!",
+    subHeader: "Sorry, but you have entered a weak password."
   },
   requiresRecentLogin: {
-    title: "Credential Expired!",
-    subTitle: "Sorry, but this credential has expired! Please login again."
+    header: "Credential Expired!",
+    subHeader: "Sorry, but this credential has expired! Please login again."
   },
   userMismatch: {
-    title: "User Mismatch!",
-    subTitle: "Sorry, but this credential is for another user!"
+    header: "User Mismatch!",
+    subHeader: "Sorry, but this credential is for another user!"
   },
   providerAlreadyLinked: {
-    title: "Already Linked!",
-    subTitle: "Sorry, but your account is already linked to this credential."
+    header: "Already Linked!",
+    subHeader: "Sorry, but your account is already linked to this credential."
   },
   credentialAlreadyInUse: {
-    title: "Credential Not Available!",
-    subTitle: "Sorry, but this credential is already used by another user."
+    header: "Credential Not Available!",
+    subHeader: "Sorry, but this credential is already used by another user."
   },
   // Profile Error Messages
   changeName: {
-    title: "Change Name Failed!",
-    subTitle: "Sorry, but we've encountered an error changing your name."
+    header: "Change Name Failed!",
+    subHeader: "Sorry, but we've encountered an error changing your name."
   },
   invalidCharsName: Validator.profileNameValidator.patternError,
   nameTooShort: Validator.profileNameValidator.lengthError,
   changeEmail: {
-    title: "Change Email Failed!",
-    subTitle:
+    header: "Change Email Failed!",
+    subHeader:
       "Sorry, but we've encountered an error changing your email address."
   },
   invalidProfileEmail: Validator.profileEmailValidator.patternError,
   changePhoto: {
-    title: "Change Photo Failed!",
-    subTitle: "Sorry, but we've encountered an error changing your photo."
+    header: "Change Photo Failed!",
+    subHeader: "Sorry, but we've encountered an error changing your photo."
   },
   passwordTooShort: Validator.profilePasswordValidator.lengthError,
   invalidCharsPassword: Validator.profilePasswordValidator.patternError,
   passwordsDoNotMatch: {
-    title: "Change Password Failed!",
-    subTitle: "Sorry, but the passwords you entered do not match."
+    header: "Change Password Failed!",
+    subHeader: "Sorry, but the passwords you entered do not match."
   },
   updateProfile: {
-    title: "Update Profile Failed",
-    subTitle: "Sorry, but we've encountered an error updating your profile."
+    header: "Update Profile Failed",
+    subHeader: "Sorry, but we've encountered an error updating your profile."
   },
   usernameExists: {
-    title: "Username Already Exists!",
-    subTitle: "Sorry, but this username is already taken by another user."
+    header: "Username Already Exists!",
+    subHeader: "Sorry, but this username is already taken by another user."
   },
   phoneNumberExists: {
-    title: "Phone Number Already Exists!",
-    subTitle: "Sorry, but this phone number is already taken by another user."
+    header: "Phone Number Already Exists!",
+    subHeader: "Sorry, but this phone number is already taken by another user."
   },
   // Image Error Messages
   imageUpload: {
-    title: "Image Upload Failed!",
-    subTitle: "Sorry but we've encountered an error uploading selected image."
+    header: "Image Upload Failed!",
+    subHeader: "Sorry but we've encountered an error uploading selected image."
   },
   // Group Error Messages
   groupUpdate: {
-    title: "Update Group Failed!",
-    subTitle: "Sorry, but we've encountered an error updating this group."
+    header: "Update Group Failed!",
+    subHeader: "Sorry, but we've encountered an error updating this group."
   },
   groupLeave: {
-    title: "Leave Group Failed!",
-    subTitle: "Sorry, but you've encountered an error leaving this group."
+    header: "Leave Group Failed!",
+    subHeader: "Sorry, but you've encountered an error leaving this group."
   },
   groupDelete: {
-    title: "Delete Group Failed!",
-    subTitle: "Sorry, but we've encountered an error deleting this group."
+    header: "Delete Group Failed!",
+    subHeader: "Sorry, but we've encountered an error deleting this group."
   }
 };
 
 const successMessages = {
   passwordResetSent: {
-    title: "Password Reset Sent!",
-    subTitle: "A password reset email has been sent to: "
+    header: "Password Reset Sent!",
+    subHeader: "A password reset email has been sent to: "
   },
   profileUpdated: {
-    title: "Profile Updated!",
-    subTitle: "Your profile has been successfully updated!"
+    header: "Profile Updated!",
+    subHeader: "Your profile has been successfully updated!"
   },
   phoneNumberUpdated: {
-    title: "Phone Number Updated!",
-    subTitle: "Your phone number has been successfully updated!"
+    header: "Phone Number Updated!",
+    subHeader: "Your phone number has been successfully updated!"
   },
   emailVerified: {
-    title: "Email Confirmed!",
-    subTitle: "Congratulations! Your email has been confirmed!"
+    header: "Email Confirmed!",
+    subHeader: "Congratulations! Your email has been confirmed!"
   },
   emailVerificationSent: {
-    title: "Email Confirmation Sent!",
-    subTitle: "An email confirmation has been sent to: "
+    header: "Email Confirmation Sent!",
+    subHeader: "An email confirmation has been sent to: "
   },
   accountDeleted: {
-    title: "Account Deleted!",
-    subTitle: "Your account has been successfully deleted."
+    header: "Account Deleted!",
+    subHeader: "Your account has been successfully deleted."
   },
   passwordChanged: {
-    title: "Password Changed!",
-    subTitle: "Your password has been successfully changed."
+    header: "Password Changed!",
+    subHeader: "Your password has been successfully changed."
   },
   friendRequestSent: {
-    title: "Friend Request Sent!",
-    subTitle: "Your friend request has been successfully sent!"
+    header: "Friend Request Sent!",
+    subHeader: "Your friend request has been successfully sent!"
   },
   friendRequestRemoved: {
-    title: "Friend Request Deleted!",
-    subTitle: "Your friend request has been successfully deleted."
+    header: "Friend Request Deleted!",
+    subHeader: "Your friend request has been successfully deleted."
   },
   groupUpdated: {
-    title: "Group Updated!",
-    subTitle: "This group has been successfully updated!"
+    header: "Group Updated!",
+    subHeader: "This group has been successfully updated!"
   },
   groupLeft: {
-    title: "Leave Group",
-    subTitle: "You have successfully left this group."
+    header: "Leave Group",
+    subHeader: "You have successfully left this group."
   }
 };
 
@@ -180,398 +180,397 @@ export class AlertProvider {
   ) {}
 
   // Show profile updated
-  showProfileUpdatedMessage() {
-    this.alert = this.alertCtrl
-      .create({
-        title: successMessages.profileUpdated["title"],
-        subTitle: successMessages.profileUpdated["subTitle"],
-        buttons: ["OK"]
-      })
+  async showProfileUpdatedMessage() {
+    this.alert = (await this.alertCtrl
+        .create({
+            header: successMessages.profileUpdated["title"],
+            subHeader: successMessages.profileUpdated["subHeader"],
+            buttons: ["OK"]
+        }))
       .present();
   }
 
-  showPhoneNumberUpdatedMessage() {
-    this.alert = this.alertCtrl
-      .create({
-        title: successMessages.phoneNumberUpdated["title"],
-        subTitle: successMessages.phoneNumberUpdated["subTitle"],
-        buttons: ["OK"]
-      })
+  async showPhoneNumberUpdatedMessage() {
+    this.alert = (await this.alertCtrl
+        .create({
+            header: successMessages.phoneNumberUpdated["title"],
+            subHeader: successMessages.phoneNumberUpdated["subHeader"],
+            buttons: ["OK"]
+        }))
       .present();
   }
 
   // Show password reset sent
-  showPasswordResetMessage(email) {
-    this.alert = this.alertCtrl
-      .create({
-        title: successMessages.passwordResetSent["title"],
-        subTitle: successMessages.passwordResetSent["subTitle"] + email,
-        buttons: ["OK"]
-      })
+  async showPasswordResetMessage(email) {
+    this.alert = (await this.alertCtrl
+        .create({
+            header: successMessages.passwordResetSent["title"],
+            subHeader: successMessages.passwordResetSent["subHeader"] + email,
+            buttons: ["OK"]
+        }))
       .present();
   }
 
   // Show email verified and redirect to homePage
-  showEmailVerifiedMessageAndRedirect(navCtrl) {
-    this.alert = this.alertCtrl
-      .create({
-        title: successMessages.emailVerified["title"],
-        subTitle: successMessages.emailVerified["subTitle"],
-        buttons: [
-          {
-            text: "OK",
-            handler: () => {
-              //navCtrl.setRoot(Login.homePage);
-            }
-          }
-        ]
-      })
+  async showEmailVerifiedMessageAndRedirect(navCtrl) {
+    this.alert = (await this.alertCtrl
+        .create({
+            header: successMessages.emailVerified["title"],
+            subHeader: successMessages.emailVerified["subHeader"],
+            buttons: [
+                {
+                    text: "OK",
+                    handler: () => {
+                        //navCtrl.setRoot(Login.homePage);
+                    }
+                }
+            ]
+        }))
       .present();
   }
 
   // Show email verification sent
-  showEmailVerificationSentMessage(email) {
-    this.alert = this.alertCtrl
-      .create({
-        title: successMessages.emailVerificationSent["title"],
-        subTitle: successMessages.emailVerificationSent["subTitle"] + email,
-        buttons: ["OK"]
-      })
+  async showEmailVerificationSentMessage(email) {
+    this.alert = (await this.alertCtrl
+        .create({
+            header: successMessages.emailVerificationSent["title"],
+            subHeader: successMessages.emailVerificationSent["subHeader"] + email,
+            buttons: ["OK"]
+        }))
       .present();
   }
 
   // Show account deleted
-  showAccountDeletedMessage() {
-    this.alert = this.alertCtrl
-      .create({
-        title: successMessages.accountDeleted["title"],
-        subTitle: successMessages.accountDeleted["subTitle"],
-        buttons: ["OK"]
-      })
+  async showAccountDeletedMessage() {
+    this.alert = (await this.alertCtrl
+        .create({
+            header: successMessages.accountDeleted["title"],
+            subHeader: successMessages.accountDeleted["subHeader"],
+            buttons: ["OK"]
+        }))
       .present();
   }
 
   // Show password changed
-  showPasswordChangedMessage() {
-    this.alert = this.alertCtrl
-      .create({
-        title: successMessages.passwordChanged["title"],
-        subTitle: successMessages.passwordChanged["subTitle"],
-        buttons: ["OK"]
-      })
+  async showPasswordChangedMessage() {
+    this.alert = (await this.alertCtrl
+        .create({
+            header: successMessages.passwordChanged["title"],
+            subHeader: successMessages.passwordChanged["subHeader"],
+            buttons: ["OK"]
+        }))
       .present();
   }
   // show alert
-  showAlert(title, subTitle) {
-    this.alert = this.alertCtrl
-      .create({
-        title: title,
-        subTitle: subTitle,
-        buttons: ["OK"]
-      })
+  async showAlert(title, subHeader) {
+    this.alert = (await this.alertCtrl
+        .create({
+            header: title,
+            subHeader: subHeader,
+            buttons: ["OK"]
+        }))
       .present();
   }
 
   // Show friend request sent
-  showFriendRequestSent() {
-    this.alert = this.alertCtrl
-      .create({
-        title: successMessages.friendRequestSent["title"],
-        subTitle: successMessages.friendRequestSent["subTitle"],
-        buttons: ["OK"]
-      })
+  async showFriendRequestSent() {
+    this.alert = (await this.alertCtrl
+        .create({
+            header: successMessages.friendRequestSent["title"],
+            subHeader: successMessages.friendRequestSent["subHeader"],
+            buttons: ["OK"]
+        }))
       .present();
   }
 
   // Show friend request removed
-  showFriendRequestRemoved() {
-    this.alert = this.alertCtrl
-      .create({
-        title: successMessages.friendRequestRemoved["title"],
-        subTitle: successMessages.friendRequestRemoved["subTitle"],
-        buttons: ["OK"]
-      })
+  async showFriendRequestRemoved() {
+    this.alert = (await this.alertCtrl
+        .create({
+            header: successMessages.friendRequestRemoved["title"],
+            subHeader: successMessages.friendRequestRemoved["subHeader"],
+            buttons: ["OK"]
+        }))
       .present();
   }
 
   // Show group updated.
-  showGroupUpdatedMessage() {
-    this.alert = this.alertCtrl
-      .create({
-        title: successMessages.groupUpdated["title"],
-        subTitle: successMessages.groupUpdated["subTitle"],
-        buttons: ["OK"]
-      })
+  async showGroupUpdatedMessage() {
+    this.alert = (await this.alertCtrl
+        .create({
+            header: successMessages.groupUpdated["title"],
+            subHeader: successMessages.groupUpdated["subHeader"],
+            buttons: ["OK"]
+        }))
       .present();
   }
 
   // Show error messages depending on the code
   // If you added custom error codes on top, make sure to add a case block for it.
-  showErrorMessage(code) {
+  async showErrorMessage(code) {
     switch (code) {
       // Firebase Error Messages
       case "auth/account-exists-with-different-credential":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.accountExistsWithDifferentCredential["title"],
-            subTitle:
-              errorMessages.accountExistsWithDifferentCredential["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.accountExistsWithDifferentCredential["title"],
+                subHeader: errorMessages.accountExistsWithDifferentCredential["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "auth/invalid-credential":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.invalidCredential["title"],
-            subTitle: errorMessages.invalidCredential["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.invalidCredential["title"],
+                subHeader: errorMessages.invalidCredential["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "auth/operation-not-allowed":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.operationNotAllowed["title"],
-            subTitle: errorMessages.operationNotAllowed["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.operationNotAllowed["title"],
+                subHeader: errorMessages.operationNotAllowed["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "auth/user-disabled":
         this.alert = this.alertCtrl.create({
-          title: errorMessages.userDisabled["title"],
-          subTitle: errorMessages.userDisabled["subTitle"],
+          header: errorMessages.userDisabled["title"],
+          subHeader: errorMessages.userDisabled["subHeader"],
           buttons: ["OK"]
         });
         this.alert.present();
         break;
       case "auth/user-not-found":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.userNotFound["title"],
-            subTitle: errorMessages.userNotFound["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.userNotFound["title"],
+                subHeader: errorMessages.userNotFound["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "auth/wrong-password":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.wrongPassword["title"],
-            subTitle: errorMessages.wrongPassword["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.wrongPassword["title"],
+                subHeader: errorMessages.wrongPassword["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "auth/invalid-email":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.invalidEmail["title"],
-            subTitle: errorMessages.invalidEmail["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.invalidEmail["title"],
+                subHeader: errorMessages.invalidEmail["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "auth/email-already-in-use":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.emailAlreadyInUse["title"],
-            subTitle: errorMessages.emailAlreadyInUse["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.emailAlreadyInUse["title"],
+                subHeader: errorMessages.emailAlreadyInUse["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "auth/weak-password":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.weakPassword["title"],
-            subTitle: errorMessages.weakPassword["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.weakPassword["title"],
+                subHeader: errorMessages.weakPassword["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "auth/requires-recent-login":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.requiresRecentLogin["title"],
-            subTitle: errorMessages.requiresRecentLogin["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.requiresRecentLogin["title"],
+                subHeader: errorMessages.requiresRecentLogin["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "auth/user-mismatch":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.userMismatch["title"],
-            subTitle: errorMessages.userMismatch["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.userMismatch["title"],
+                subHeader: errorMessages.userMismatch["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "auth/provider-already-linked":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.providerAlreadyLinked["title"],
-            subTitle: errorMessages.providerAlreadyLinked["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.providerAlreadyLinked["title"],
+                subHeader: errorMessages.providerAlreadyLinked["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "auth/credential-already-in-use":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.credentialAlreadyInUse["title"],
-            subTitle: errorMessages.credentialAlreadyInUse["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.credentialAlreadyInUse["title"],
+                subHeader: errorMessages.credentialAlreadyInUse["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       // Profile Error Messages
       case "profile/error-change-name":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.changeName["title"],
-            subTitle: errorMessages.changeName["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.changeName["title"],
+                subHeader: errorMessages.changeName["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "profile/invalid-chars-name":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.invalidCharsName["title"],
-            subTitle: errorMessages.invalidCharsName["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.invalidCharsName["title"],
+                subHeader: errorMessages.invalidCharsName["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "profile/name-too-short":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.nameTooShort["title"],
-            subTitle: errorMessages.nameTooShort["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.nameTooShort["title"],
+                subHeader: errorMessages.nameTooShort["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "profile/error-change-email":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.changeEmail["title"],
-            subTitle: errorMessages.changeEmail["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.changeEmail["title"],
+                subHeader: errorMessages.changeEmail["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "profile/invalid-email":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.invalidProfileEmail["title"],
-            subTitle: errorMessages.invalidProfileEmail["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.invalidProfileEmail["title"],
+                subHeader: errorMessages.invalidProfileEmail["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "profile/error-change-photo":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.changePhoto["title"],
-            subTitle: errorMessages.changePhoto["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.changePhoto["title"],
+                subHeader: errorMessages.changePhoto["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "profile/password-too-short":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.passwordTooShort["title"],
-            subTitle: errorMessages.passwordTooShort["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.passwordTooShort["title"],
+                subHeader: errorMessages.passwordTooShort["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "profile/invalid-chars-password":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.invalidCharsPassword["title"],
-            subTitle: errorMessages.invalidCharsPassword["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.invalidCharsPassword["title"],
+                subHeader: errorMessages.invalidCharsPassword["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "profile/passwords-do-not-match":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.passwordsDoNotMatch["title"],
-            subTitle: errorMessages.passwordsDoNotMatch["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.passwordsDoNotMatch["title"],
+                subHeader: errorMessages.passwordsDoNotMatch["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "profile/error-update-profile":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.updateProfile["title"],
-            subTitle: errorMessages.updateProfile["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.updateProfile["title"],
+                subHeader: errorMessages.updateProfile["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "profile/error-same-username":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.usernameExists["title"],
-            subTitle: errorMessages.usernameExists["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.usernameExists["title"],
+                subHeader: errorMessages.usernameExists["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "profile/error-same-phoneNumber":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.phoneNumberExists["title"],
-            subTitle: errorMessages.phoneNumberExists["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.phoneNumberExists["title"],
+                subHeader: errorMessages.phoneNumberExists["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       //Image Error Messages
       case "image/error-image-upload":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.imageUpload["title"],
-            subTitle: errorMessages.imageUpload["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.imageUpload["title"],
+                subHeader: errorMessages.imageUpload["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       // Group Error MEssages
       case "group/error-update-group":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.groupUpdate["title"],
-            subTitle: errorMessages.groupUpdate["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.groupUpdate["title"],
+                subHeader: errorMessages.groupUpdate["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "group/error-leave-group":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.groupLeave["title"],
-            subTitle: errorMessages.groupLeave["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.groupLeave["title"],
+                subHeader: errorMessages.groupLeave["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
       case "group/error-delete-group":
-        this.alert = this.alertCtrl
-          .create({
-            title: errorMessages.groupDelete["title"],
-            subTitle: errorMessages.groupDelete["subTitle"],
-            buttons: ["OK"]
-          })
+        this.alert = (await this.alertCtrl
+            .create({
+                header: errorMessages.groupDelete["title"],
+                subHeader: errorMessages.groupDelete["subHeader"],
+                buttons: ["OK"]
+            }))
           .present();
         break;
     }

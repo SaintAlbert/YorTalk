@@ -1,9 +1,10 @@
 import {Component} from '@angular/core';
-import {App, NavController, NavParams} from '@ionic/angular';
+//import {App, NavController, NavParams} from '@ionic/angular';
 import {NewGroupPage} from '../new-group/new-group';
 import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
 import {GroupPage} from '../group/group';
+import { Nav } from '../../services/nav';
 
 @Component({
   selector: 'page-groups',
@@ -16,7 +17,7 @@ export class GroupsPage {
   private updateDateTime: any;
   // GroupsPage
   // This is the page where the user can add, view and search for groups.
-  constructor(public navCtrl: NavController, public navParams: NavParams, public app: App, public dataProvider: DataProvider, public loadingProvider: LoadingProvider) { }
+  constructor(public navCtrl: Nav, public dataProvider: DataProvider, public loadingProvider: LoadingProvider) { }
 
   ionViewDidLoad() {
     // Initialize
@@ -100,12 +101,14 @@ export class GroupsPage {
 
   // New Group.
   newGroup() {
-    this.app.getRootNav().push(NewGroupPage);
+    this.navCtrl.push('groups/new-group')
+    //this.app.getRootNav().push(NewGroupPage);
   }
 
   // Open Group Chat.
   viewGroup(groupId) {
-    this.app.getRootNav().push(GroupPage, { groupId: groupId });
+    this.navCtrl.push('groups/group', { groupId: groupId })
+    //this.app.getRootNav().push(GroupPage, { groupId: groupId });
   }
 
   // Return class based if group has unreadMessages or not.

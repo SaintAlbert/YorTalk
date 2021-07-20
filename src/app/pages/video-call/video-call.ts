@@ -1,6 +1,8 @@
 import {Component} from '@angular/core';
-import {Events, NavController, NavParams, ViewController} from '@ionic/angular';
+import { ViewController} from '@ionic/angular';
 import {DataProvider} from '../../services/data'
+import { Events } from '../../services/events';
+import { Nav } from '../../services/nav';
 
 /**
  * Generated class for the VideoCallPage page.
@@ -20,11 +22,9 @@ export class VideoCallPage {
   showHangup = false;
   isVideoMute;
   isAudioMute;
-  constructor(public navCtrl: NavController,
-    public navParams: NavParams,
+  constructor(public navCtrl: Nav,
     public events:Events,
-    public dataProvider: DataProvider,
-    public viewCtrl: ViewController) {
+    public dataProvider: DataProvider) {
     this.webRTCClient =  this.dataProvider.getwebRTCClient();
     this.events.subscribe('userMediaSuccess',(e)=>{
       this.webRTCClient.addStreamInDiv(e.detail.stream, e.detail.callType, "mini", 'miniElt-' + e.detail.callId, {
@@ -68,7 +68,7 @@ export class VideoCallPage {
 
     this.webRTCClient.removeElementFromDiv('mini', 'miniElt-' + callId);
     this.webRTCClient.removeElementFromDiv('remote', 'remoteElt-' + callId);
-     this.viewCtrl.dismiss();
+    this.navCtrl.closeModal();
   }
   HangUp(){
     let callId = this.dataProvider.getIncomingCallid();

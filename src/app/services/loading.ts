@@ -19,7 +19,9 @@ export class LoadingProvider {
   //Show loading
   show() {
     if (!this.loading) {
-      this.loading = this.loadingController.create(this.spinner);
+ 
+      //this.loading = this.loadingController.create(this.spinner);
+      this.loading = this.loadingController.create();
       this.loading.present();
     }
   }

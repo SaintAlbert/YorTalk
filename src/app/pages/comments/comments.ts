@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
-import { NavController, NavParams, ModalController  } from '@ionic/angular';
+import { ModalController  } from '@ionic/angular';
 import {FirebaseProvider} from '../../services/firebase';
 import {DataProvider} from '../../services/data';
 import * as firebase from 'firebase';
+import { Nav } from '../../services/nav';
 
 /**
  * Generated class for the CommentsPage page.
@@ -20,12 +21,11 @@ export class CommentsPage {
   postKey;
   commentText;
   comments:any;
-  constructor(public navCtrl: NavController,
-    public navParams: NavParams,
+  constructor(public navCtrl: Nav,
     public viewCtrl: ModalController ,
     public firebaseProvider:FirebaseProvider,
     public dataProvider : DataProvider) {
-      this.postKey = this.navParams.get('postKey')
+    this.postKey = this.navCtrl.get('postKey')
   }
 
   ionViewDidLoad() {

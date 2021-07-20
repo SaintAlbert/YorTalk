@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 import {
-  ActionSheetController, AlertController, ModalController, NavController, NavParams,
+  ActionSheetController, AlertController, 
   Platform
 } from "@ionic/angular";
 import {AddPostPage} from "../add-post/add-post";
@@ -16,6 +16,7 @@ import {AlertProvider} from "../../services/alert";
 import {UpdateContactPage} from "../update-contact/update-contact";
 import {LoginPage} from "../login/login";
 import {LogoutProvider} from "../../services/logout";
+import { Nav } from "../../services/nav";
 
 declare var AccountKitPlugin: any;
 
@@ -37,13 +38,11 @@ export class TimelinePage {
   public friendsList: any;
   isFirstTime;
   constructor(
-    public navCtrl: NavController,
-    public navParams: NavParams,
+    public navCtrl: Nav,
     public loadingProvider: LoadingProvider,
     public angularDb: AngularFireDatabase,
     public dataProvider: DataProvider,
     public firebaseProvider: FirebaseProvider,
-    public modalCtrl: ModalController,
     public alertCtrl: AlertController,
     public actionSheetCtrl: ActionSheetController,
     public alertProvider: AlertProvider,
@@ -83,12 +82,12 @@ export class TimelinePage {
         }
       });
 
-      this.dataProvider.getData("userData").then(async data => {
+      this.dataProvider.getData("userData").then( data => {
         if (data.phoneNumber == "") {
-          let modal = this.modalCtrl.create(UpdateContactPage, {
+          this.navCtrl.openModal(UpdateContactPage, {
             userData: data
           });
-          (await modal).present();
+         
         }
       });
     });
@@ -103,7 +102,8 @@ export class TimelinePage {
         this.logoutProvider.logout().then(res => {
           this.dataProvider.clearData();
           AccountKitPlugin.logout();
-          this.navCtrl.parent.parent.setRoot(LoginPage);
+          this.navCtrl.setRoot("login")
+          //this.navCtrl.parent.parent.setRoot(LoginPage);
           this.alertProvider.showToast("You are temporary blocked.");
         });
       }
@@ -552,7 +552,8 @@ export class TimelinePage {
   }
 
   addPost() {
-    this.navCtrl.push(AddPostPage);
+    this.navCtrl.push('timeline/add-post');
+    //this.navCtrl.push(AddPostPage);
   }
 
   likePost(post) {
@@ -571,8 +572,7 @@ export class TimelinePage {
   }
 
   async commentPost(post) {
-    let modal = this.modalCtrl.create(CommentsPage, { postKey: post.$key });
-    (await modal).present();
+    this.navCtrl.openModal(CommentsPage, { postKey: post.$key });
   }
 
   openMap(lat, long) {
@@ -585,7 +585,6 @@ export class TimelinePage {
 
   // Enlarge image messages.
   async enlargeImage(img) {
-    let imageModal = this.modalCtrl.create(ImageModalPage, { img: img });
-    (await imageModal).present();
+    this.navCtrl.openModal(ImageModalPage, { img: img });
   }
 }

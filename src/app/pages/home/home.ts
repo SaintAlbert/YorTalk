@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import { AlertController, App, ModalController, NavController, NavParams } from "@ionic/angular";
+import { AlertController } from "@ionic/angular";
 import {LogoutProvider} from "../../services/logout";
 import {LoadingProvider} from "../../services/loading";
 import {AlertProvider} from "../../services/alert";
@@ -15,6 +15,7 @@ import {Login} from "../../login";
 import * as firebase from "firebase";
 import {Camera} from "@ionic-native/camera";
 import {ReportedPostPage} from "../reported-post/reported-post";
+import { Nav } from "../../services/nav";
 
 declare var AccountKitPlugin: any;
 
@@ -32,12 +33,9 @@ export class HomePage {
   // Change name, profile pic, email, and password
   // The user can also opt for the deletion of their account, and finally logout.
   constructor(
-    public navCtrl: NavController,
+    public navCtrl: Nav,
     public alertCtrl: AlertController,
-    public navParams: NavParams,
-    public app: App,
     public logoutProvider: LogoutProvider,
-    public modalCtrl: ModalController,
     public loadingProvider: LoadingProvider,
     public imageProvider: ImageProvider,
     public angularDb: AngularFireDatabase,
@@ -45,7 +43,7 @@ export class HomePage {
     public dataProvider: DataProvider,
     public camera: Camera
   ) {
-    this.logoutProvider.setApp(this.app);
+    this.logoutProvider.setApp(this.navCtrl);
   }
 
   ionViewDidLoad() {
@@ -156,8 +154,9 @@ export class HomePage {
                                             this.alertProvider.showErrorMessage(code);
                                             if (code == "auth/requires-recent-login") {
                                                 this.logoutProvider.logout().then(res => {
-                                                    AccountKitPlugin.logout();
-                                                    this.navCtrl.parent.parent.setRoot(LoginPage);
+                                                  AccountKitPlugin.logout();
+                                                  this.navCtrl.pop('/login')
+                                                    //this.navCtrl.parent.parent.setRoot(LoginPage);
                                                 });
                                             }
                                         });
@@ -284,10 +283,10 @@ export class HomePage {
 
   // updateContact number
   updateContactNumber() {
-    let profileModal = this.modalCtrl.create(UpdateContactPage, {
+    this.navCtrl.openModal(UpdateContactPage, {
       userData: this.user
     });
-    profileModal.present();
+   
   }
 
   loginCallback(response) {
@@ -380,8 +379,9 @@ export class HomePage {
                                                 Validator.profileEmailValidator.pattern.test(email);
                                                 // Check if emailVerification is enabled, if it is go to verificationPage.
                                                 if (Login.emailVerification) {
-                                                    if (!firebase.auth().currentUser.emailVerified) {
-                                                        this.navCtrl.setRoot(Login.verificationPage);
+                                                  if (!firebase.auth().currentUser.emailVerified) {
+                                                    
+                                                    this.navCtrl.setRoot('verification');
                                                     }
                                                 }
                                             })
@@ -397,8 +397,9 @@ export class HomePage {
                                         if (code == "auth/requires-recent-login") {
                                             this.logoutProvider.logout().then(res => {
                                                 this.dataProvider.clearData();
-                                                AccountKitPlugin.logout();
-                                                this.navCtrl.parent.parent.setRoot(LoginPage);
+                                              AccountKitPlugin.logout();
+                                              this.navCtrl.setRoot('login');
+                                                //this.navCtrl.parent.parent.setRoot(LoginPage);
                                             });
                                         }
                                     });
@@ -479,7 +480,8 @@ export class HomePage {
                                                             this.logoutProvider.logout().then(res => {
                                                                 this.dataProvider.clearData();
                                                                 AccountKitPlugin.logout();
-                                                                this.navCtrl.parent.parent.setRoot(LoginPage);
+                                                                //this.navCtrl.parent.parent.setRoot(LoginPage);
+                                                              this.navCtrl.setRoot('login');
                                                             });
                                                         }
                                                     });
@@ -541,7 +543,8 @@ export class HomePage {
                                         this.alertProvider.showAccountDeletedMessage();
                                         this.logoutProvider.logout().then(res => {
                                             AccountKitPlugin.logout();
-                                            this.navCtrl.parent.parent.setRoot(LoginPage);
+                                            //this.navCtrl.parent.parent.setRoot(LoginPage);
+                                          this.navCtrl.setRoot('login');
                                         });
                                     });
                             })
@@ -552,7 +555,8 @@ export class HomePage {
                                 if (code == "auth/requires-recent-login") {
                                     this.logoutProvider.logout().then(res => {
                                         this.dataProvider.clearData();
-                                        this.navCtrl.parent.parent.setRoot(LoginPage);
+                                        //this.navCtrl.parent.parent.setRoot(LoginPage);
+                                      this.navCtrl.setRoot('login');
                                     });
                                 }
                             });
@@ -579,7 +583,8 @@ export class HomePage {
                         this.logoutProvider.logout().then(res => {
                             this.dataProvider.clearData();
                             AccountKitPlugin.logout();
-                            this.navCtrl.parent.parent.setRoot(LoginPage);
+                            //this.navCtrl.parent.parent.setRoot(LoginPage);
+                          this.navCtrl.setRoot('login');
                         });
                     }
                 }
@@ -589,10 +594,10 @@ export class HomePage {
   }
 
   reportedPost() {
-    this.navCtrl.push(ReportedPostPage);
+    this.navCtrl.push('timeline/reported-post');
   }
 
   users() {
-    this.navCtrl.push(UsersPage);
+    this.navCtrl.push('users');
   }
 }

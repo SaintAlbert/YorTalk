@@ -1,7 +1,8 @@
 import {Component} from '@angular/core';
-import {ActionSheetController, NavController, NavParams} from '@ionic/angular';
-import {DataProvider} from '../../providers/data';
-import {LoadingProvider} from '../../providers/loading';
+import {ActionSheetController} from '@ionic/angular';
+import {DataProvider} from '../../services/data';
+import {LoadingProvider} from '../../services/loading';
+import { Nav } from '../../services/nav';
 
 /**
  * Generated class for the ReportedPostPage page.
@@ -17,8 +18,7 @@ import {LoadingProvider} from '../../providers/loading';
 })
 export class ReportedPostPage {
   reportedPost = []
-  constructor(public navCtrl: NavController, 
-    public navParams: NavParams,
+  constructor(public navCtrl: Nav, 
     public dataProvider: DataProvider, 
     public loadingProvider: LoadingProvider,  
 
@@ -32,9 +32,9 @@ export class ReportedPostPage {
     this.getReportedPost()
   }
 
-  reportPost(item) {
+  async reportPost(item) {
     let actionSheet = this.actionSheetCtrl.create({
-      title: "Reported Post",
+      header: "Reported Post",
       buttons: [
         {
           text: 'Delete post',
@@ -63,7 +63,7 @@ export class ReportedPostPage {
       ]
     });
 
-    actionSheet.present();
+    (await actionSheet).present();
   }
 
 

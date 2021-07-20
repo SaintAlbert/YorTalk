@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
-import {App} from '@ionic/angular';
+//import {App} from '@ionic/angular';
 
 import {LoadingProvider} from './loading';
 import {DataProvider} from './data';
 import * as firebase from 'firebase';
+import { Nav } from './nav';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class LogoutProvider {
   // This is the provider class for logging out.
   // Before logout function can be used it's important to set the app to the Provider
   // by calling setApp(app) in the constructor of the controller that needs the logout functionality.
-  constructor(public app: App,
+  constructor(public app: Nav,
     public loadingProvider: LoadingProvider,
     public dataProvider: DataProvider) {
   }
@@ -31,12 +32,16 @@ export class LogoutProvider {
       // Sign the user out on Firebase
       firebase.auth().signOut().then((success) => {
         // Clear navigation stacks
-        this.app.getRootNav().popToRoot().then(() => {
-          this.loadingProvider.hide();
-          resolve(true)
-          // Restart the entire app
-          //document.location.href = 'index.html';
-        });
+        //this.app.pop("/login");
+        this.app.setRoot('login');
+        this.loadingProvider.hide();
+        resolve(true)
+        //this.app.getRootNav().popToRoot().then(() => {
+        //  this.loadingProvider.hide();
+        //  resolve(true)
+        //  // Restart the entire app
+        //  //document.location.href = 'index.html';
+        //});
       });
 
     })
