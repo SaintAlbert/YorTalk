@@ -17,8 +17,8 @@
             <button ion-button icon-left class="dark" tappable (click)="login()" [disabled]="!emailPasswordForm.valid">LOGIN</button>
           </ion-list>
         </form>
-        <button ion-button  icon-left class="facebook" class="facebook" tappable (click)="loginProvider.facebookLogin()"><ion-icon name="logo-facebook"></ion-icon>LOGIN WITH FACEBOOK</button>
-        <button ion-button icon-left class="google" class="google" tappable (click)="loginProvider.googleLogin()"><ion-icon name="logo-google"></ion-icon>LOGIN WITH GOOGLE</button>
+        <button ion-button  icon-left class="facebook"  tappable (click)="loginProvider.facebookLogin()"><ion-icon name="logo-facebook"></ion-icon>LOGIN WITH FACEBOOK</button>
+        <button ion-button icon-left class="google"  tappable (click)="loginProvider.googleLogin()"><ion-icon name="logo-google"></ion-icon>LOGIN WITH GOOGLE</button>
         <button ion-button icon-left class="dark" tappable (click)="loginWithPhone()"><ion-icon name="md-call"></ion-icon>Signup with Phone</button>
         <p tappable (click)="clearForms(); mode = 'register'">Don't Have an Account? <b>Sign up</b></p>
         <p tappable (click)="clearForms(); mode = 'forgotPassword'">Forgot your Password?</p>

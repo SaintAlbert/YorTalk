@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {  ModalController, NavController, Platform } from '@ionic/angular';
+import {  Platform } from '@ionic/angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Keyboard } from '@ionic-native/keyboard';
@@ -12,6 +12,7 @@ import { AdMobFree, AdMobFreeBannerConfig } from '@ionic-native/admob-free';
 import { DataProvider } from './services/data';
 import { VideoProvider } from './services/video';
 import { Events } from './services/events';
+import { Nav } from './services/nav';
 
 @Component({
   selector: 'app-root',
@@ -25,24 +26,26 @@ export class AppComponent {
     statusBar: StatusBar,
     splashScreen: SplashScreen,
     keyboard: Keyboard,
-    public modalCtrl: ModalController,
     public events: Events,
     private admobFree: AdMobFree,
     public videoProvider: VideoProvider,
     public angularDb: AngularFireDatabase,
     public dataProvider: DataProvider,
-    public navCtrl: NavController  ) {
+    public navCtrl: Nav  ) {
     platform.ready().then(() => {
+      
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
       splashScreen.hide();
       this.events.subscribe('openVideocall', async () => {
-        let profileModal = await this.modalCtrl.create({ component: VideoCallPage });
-        profileModal.present();
+        this.navCtrl.openModal(VideoCallPage,null );
+        //let profileModal = await this.modalCtrl.create({ component: VideoCallPage });
+        //profileModal.present();
       })
 
       this.dataProvider.getData('userData').then((data) => {
+        
         let userData = <any>data;
         this.userData = userData;
         if (userData) {
@@ -66,7 +69,7 @@ export class AppComponent {
           //   }
           // });
           this.videoProvider.InitializingRTC(userData);
-          this.navCtrl.navigateRoot('/tabs');
+          this.navCtrl.setRoot('tabs');
         } else {
           // this.dataProvider.getContact().then(data=>{
           //   if(data && this.userData!=''){
@@ -74,8 +77,10 @@ export class AppComponent {
           //   }
           // });
           //this.rootPage = LoginPage
-          this.navCtrl.navigateRoot('/login');
+          //alert("Ready")
+          this.navCtrl.setRoot('login');
         }
+       
       })
 
 

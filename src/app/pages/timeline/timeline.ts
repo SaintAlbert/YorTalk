@@ -82,7 +82,7 @@ export class TimelinePage {
         }
       });
 
-      this.dataProvider.getData("userData").then( data => {
+      this.dataProvider.getData("userData").then( (data:any) => {
         if (data.phoneNumber == "") {
           this.navCtrl.openModal(UpdateContactPage, {
             userData: data

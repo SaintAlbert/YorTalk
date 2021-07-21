@@ -20,6 +20,7 @@ import { Geolocation } from "@ionic-native/geolocation";
 // import { AngularFireModule, AuthMethods, AuthProviders } from 'angularfire2';
 import { AngularFireModule } from "angularfire2";
 import { AngularFireDatabaseModule } from "angularfire2/database";
+import { AngularFireAuthModule } from 'angularfire2/auth';
 import * as firebase from "firebase/app";
 // import { GooglePlus } from '@ionic-native/google-plus';
 import { NativeAudio } from "@ionic-native/native-audio";
@@ -27,7 +28,8 @@ import { AdMobFree } from "@ionic-native/admob-free";
 import { SocialSharing } from "@ionic-native/social-sharing";
 import { Contacts } from "@ionic-native/contacts";
 import { IonicStorageModule } from '@ionic/storage-angular';
-import { Drivers, Storage } from '@ionic/storage';
+//import { Drivers, Storage } from '@ionic/storage';
+import { Storage } from '@capacitor/storage';
 import { File } from "@ionic-native/file";
 import { MediaCapture } from "@ionic-native/media-capture";
 //import { CordovaMediaProvider, defaultAudioProviderFactory, IonicAudioModule, WebAudioProvider } from "ionic-audio";
@@ -55,6 +57,7 @@ import { ImageProvider } from './services/image';
 import { DataProvider } from './services/data';
 import { FirebaseProvider } from './services/firebase';
 import { Nav } from './services/nav';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 //export function myCustomAudioProviderFactory() {
 //  return window.hasOwnProperty("cordova")
@@ -69,17 +72,21 @@ firebase.initializeApp(Login.firebaseConfig);
   declarations: [AppComponent, FriendPipe, SearchPipe, ConversationPipe, DateFormatPipe, GroupPipe],
   entryComponents: [],
   imports: [BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
    // IonicAudioModule.forRoot(defaultAudioProviderFactory),
     IonicModule.forRoot({
       mode: "ios",
       scrollAssist: false,
     }),
-    IonicStorageModule.forRoot({
-      name: '__mydb',
-      driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage]
-    }),
+    IonicStorageModule.forRoot(),
+    //IonicStorageModule.forRoot({
+    //  name: '__mydb',
+    //  driverOrder: [Drivers.IndexedDB, Drivers.LocalStorage]
+    //}),
     AngularFireModule.initializeApp(Login.firebaseConfig),
     AngularFireDatabaseModule,
+    AngularFireAuthModule,
     //IonicModule.forRoot(),
     AppRoutingModule],
   providers: [
@@ -100,6 +107,7 @@ firebase.initializeApp(Login.firebaseConfig);
     AdMobFree,
     Badge,
     SocialSharing,
+    //Storage,
     //{ provide: ErrorHandler, useClass: IonicErrorHandler },
     LoginProvider,
     LogoutProvider,

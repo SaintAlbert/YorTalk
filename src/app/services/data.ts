@@ -2,10 +2,14 @@ import {Injectable} from "@angular/core";
 import {AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable} from "angularfire2/database";
 import * as firebase from "firebase";
 import {Contacts} from "@ionic-native/contacts";
-import {Storage} from "@ionic/storage";
+//import {Storage} from "@ionic/storage";
+//import { Storage } from '@capacitor/storage';
+import { Plugins } from '@capacitor/core';
 import async from "async";
 import { map } from 'rxjs/operators';
 import _ from 'lodash';
+
+const { Storage } = Plugins;
 
 @Injectable({
   providedIn: 'root'
@@ -22,10 +26,11 @@ export class DataProvider {
   userContactsListWithCountryCode = [];
   isContactGet = false;
   countryCode = "+1";
+  //storage: Storage
   constructor(
     public angularDb: AngularFireDatabase,
     private contacts: Contacts,
-    private storage: Storage,
+    //private storage: Storage,
   ) {
   }
 
@@ -348,18 +353,27 @@ export class DataProvider {
   //   });
   // }
 
-  setData(key, val) {
-    this.storage.set(key, val);
-  }
-
-  getData(key) {
-    return this.storage.get(key).then(val => {
-      return val;
+  async setData(key, val) {
+   // Storage.set(key, val);
+    await Storage.set({
+      key: key,
+      value: JSON.stringify(val)
     });
   }
 
+  getData(key) {
+    //return Storage.get(key).then(val => {
+    //  return val;
+    //});
+
+    return Storage.get({ key: key }).then(val => {
+      return val;
+    });
+    
+  }
+
   clearData() {
-    this.storage.clear();
+    Storage.clear();
   }
 
   checkUserExitsOrNot(userContactsList) {

@@ -101,7 +101,7 @@ export class LoginProvider {
   // This is important, so the provider can redirect the app to the views depending
   // on the status of the Firebase user.
   setNavController(navCtrl) {
-    this.navCtrl = navCtrl;
+   // this.navCtrl = navCtrl;
   }
 
   // Facebook Login, after successful authentication, triggers firebase.auth().onAuthStateChanged((user) on top and

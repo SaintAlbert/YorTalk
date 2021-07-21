@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController} from '@ionic/angular';
+//import {NavController} from '@ionic/angular';
 import {LoginProvider} from '../../services/login';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {Validator} from '../../validator';
@@ -21,10 +21,11 @@ export class LoginPage {
   // LoginPage
   // This is the page where the user can register and login to our app.
   // It's important to initialize the loginProvider here and setNavController as it will direct the routes of our app.
-  constructor(public navCtrl: Nav, 
+  constructor(private navCtrl: Nav, 
     public loginProvider: LoginProvider, 
     private iab: InAppBrowser,
     public formBuilder: FormBuilder) {
+    alert("Am here")
     // It's important to hook the navController to our loginProvider.
     this.loginProvider.setNavController(this.navCtrl);
     // Create our forms and their validators based on validators set on validator.ts.

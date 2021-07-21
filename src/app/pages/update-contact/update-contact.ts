@@ -29,7 +29,7 @@ export class UpdateContactPage {
         public angularDb:AngularFireDatabase,
 		public countryCodeProvider: CountryCodeProvider){
 		 this.zone.run(() => {
-			this.dataProvider.getData('userData').then((data)=>{
+			this.dataProvider.getData('userData').then((data:any)=>{
 				this.user = data;
 				if(this.countryCode != undefined){
 					this.phoneNumber = parseInt(data.phoneNumber.replace(this.countryCode,''))

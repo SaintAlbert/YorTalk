@@ -8,7 +8,7 @@ import {Facebook} from 'ng2-cordova-oauth/core';
 import {OauthCordova} from 'ng2-cordova-oauth/platform/cordova';
 import {Login} from '../../login';
 import {GooglePlus} from '@ionic-native/google-plus';
-import {LoginPage} from '../login/login';
+//import {LoginPage} from '../login/login';
 import { Nav } from '../../services/nav';
 
 @Component({
