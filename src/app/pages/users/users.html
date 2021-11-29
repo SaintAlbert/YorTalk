@@ -6,9 +6,9 @@
 -->
 <ion-header>
 
-  <ion-navbar>
+  <ion-toolbar>
     <ion-title>User list</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
 
 </ion-header>
 
@@ -20,8 +20,8 @@
         <img src="{{item.img}}">
       </ion-avatar>
       <h2>{{item.name}}</h2>
-      <button item-right ion-button color="dark" (click)="blockUser(item)" *ngIf="!item.isBlock">Block</button>
-      <button item-right ion-button color="danger" (click)="unblockUser(item)" *ngIf="item.isBlock">Unblock</button>
+      <ion-button item-right color="dark" (click)="blockUser(item)" *ngIf="!item.isBlock">Block</ion-button>
+      <ion-button item-right color="danger" (click)="unblockUser(item)" *ngIf="item.isBlock">Unblock</ion-button>
     </ion-item>
   </ion-card>
 </ion-content>

@@ -20,8 +20,12 @@ export class Nav {
     this.navCtrl.navigateBack('/' + url);
   }
 
+  back() {
+    this.navCtrl.back()
+  }
+
   popToRoot() {
-    this.navCtrl.navigateBack('/' );
+    this.navCtrl.navigateBack('/tabs' );
   }
   setRoot(url: string) {
     this.navCtrl.navigateRoot('/' + url);

@@ -1,0 +1,58 @@
+<ion-header>
+  <ion-toolbar hideBackButton="true">
+    <ion-buttons>
+      <ion-button tappable (click)="back()">Back</ion-button>
+    </ion-buttons>
+    <ion-title>Friend Requests</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <!-- No friend requests sent or received. -->
+  <div class="empty-list" *ngIf="(friendRequests && friendRequests.length == 0) && (requestsSent && requestsSent.length == 0)">
+    <h1><ion-icon name="md-filing"></ion-icon></h1>
+    <p>Uh-oh! There are no pending friend requests right now.</p>
+    <ion-button icon-left tappable (click)="back()"><ion-icon name="md-arrow-round-back"></ion-icon>Go Back</ion-button>
+  </div>
+  <!-- Show friend requests received. -->
+  <ion-list class="avatar-list" *ngIf="friendRequests && friendRequests.length > 0">
+    <ion-item *ngFor="let friendRequest of friendRequests" lines="none" (click)="viewUser(friendRequest.$key)">
+      <!--<ion-fab slot="fixed" vertical="center" right style="position: absolute; right: 0 ;">
+    <ion-fab-button mini tappable (click)="acceptFriendRequest(friendRequest); $event.stopPropagation();">
+      <ion-icon name="md-checkmark-circle" class="success"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>-->
+
+      <ion-button slot="end" fill="clear" vertical="center" (click)="acceptFriendRequest(friendRequest); $event.stopPropagation();" item-right ><ion-icon slot="icon-only" name="md-checkmark-circle" class="success"></ion-icon></ion-button>
+
+      <ion-avatar slot="start">
+        <ion-icon name="radio-button-on" class="online" [ngClass]="friendRequest.isOnline?'isOnline' : 'isOffline'"></ion-icon>
+        <img src="{{friendRequest.img}}">
+      </ion-avatar>
+      <ion-label ion-text-wrap>
+        <h2>{{friendRequest.name}}</h2>
+        <p>has sent you a friend request.</p>
+      </ion-label>
+
+    </ion-item>
+  </ion-list>
+  <!-- Show friend requests sent. -->
+  <ion-list class="avatar-list" *ngIf="requestsSent && requestsSent.length > 0">
+    <ion-item *ngFor="let requestSent of requestsSent" lines="none" (click)="viewUser(requestSent.$key)">
+      <!--<ion-fab slot="fixed" vertical="center" right style="position: absolute; right: 0 ;">
+        <ion-fab-button mini tappable (click)="cancelFriendRequest(requestSent); $event.stopPropagation();">
+          <ion-icon name="md-close-circle" class="danger"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>-->
+
+      <ion-button slot="end" fill="clear" vertical="center" (click)="cancelFriendRequest(requestSent); $event.stopPropagation();" item-right ><ion-icon slot="icon-only" name="md-close-circle" class="danger"></ion-icon></ion-button>
+      <ion-avatar slot="start">
+        <img src="{{requestSent.img}}">
+      </ion-avatar>
+      <ion-label ion-text-wrap>
+        <h2>{{requestSent.name}}</h2>
+        <p>friend request sent.</p>
+      </ion-label>
+
+    </ion-item>
+  </ion-list>
+</ion-content>

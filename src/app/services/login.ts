@@ -1,24 +1,21 @@
-import {Injectable, NgZone} from "@angular/core";
-import {Facebook} from "ng2-cordova-oauth/core";
-import {OauthCordova} from "ng2-cordova-oauth/platform/cordova";
-import * as firebase from "firebase";
-import {Login} from "../login";
-//import {NavController} from "ionic-angular";
-import {LoadingProvider} from "./loading";
-import {AlertProvider} from "./alert";
-import {GooglePlus} from "@ionic-native/google-plus";
-import {AngularFireDatabase} from "angularfire2/database";
-import {DataProvider} from "./data";
-import {VideoProvider} from "./video";
-import {AsYouType, format, getPhoneCode, parse} from "libphonenumber-js";
+import { Injectable, NgZone } from "@angular/core";
+import { Facebook } from "ng2-cordova-oauth/core";
+import { OauthCordova } from "ng2-cordova-oauth/platform/cordova";
+import  firebase from "firebase/app";
+import { Login } from "../login";
+import { LoadingProvider } from "./loading";
+import { AlertProvider } from "./alert";
+import { GooglePlus } from "@ionic-native/google-plus";
+import { AngularFireDatabase } from "angularfire2/database";
+import { DataProvider } from "./data";
+import { VideoProvider } from "./video";
+import {  format, getPhoneCode, parse } from "libphonenumber-js";
 import { Nav } from "./nav";
 
 // import { Diagnostic } from '@ionic-native/diagnostic';
 
 declare var cordova: any;
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class LoginProvider {
   // Login Provider
   // This is the provider class for most of the login functionalities on Firebase.
@@ -101,7 +98,7 @@ export class LoginProvider {
   // This is important, so the provider can redirect the app to the views depending
   // on the status of the Firebase user.
   setNavController(navCtrl) {
-   // this.navCtrl = navCtrl;
+    this.navCtrl = navCtrl;
   }
 
   // Facebook Login, after successful authentication, triggers firebase.auth().onAuthStateChanged((user) on top and
@@ -127,7 +124,7 @@ export class LoginProvider {
             this.alertProvider.showErrorMessage(code);
           });
       },
-      error => {}
+      error => { }
     );
   }
 
@@ -219,9 +216,10 @@ export class LoginProvider {
         this.createUserData();
       })
       .catch(error => {
+        this.loadingProvider.hide();
         let code = error["code"];
         if (code == "auth/user-not-found") {
-          this.register(email, password);
+          //this.register(email, password);
         } else {
           this.loadingProvider.hide();
           this.alertProvider.showErrorMessage(code);
@@ -335,7 +333,7 @@ export class LoginProvider {
           // Get email from Firebase user.
           email = user.email;
           // Set default description.
-          let description = "Hello! I am a new Communicaters user.";
+          let description = "Hello! I am a new YorTalk user.";
           let uniqueId = Math.floor(Math.random() * 10000000000);
           let tempData = {
             userId: userId,
@@ -359,8 +357,7 @@ export class LoginProvider {
               this.loadingProvider.hide();
               this.videoProvider.InitializingRTC(tempData);
               this.dataProvider.setData("userData", tempData);
-              //this.navCtrl.setRoot(Login.homePage, { animate: false });
-              this.navCtrl.setRoot('tabs');
+              this.navCtrl.setRoot("tabs");
             });
         } else {
           let _userData = account.val();
@@ -370,7 +367,7 @@ export class LoginProvider {
               .update({
                 isOnline: true
               })
-              .then(success => {})
+              .then(success => { })
               .catch(error => {
                 //this.alertProvider.showErrorMessage('profile/error-update-profile');
               });
@@ -378,8 +375,7 @@ export class LoginProvider {
           if (!_userData.isBlock) {
             this.videoProvider.InitializingRTC(account.val());
             this.dataProvider.setData("userData", account.val());
-            //this.navCtrl.setRoot(Login.homePage, { animate: false });
-            this.navCtrl.setRoot('tabs');
+            this.navCtrl.setRoot("tabs");
           } else {
             this.alertProvider.showAlert(
               "Login Failed",

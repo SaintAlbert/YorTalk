@@ -1,10 +1,8 @@
 :host {
-  .scroll-content {
-    background: url('/assets/images/background.png') !important;
-    background-size: 100%
-  }
 
-  div {
+  ion-content {
+    --background: url('/assets/images/background.png') !important;
+    background-size: 100%;
     text-align: center;
 
     .top {
@@ -41,7 +39,7 @@
 
       p.activated,
       p:active {
-        color: var(--ion-color-primary);
+        color: var(--cprimary);
       }
 
       .item-ios {
@@ -54,42 +52,46 @@
       }
 
       button.facebook {
-        background: var(--ion-color-primary)var(--ion-color-facebook);
+        background: var(--facebook);
+        color: #fff;
       }
 
       button.facebook.activated,
       button.facebook:active {
-        background: var(--ion-color-facebook);
+        background: var(--facebook-active);
+        color: #fff;
       }
 
       button.google {
-        background: var(--ion-color-google);
+        background: var(--google);
+        color: #fff;
       }
 
       button.google.activated,
       button.google:active {
-        background: var(--ion-color-google);
+        background: var(--google-active);
+        color: #fff;
       }
 
       button.secondary {
-        background: var(--ion-color-secondary);
+        background: var(--secondary);
       }
 
       button.secondary.activated,
       button.secondary:active {
-        background: var(--ion-color-secondary);
+        background: var(--secondary-active);
       }
 
       button.dark {
-        background: var(--ion-color-dark);
+        background: var(--dark);
       }
 
       button.dark.activated,
       button.dark:active {
-        background: var(--ion-color-dark);
+        background: var(--dark-active);
       }
 
-      ion-input {
+      ion-input, {
         background-color: rgba(0, 0, 0, 0.5);
         padding: 10px;
       }
@@ -114,7 +116,7 @@
 
           ion-item {
             background: transparent;
-            color: var(--ion-color-primary);
+            color: var(--cprimary);
 
             ion-label {
               text-align: left;
@@ -135,7 +137,7 @@
         }
 
         button.clear.activated {
-          color: var(--ion-color-primary);
+          color: var(--cprimary);
         }
       }
     }

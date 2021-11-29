@@ -1,18 +1,15 @@
 import {Component} from "@angular/core";
-//import {  ModalController, NavController, NavParams } from "@ionic/angular";
-//import {SearchPeoplePage} from "../search-people/search-people";
-//import {UserInfoPage} from "../user-info/user-info";
-//import {MessagePage} from "../message/message";
-//import {RequestsPage} from "../requests/requests";
+;
 import {DataProvider} from "../../services/data";
 import {LoadingProvider} from "../../services/loading";
-import * as firebase from "firebase";
+import firebase from "firebase/app";
 import _ from "lodash";
 import {SocialSharing} from "@ionic-native/social-sharing";
-import {UpdateContactPage} from "../update-contact/update-contact";
+import {UpdateContactPage} from "../../components/update-contact/update-contact";
 
 import {Contacts} from "@ionic-native/contacts";
 import { Nav } from "../../services/nav";
+//import { map } from "rxjs/operators";
 
 @Component({
   selector: "page-friends",
@@ -20,9 +17,9 @@ import { Nav } from "../../services/nav";
   styleUrls: ['friends.scss']
 })
 export class FriendsPage {
-  private friends: any;
-  private friendRequests: any;
-  private searchFriend: any;
+   friends: any;
+   friendRequests: any;
+   searchFriend: any;
   mode = "Friends";
   contactFriends: any;
   isLoadding = true;
@@ -31,18 +28,15 @@ export class FriendsPage {
   // FriendsPage
   // This is the page where the user can search, view, and initiate a chat with their friends.
   constructor(
-    //public navCtrl: Nav,
-    //public navParams: NavParams,
-    //public app: App,
     public dataProvider: DataProvider,
     public loadingProvider: LoadingProvider,
     private contacts: Contacts,
-   // public modalCtrl: ModalController,
     public socialsharing: SocialSharing,
     private nav:Nav
   ) {}
 
-  ionViewDidLoad() {
+  ngOnInit() {
+
     // Initialize
     this.searchFriend = "";
     this.loadingProvider.show();
@@ -62,7 +56,7 @@ export class FriendsPage {
       }
       if (account.friends) {
         for (var i = 0; i < account.friends.length; i++) {
-          this.dataProvider.getUser(account.friends[i]).subscribe(friend => {
+          this.dataProvider.getUser(account.friends[i]).valueChanges().subscribe(friend => {
             this.addOrUpdateFriend(friend);
           });
         }
@@ -76,9 +70,13 @@ export class FriendsPage {
         if (data && this.account != "") {
           this.dataProvider
             .setContactWithCountryCode(this.account.countryCode)
-            .then(friend => {
-              this.contactFriends = friend;
-              this.contactFriends = _.sortBy(this.contactFriends, ["name"]);
+            .then((friend:[]) => {
+         
+              
+              if (friend.length>0) {
+                this.contactFriends = friend;
+                this.contactFriends = _.sortBy(this.contactFriends, ["name"]);
+              }
               this.isLoadding = false;
             });
         }
@@ -86,6 +84,8 @@ export class FriendsPage {
       this.loadingProvider.hide();
       userData.unsubscribe();
     });
+
+
   }
 
   // Add or update friend data for real-time sync.
@@ -108,13 +108,14 @@ export class FriendsPage {
   }
 
   // update contact number
-  async updateContact() {
+  updateContact() {
     this.nav.openModal(UpdateContactPage, {
       userData: this.account
-    })
+    });
+
   }
 
-  // Proceed to searchPeople page.
+  //// Proceed to searchPeople page.
   searchPeople() {
     this.nav.push('searchpeople');
    // this.app.getRootNav().push(SearchPeoplePage);
@@ -137,6 +138,7 @@ export class FriendsPage {
     this.nav.push('message', { userId: userId });
     //this.app.getRootNav().push(MessagePage, { userId: userId });
   }
+
 
   // get Contact number
   // getContact(){

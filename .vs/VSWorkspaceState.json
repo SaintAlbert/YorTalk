@@ -3,14 +3,15 @@
     "",
     "\\src",
     "\\src\\app",
+    "\\src\\app\\components",
+    "\\src\\app\\components\\denomination",
     "\\src\\app\\pages",
-    "\\src\\app\\pages\\trial",
-    "\\src\\app\\pages\\user-info",
-    "\\src\\app\\pages\\users",
-    "\\src\\app\\pages\\verification",
-    "\\src\\app\\pages\\video-call",
-    "\\src\\app\\services"
+    "\\src\\app\\pages\\live-room",
+    "\\src\\app\\pages\\new-live-room",
+    "\\src\\app\\services",
+    "\\src\\assets\\dollars",
+    "\\src\\assets\\images"
   ],
-  "SelectedNode": "\\src\\app\\app.component.ts",
+  "SelectedNode": "\\src\\app\\pages\\live-room\\live-room.ts",
   "PreviewInSolutionExplorer": false
 }

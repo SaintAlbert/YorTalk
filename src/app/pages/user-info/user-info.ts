@@ -4,9 +4,10 @@ import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
 import {FirebaseProvider} from '../../services/firebase';
 //import {MessagePage} from '../message/message';
-import {ImageModalPage} from '../image-modal/image-modal';
-import * as firebase from 'firebase';
+import { ImageModalPage } from '../../components/image-modal/image-modal';
+import firebase  from 'firebase/app';
 import { Nav } from '../../services/nav';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'page-user-info',
@@ -25,20 +26,28 @@ export class UserInfoPage {
   constructor(public navCtrl: Nav,  public dataProvider: DataProvider,
     public loadingProvider: LoadingProvider, public alertCtrl: AlertController, public firebaseProvider: FirebaseProvider) { }
 
-  ionViewDidLoad() {
+  ngOnInit () {
     this.userId = this.navCtrl.get('userId');
     this.loadingProvider.show();
     // Get user info.
-    this.dataProvider.getUser(this.userId).subscribe((user) => {
+    this.dataProvider.getUser(this.userId)
+      //.valueChanges()
+      .snapshotChanges()
+      .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+      .subscribe((user) => {
       this.user = user;
       this.loadingProvider.hide();
     });
     // Get friends of current logged in user.
-    this.dataProvider.getUser(firebase.auth().currentUser.uid).subscribe((user) => {
+    this.dataProvider.getUser(firebase.auth().currentUser.uid)
+      //.valueChanges()
+      .snapshotChanges()
+      .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+      .subscribe((user: any) => {
       this.friends = user.friends;
     });
     // Get requests of current logged in user.
-    this.dataProvider.getRequests(firebase.auth().currentUser.uid).subscribe((requests) => {
+    this.dataProvider.getRequests(firebase.auth().currentUser.uid).subscribe((requests:any) => {
       this.friendRequests = requests.friendRequests;
       this.requestsSent = requests.requestsSent;
     });
@@ -46,7 +55,8 @@ export class UserInfoPage {
 
   // Back
   back() {
-    this.navCtrl.popToRoot();
+    //this.navCtrl.popToRoot();
+    this.navCtrl.back();
   }
 
   // Enlarge user's profile image.

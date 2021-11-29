@@ -1,15 +1,15 @@
 <ion-header>
-  <ion-navbar hideBackButton="true">
-    <ion-buttons start>
-     <button ion-button tappable (click)="back()">Back</button>
+  <ion-toolbar hideBackButton="true">
+    <ion-buttons slot="secondary">
+     <ion-button tappable (click)="back()">Back</ion-button>
    </ion-buttons>
    <ion-title>{{title}}</ion-title>
-   <ion-buttons end>
-     <button (click)="videoCall()" ion-button icon-only [disabled]="!isOnline">
+   <ion-buttons slot="primary">
+     <ion-button (click)="videoCall()" icon-only [disabled]="!isOnline">
        <ion-icon name="videocam"></ion-icon>
-     </button>
+     </ion-button>
    </ion-buttons>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 <ion-content has-footer>
   <!-- Messages -->
@@ -18,12 +18,12 @@
     <p class="center" *ngIf="startIndex > 0"><span tappable (click)="loadPreviousMessages()">Load previous messages</span></p>
     <ion-row *ngFor="let message of messagesToShow">
       <!--  Message -->
-      <ion-col col-2 class="center" *ngIf="isSender(message)">
+      <ion-col size="2" class="center" *ngIf="isSender(message)">
         <img src="{{message.avatar}}" (load)="doScroll()" />
       </ion-col>
-      <ion-col col-1 *ngIf="!isSender(message)">
+      <ion-col size="1" *ngIf="!isSender(message)">
       </ion-col>
-      <ion-col col-9 class="sender" *ngIf="isSender(message)" (press)="share(message)">
+      <ion-col size="9" class="sender" *ngIf="isSender(message)" (press)="share(message)">
         <div class="left" *ngIf="message.type == 'text'">
          <p>
             {{message.message}}<br/>
@@ -57,7 +57,7 @@
           
         </div>
       </ion-col>
-      <ion-col col-9 *ngIf="!isSender(message)" (press)="share(message)">
+      <ion-col size="9" *ngIf="!isSender(message)" (press)="share(message)">
         <div class="right" *ngIf="message.type == 'text'">
           <p>{{message.message}}<br/>
           <span>{{message.date | DateFormat}}</span>
@@ -88,9 +88,9 @@
           
         </div>
       </ion-col>
-      <ion-col col-1 *ngIf="isSender(message)">
+      <ion-col size="1" *ngIf="isSender(message)">
       </ion-col>
-      <ion-col col-2 class="center" *ngIf="!isSender(message)">
+      <ion-col size="2" class="center" *ngIf="!isSender(message)">
         <ion-icon name="radio-button-on" class="online" [ngClass]="message.isOnline?'isOnline' : 'isOffline'"></ion-icon>
         <img src="{{message.avatar}}" tappable (click)="viewUser(message.sender)" (load)="doScroll()" />
       </ion-col>
@@ -103,25 +103,25 @@
  <ion-grid class="bottom_bar">
       <ion-row>
         <ion-col>
-            <ion-fab middle left >
+            <ion-fab slot="fixed" vertical="center" left >
                 <ion-buttons style="margin-top:13px">
                 <button mini tappable (click)="sendPhoto()"><ion-icon name="md-camera"></ion-icon></button>
                 </ion-buttons>
               </ion-fab>
         </ion-col>
         <ion-col>
-            <ion-fab middle left >
+            <ion-fab slot="fixed" vertical="center" left >
                 <ion-buttons style="margin-top:13px">
                 <button mini tappable (press)="audioRec()"><ion-icon name="md-mic"></ion-icon></button>
                 </ion-buttons>
               </ion-fab>
         </ion-col>
-        <ion-col col-8>
+        <ion-col size="8">
             <ion-textarea style="color: white" placeholder="Type your message" [(ngModel)]="message" (focus)="scrollBottom()" (keypress)="onType($event.keyCode)"></ion-textarea>
         </ion-col>
         <ion-col>
-            <ion-fab middle right style="position: absolute; right: 0 ;">
-                <button ion-fab mini tappable (click)="send()" [disabled]="!message"><ion-icon name="md-send"></ion-icon></button>
+            <ion-fab slot="fixed" vertical="center" right style="position: absolute; right: 0 ;">
+                <ion-fab-button mini tappable (click)="send()" [disabled]="!message"><ion-icon name="md-send"></ion-icon></ion-fab-button>
               </ion-fab>
         </ion-col>
       </ion-row>

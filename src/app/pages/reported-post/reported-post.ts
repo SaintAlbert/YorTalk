@@ -26,7 +26,7 @@ export class ReportedPostPage {
   ) {
   }
 
-  ionViewDidLoad() {
+  ngOnInit () {
     console.log('ionViewDidLoad ReportedPostPage');
     this.loadingProvider.show();    
     this.getReportedPost()
@@ -67,7 +67,7 @@ export class ReportedPostPage {
   }
 
 
-  getReportedPost(){
+  getReportedPost() {
     this.dataProvider.getAllReportedPost().subscribe((post) => {
       this.loadingProvider.hide();
       this.reportedPost = post;

@@ -1,20 +1,22 @@
-import {Component} from "@angular/core";
+import { Component } from "@angular/core";
 import { AlertController } from "@ionic/angular";
-import {LogoutProvider} from "../../services/logout";
-import {LoadingProvider} from "../../services/loading";
-import {AlertProvider} from "../../services/alert";
-import {ImageProvider} from "../../services/image";
-import {DataProvider} from "../../services/data";
-import {AngularFireDatabase} from "angularfire2/database";
-import {Validator} from "../../validator";
+import { LogoutProvider } from "../../services/logout";
+import { LoadingProvider } from "../../services/loading";
+import { AlertProvider } from "../../services/alert";
+import { ImageProvider } from "../../services/image";
+import { DataProvider } from "../../services/data";
+import { AngularFireDatabase } from "angularfire2/database";
+import firebase from 'firebase/app';
+import { Validator } from "../../validator";
 //import {LoginPage} from "../login/login";
-import {UpdateContactPage} from "../update-contact/update-contact";
+import { UpdateContactPage } from "../../components/update-contact/update-contact";
 //import {UsersPage} from "../users/users";
 
-import {Login} from "../../login";
-import * as firebase from "firebase";
-import {Camera} from "@ionic-native/camera";
+import { Login } from "../../login";
+//import * as firebase from "firebase";
+//import { Camera } from "@ionic-native/camera";
 //import {ReportedPostPage} from "../reported-post/reported-post";
+import { CameraSource } from '@capacitor/core';
 import { Nav } from "../../services/nav";
 
 declare var AccountKitPlugin: any;
@@ -41,12 +43,12 @@ export class HomePage {
     public angularDb: AngularFireDatabase,
     public alertProvider: AlertProvider,
     public dataProvider: DataProvider,
-    public camera: Camera
+    //public camera: Camera
   ) {
     this.logoutProvider.setApp(this.navCtrl);
   }
 
-  ionViewDidLoad() {
+  ngOnInit() {
     // Observe the userData on database to be used by our markup html.
     // Whenever the userData on the database is updated, it will automatically reflect on our user variable.
     // this.loadingProvider.show();
@@ -57,6 +59,8 @@ export class HomePage {
       console.log(" user", this.user);
     });
   }
+ 
+
   sendfeedback() {
     window.open(
       `mailto:mayorainfotech@gmail.com?Subject=SendFeedBack`,
@@ -80,14 +84,22 @@ export class HomePage {
                     text: "Choose from Gallery",
                     handler: () => {
                         // Call imageProvider to process, upload, and update user photo.
-                        this.imageProvider.setProfilePhoto(this.user, this.camera.PictureSourceType.PHOTOLIBRARY);
+                        this.imageProvider.setProfilePhoto(
+                          this.user,
+                           CameraSource.Photos
+                            //this.camera.PictureSourceType.PHOTOLIBRARY
+                        );
                     }
                 },
                 {
                     text: "Take Photo",
                     handler: () => {
                         // Call imageProvider to process, upload, and update user photo.
-                        this.imageProvider.setProfilePhoto(this.user, this.camera.PictureSourceType.CAMERA);
+                        this.imageProvider.setProfilePhoto(
+                          this.user,
+                          CameraSource.Camera
+                            //this.camera.PictureSourceType.CAMERA
+                        );
                     }
                 }
             ]
@@ -144,7 +156,9 @@ export class HomePage {
                                                     this.alertProvider.showProfileUpdatedMessage();
                                                 })
                                                 .catch(error => {
-                                                    this.alertProvider.showErrorMessage("profile/error-update-profile");
+                                                    this.alertProvider.showErrorMessage(
+                                                        "profile/error-update-profile"
+                                                    );
                                                 });
                                         })
                                         .catch(error => {
@@ -154,18 +168,17 @@ export class HomePage {
                                             this.alertProvider.showErrorMessage(code);
                                             if (code == "auth/requires-recent-login") {
                                                 this.logoutProvider.logout().then(res => {
-                                                  AccountKitPlugin.logout();
-                                                  this.navCtrl.pop('/login')
-                                                    //this.navCtrl.parent.parent.setRoot(LoginPage);
+                                                    AccountKitPlugin.logout();
+                                                  this.navCtrl.setRoot('login');
                                                 });
                                             }
                                         });
+                                } else {
+                                    this.alertProvider.showErrorMessage(
+                                        "profile/invalid-chars-name"
+                                    );
                                 }
-                                else {
-                                    this.alertProvider.showErrorMessage("profile/invalid-chars-name");
-                                }
-                            }
-                            else {
+                            } else {
                                 this.alertProvider.showErrorMessage("profile/name-too-short");
                             }
                         }
@@ -205,9 +218,10 @@ export class HomePage {
                                 .take(1)
                                 .subscribe(userList => {
                                     if (userList.length > 0) {
-                                        this.alertProvider.showErrorMessage("profile/error-same-username");
-                                    }
-                                    else {
+                                        this.alertProvider.showErrorMessage(
+                                            "profile/error-same-username"
+                                        );
+                                    } else {
                                         this.angularDb
                                             .object("/accounts/" + this.user.userId)
                                             .update({
@@ -217,7 +231,9 @@ export class HomePage {
                                                 this.alertProvider.showProfileUpdatedMessage();
                                             })
                                             .catch(error => {
-                                                this.alertProvider.showErrorMessage("profile/error-update-profile");
+                                                this.alertProvider.showErrorMessage(
+                                                    "profile/error-update-profile"
+                                                );
                                             });
                                     }
                                 });
@@ -257,9 +273,10 @@ export class HomePage {
                                 .take(1)
                                 .subscribe(userList => {
                                     if (userList.length > 0) {
-                                        this.alertProvider.showErrorMessage("profile/error-same-phoneNumber");
-                                    }
-                                    else {
+                                        this.alertProvider.showErrorMessage(
+                                            "profile/error-same-phoneNumber"
+                                        );
+                                    } else {
                                         this.angularDb
                                             .object("/accounts/" + this.user.userId)
                                             .update({
@@ -269,7 +286,9 @@ export class HomePage {
                                                 this.alertProvider.showPhoneNumberUpdatedMessage();
                                             })
                                             .catch(error => {
-                                                this.alertProvider.showErrorMessage("profile/error-update-profile");
+                                                this.alertProvider.showErrorMessage(
+                                                    "profile/error-update-profile"
+                                                );
                                             });
                                     }
                                 });
@@ -286,7 +305,6 @@ export class HomePage {
     this.navCtrl.openModal(UpdateContactPage, {
       userData: this.user
     });
-   
   }
 
   loginCallback(response) {
@@ -326,7 +344,9 @@ export class HomePage {
                                     this.alertProvider.showProfileUpdatedMessage();
                                 })
                                 .catch(error => {
-                                    this.alertProvider.showErrorMessage("profile/error-update-profile");
+                                    this.alertProvider.showErrorMessage(
+                                        "profile/error-update-profile"
+                                    );
                                 });
                         }
                     }
@@ -379,14 +399,17 @@ export class HomePage {
                                                 Validator.profileEmailValidator.pattern.test(email);
                                                 // Check if emailVerification is enabled, if it is go to verificationPage.
                                                 if (Login.emailVerification) {
-                                                  if (!firebase.auth().currentUser.emailVerified) {
-                                                    
-                                                    this.navCtrl.setRoot('verification');
+                                                    if (!firebase.auth().currentUser.emailVerified) {
+                                                      //this.navCtrl.setRoot(Login.verificationPage);
+                                                      this.navCtrl.setRoot('verification');
+                                                     
                                                     }
                                                 }
                                             })
                                             .catch(error => {
-                                                this.alertProvider.showErrorMessage("profile/error-change-email");
+                                                this.alertProvider.showErrorMessage(
+                                                    "profile/error-change-email"
+                                                );
                                             });
                                     })
                                     .catch(error => {
@@ -397,14 +420,12 @@ export class HomePage {
                                         if (code == "auth/requires-recent-login") {
                                             this.logoutProvider.logout().then(res => {
                                                 this.dataProvider.clearData();
-                                              AccountKitPlugin.logout();
+                                                AccountKitPlugin.logout();
                                               this.navCtrl.setRoot('login');
-                                                //this.navCtrl.parent.parent.setRoot(LoginPage);
                                             });
                                         }
                                     });
-                            }
-                            else {
+                            } else {
                                 this.alertProvider.showErrorMessage("profile/invalid-email");
                             }
                         }
@@ -449,19 +470,24 @@ export class HomePage {
                     text: "Save",
                     handler: data => {
                         let currentPassword = data["currentPassword"];
-                        let credential = firebase.auth.EmailAuthProvider.credential(this.user.email, currentPassword);
+                        let credential = firebase.auth.EmailAuthProvider.credential(
+                            this.user.email,
+                            currentPassword
+                        );
                         // Check if currentPassword entered is correct
                         this.loadingProvider.show();
                         firebase
                             .auth()
-                            .currentUser.reauthenticate(credential)
+                            .currentUser.reauthenticateWithCredential(credential)
                             .then(success => {
                                 let password = data["password"];
                                 // Check if entered password is not the same as the currentPassword
                                 if (password != currentPassword) {
                                     if (password.length >=
                                         Validator.profilePasswordValidator.minLength) {
-                                        if (Validator.profilePasswordValidator.pattern.test(password)) {
+                                        if (Validator.profilePasswordValidator.pattern.test(
+                                            password
+                                        )) {
                                             if (password == data["confirmPassword"]) {
                                                 // Update password on Firebase.
                                                 firebase
@@ -469,7 +495,9 @@ export class HomePage {
                                                     .currentUser.updatePassword(password)
                                                     .then(success => {
                                                         this.loadingProvider.hide();
-                                                        Validator.profilePasswordValidator.pattern.test(password);
+                                                        Validator.profilePasswordValidator.pattern.test(
+                                                            password
+                                                        );
                                                         this.alertProvider.showPasswordChangedMessage();
                                                     })
                                                     .catch(error => {
@@ -480,22 +508,24 @@ export class HomePage {
                                                             this.logoutProvider.logout().then(res => {
                                                                 this.dataProvider.clearData();
                                                                 AccountKitPlugin.logout();
-                                                                //this.navCtrl.parent.parent.setRoot(LoginPage);
                                                               this.navCtrl.setRoot('login');
                                                             });
                                                         }
                                                     });
+                                            } else {
+                                                this.alertProvider.showErrorMessage(
+                                                    "profile/passwords-do-not-match"
+                                                );
                                             }
-                                            else {
-                                                this.alertProvider.showErrorMessage("profile/passwords-do-not-match");
-                                            }
+                                        } else {
+                                            this.alertProvider.showErrorMessage(
+                                                "profile/invalid-chars-password"
+                                            );
                                         }
-                                        else {
-                                            this.alertProvider.showErrorMessage("profile/invalid-chars-password");
-                                        }
-                                    }
-                                    else {
-                                        this.alertProvider.showErrorMessage("profile/password-too-short");
+                                    } else {
+                                        this.alertProvider.showErrorMessage(
+                                            "profile/password-too-short"
+                                        );
                                     }
                                 }
                             })
@@ -543,7 +573,6 @@ export class HomePage {
                                         this.alertProvider.showAccountDeletedMessage();
                                         this.logoutProvider.logout().then(res => {
                                             AccountKitPlugin.logout();
-                                            //this.navCtrl.parent.parent.setRoot(LoginPage);
                                           this.navCtrl.setRoot('login');
                                         });
                                     });
@@ -555,7 +584,6 @@ export class HomePage {
                                 if (code == "auth/requires-recent-login") {
                                     this.logoutProvider.logout().then(res => {
                                         this.dataProvider.clearData();
-                                        //this.navCtrl.parent.parent.setRoot(LoginPage);
                                       this.navCtrl.setRoot('login');
                                     });
                                 }
@@ -583,7 +611,6 @@ export class HomePage {
                         this.logoutProvider.logout().then(res => {
                             this.dataProvider.clearData();
                             AccountKitPlugin.logout();
-                            //this.navCtrl.parent.parent.setRoot(LoginPage);
                           this.navCtrl.setRoot('login');
                         });
                     }
@@ -593,8 +620,13 @@ export class HomePage {
       .present();
   }
 
+
+
+
+
+
   reportedPost() {
-    this.navCtrl.push('timeline/reported-post');
+    this.navCtrl.push('reported-post');
   }
 
   users() {

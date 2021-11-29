@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 
 import {LoadingProvider} from './loading';
 import {DataProvider} from './data';
-import * as firebase from 'firebase';
+import  firebase from 'firebase/app';
 import { Nav } from './nav';
 
 @Injectable({

@@ -19,6 +19,17 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
+            "allowedCommonJsDependencies": [
+              "rxjs-compat",
+              "@firebase",
+              "@angular/fire",
+              "firebase",
+              "firebase/app",
+              "angularfire2",
+              "angularfire2/database",
+              "lodash",
+              "ng2-cordova-oauth"
+            ],
             "assets": [
               {
                 "glob": "**/*",
@@ -29,10 +40,25 @@
                 "glob": "**/*.svg",
                 "input": "node_modules/ionicons/dist/ionicons/svg",
                 "output": "./svg"
+              },
+              {
+                "glob": "**/*webphotofilter.js",
+                "input": "node_modules/web-photo-filter/dist",
+                "output": "./"
+              },
+              {
+                "glob": "**/*webphotofilter/*",
+                "input": "node_modules/web-photo-filter/dist",
+                "output": "./"
               }
             ],
-            "styles": ["src/theme/variables.scss", "src/global.scss"],
-            "scripts": [],
+            "styles": [ "src/theme/variables.scss", "src/global.scss" ],
+            "scripts": [
+              "node_modules/sipml/SIPml-api.js"
+              //"src/mediasoupclient/RoomClient.js"
+              //"src/api-rtc/socket.io.js",
+              //"src/api-rtc/easyrtc.js"
+            ],
             "aot": false,
             "vendorChunk": true,
             "extractLicenses": false,
@@ -73,7 +99,10 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "app:build"
+            "browserTarget": "app:build",
+            "ssl": true,
+            "sslKey": "src/ssl/key.pem",
+            "sslCert": "src/ssl/cert.pem"
           },
           "configurations": {
             "production": {

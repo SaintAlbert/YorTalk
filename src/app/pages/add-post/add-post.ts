@@ -1,15 +1,16 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import { AlertController, NavController, NavParams } from '@ionic/angular';
+import { AlertController} from '@ionic/angular';
 import {LoadingProvider} from '../../services/loading';
 import {DataProvider} from '../../services/data';
-import {AngularFireDatabase} from 'angularfire2/database';
-import * as firebase from 'firebase';
+import { AngularFireDatabase } from "angularfire2/database";
+import  firebase from 'firebase/app';
 import {FirebaseProvider} from '../../services/firebase';
 import {ImageProvider} from '../../services/image';
 import {AlertProvider} from '../../services/alert';
 import {GoogleMaps} from '@ionic-native/google-maps';
 import {Geolocation} from '@ionic-native/geolocation';
 import { Nav } from '../../services/nav';
+//import { AngularFireAuth } from '@angular/fire/auth';
 
 declare var google:any;
 
@@ -39,7 +40,8 @@ export class AddPostPage {
     //public navParams: NavParams,
     public loadingProvider: LoadingProvider,
     public dataProvider: DataProvider,
-    public angularDb:AngularFireDatabase,
+    public angularDb: AngularFireDatabase,
+    //private auth: AngularFireAuth,
     public firebaseProvider: FirebaseProvider,
     public alertCtrl:AlertController,
     public imageProvider:ImageProvider,
@@ -48,7 +50,7 @@ export class AddPostPage {
     private geolocation: Geolocation) {
   }
 
-  ionViewDidLoad() {
+  ngOnInit () {
     // Observe the userData on database to be used by our markup html.
     // Whenever the userData on the database is updated, it will automatically reflect on our user variable.
     this.dataProvider.getCurrentUser().subscribe((user) => {
@@ -57,87 +59,86 @@ export class AddPostPage {
     });
   }
 
-  post(){
-    if(this.image){
+  post() {
+    if (this.image) {
       this.loadingProvider.show();
-      this.imageProvider.uploadPostImage(this.image).then((url)=>{
+      this.imageProvider.uploadPostImage(this.image).then((url) => {
         // ======= push new post in 'timeline' ====
         this.angularDb.list('timeline').push({
           dateCreated: new Date().toString(),
-          postBy:firebase.auth().currentUser.uid,
-          postText:this.postText,
-          image:url
-        }).then((success)=>{
+          postBy: firebase.auth().currentUser.uid,
+          postText: this.postText,
+          image: url
+        }).then((success) => {
           this.postText = '';
           let timelineId = success.key;
           this.firebaseProvider.timeline(timelineId);
           this.alertProvider.showToast('Add post successfully ..');
           this.loadingProvider.hide();
-          this.navCtrl.pop('timeline');
+          this.navCtrl.back();
 
         })
       })
-    }else if(this.location){
+    } else if (this.location) {
       this.loadingProvider.show();
       // ======= push new post in 'timeline' ====
       this.angularDb.list('timeline').push({
         dateCreated: new Date().toString(),
-        postBy:firebase.auth().currentUser.uid,
-        postText:this.postText,
-        location:this.location
-      }).then((success)=>{
+        postBy: firebase.auth().currentUser.uid,
+        postText: this.postText,
+        location: this.location
+      }).then((success) => {
         this.postText = '';
         let timelineId = success.key;
         this.firebaseProvider.timeline(timelineId);
         this.alertProvider.showToast('Add post successfully ..');
         this.loadingProvider.hide();
-        //this.navCtrl.pop();
-        this.navCtrl.pop('timeline');
+        this.navCtrl.back();
 
       })
-    }else{
+    } else {
       this.loadingProvider.show();
       // ======= push new post in 'timeline' ====
       this.angularDb.list('timeline').push({
         dateCreated: new Date().toString(),
-        postBy:firebase.auth().currentUser.uid,
-        postText:this.postText,
-      }).then((success)=>{
+        postBy: firebase.auth().currentUser.uid,
+        postText: this.postText,
+      }).then((success) => {
         this.postText = '';
         let timelineId = success.key;
         this.firebaseProvider.timeline(timelineId);
         this.alertProvider.showToast('Add post successfully ..')
         this.loadingProvider.hide();
         //this.navCtrl.pop();
-        this.navCtrl.pop('timeline');
+        this.navCtrl.back();
       })
     }
   }
-  imageShare(){
-    this.imageProvider.setImage().then((url)=>{
+  imageShare() {
+    this.imageProvider.setImage().then((url) => {
       this.image = url;
     })
   }
-  locationShare(){
+  locationShare() {
     this.loadingProvider.show();
     this.geolocation.getCurrentPosition().then((position) => {
 
-     let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+      let latLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-     let mapOptions = {
-       center: latLng,
-       zoom: 15,
-       mapTypeId: google.maps.MapTypeId.ROADMAP
-     }
-     this.location = JSON.stringify({lat:position.coords.latitude,long:position.coords.longitude})
-     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-     let marker = new google.maps.Marker({
+      let mapOptions = {
+        center: latLng,
+        zoom: 15,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      }
+      this.location = JSON.stringify({ lat: position.coords.latitude, long: position.coords.longitude })
+      this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
+      let marker = new google.maps.Marker({
         map: this.map,
         animation: google.maps.Animation.DROP,
         position: this.map.getCenter()
       });
-       this.loadingProvider.hide();
-   }, (err) => {
-   });
+      this.loadingProvider.hide();
+    }, (err) => {
+    });
   }
 }

@@ -6,76 +6,120 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>IonSocial</ion-title>
-  </ion-navbar>
+  <ion-toolbar>
+    <ion-title>YorTalk</ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar>
+    <ion-chip color="secondary">
+      <ion-avatar>
+        <img src="/assets/images/event-icon.png">
+      </ion-avatar>
+      <ion-label>Wazup</ion-label>
+    </ion-chip>
+
+    <ion-chip>
+      <ion-avatar>
+        <img src="/assets/images/lifestyle-icon.jpg">
+      </ion-avatar>
+      <ion-label>Lifestyle</ion-label>
+    </ion-chip>
+
+    <ion-chip>
+      <ion-avatar>
+        <img src="/assets/images/handyman.png">
+      </ion-avatar>
+      <ion-label>Handy</ion-label>
+    </ion-chip>
+  </ion-toolbar>
 
 </ion-header>
 
 
-<ion-content >
-  <ion-card *ngIf="user">
-    <ion-item class="post" (click)="addPost()" >
-      <ion-thumbnail item-left  >
-        <img src="{{user.img}}"  >
-      </ion-thumbnail>
-      <p >What's on your mind?</p>
-    </ion-item>
+<ion-content>
+  <ion-card *ngIf="user" class="">
+    <!--<ion-card-content>-->
+      <ion-item class="post" (click)="addPost()" lines="none">
+        <ion-thumbnail item-left>
+          <img src="{{user.img}}">
+        </ion-thumbnail>
+        <p>What's on your mind?</p>
+      </ion-item>
+    <!--</ion-card-content>-->
   </ion-card>
-  <ion-card *ngFor="let item of timelineData">
-    <ion-item >
-      <ion-avatar item-left>
-        <img src="{{item.avatar}}"  >
-      </ion-avatar>
-      <h2>{{item.name}}</h2>
-      <p>{{item.dateCreated | DateFormat}}</p>
-      <ion-icon  item-right ios="ios-more" md="md-more" (click)="reportPost(item)"></ion-icon>
 
+
+
+  <ion-card *ngFor="let item of timelineData">
+    <ion-item lines="none">
+      <ion-avatar slot="start">
+        <img src="{{item.avatar}}">
+      </ion-avatar>
+      <ion-label>
+        <h3>{{item.name}}</h3>
+        <p>{{item.dateCreated | DateFormat}}</p>
+      </ion-label>
+      <ion-icon slot="end" ios="ios-more" md="md-more" (click)="reportPost(item)"></ion-icon>
     </ion-item>
 
-    <ion-card-content>
-      <p>{{item.postText}}</p>
-    </ion-card-content>
-    <!-- <img *ngIf="p.isType==2"   src="{{p.mapUrl}}" style="200px" (click)="openMap(p.mapData.lat,p.mapData.long)"> -->
     <img src="{{item.image}}" style="height:200px" *ngIf="item.image" (click)="enlargeImage(item.image)">
     <img src="https://maps.googleapis.com/maps/api/staticmap?&zoom=13&size=500x200&maptype=roadmap&markers=color:red|label:S|{{item.lat}},{{item.long}}&key=AIzaSyAt0edUAx4S2d7z8wh1Xe04yE9Xml1ZLPY" style="height:200px" *ngIf="item.location" (click)="openMap(item.lat,item.long)">
-    <ion-row text-center>
-      <ion-col col-4>
-        <button ion-button icon-left clear small color="dark" (click)="likePost(item)" *ngIf="!item.isLike">
-          <ion-icon name="thumbs-up" ></ion-icon>
-          <div> {{item.likes}} Like </div>
-        </button>
-        <button ion-button icon-left clear small color="custom" (click)="delikePost(item)" *ngIf="item.isLike">
-          <ion-icon name="thumbs-up" ></ion-icon>
-          <div>{{item.likes}} Like</div>
-        </button>
-      </ion-col>
-      <ion-col col-4>
-        <button ion-button icon-left clear small color="dark" (click)="disikePost(item)" *ngIf="!item.isdisLike">
-          <ion-icon name="thumbs-down" ></ion-icon>
-          <div> {{item.dislikes}} Dislike </div>
-        </button>
-        <button ion-button icon-left clear small color="custom" (click)="dedislikePost(item)" *ngIf="item.isdisLike">
-          <ion-icon name="thumbs-down" ></ion-icon>
-          <div>{{item.dislikes}} Dislike</div>
-        </button>
-      </ion-col>
-      <ion-col col-4>
-        <button ion-button icon-left clear small color="dark" (click)="commentPost(item)" *ngIf="!item.isComment">
-          <ion-icon name="text"></ion-icon>
-          <div>{{item.comments}} Comment</div>
-        </button>
-        <button ion-button icon-left clear small color="custom" (click)="commentPost(item)" *ngIf="item.isComment" >
-          <ion-icon name="text"></ion-icon>
-          <div>{{item.comments}} Comment</div>
-        </button>
-      </ion-col>
-      <!-- <ion-col center text-center>
-        <button ion-button icon-left clear small color="dark">
-          <ion-icon name="share-alt"></ion-icon>
-          <div>share</div>
-        </button>
-      </ion-col> -->
-    </ion-row>
+
+    <!--<ion-card-header>
+      <ion-card-title>Hotel Panama Garden</ion-card-title>
+    </ion-card-header>-->
+    <ion-card-content>
+      {{item.postText}}
+    </ion-card-content>
+
+    <ion-footer>
+      <ion-row>
+        <ion-col size="3">
+          <ion-button fill="clear" size="small" color="dark" (click)="likePost(item)" *ngIf="!item.isLike">
+            <ion-icon  name="thumbs-up"></ion-icon>
+            <div> {{item.likes}} Like </div>
+          </ion-button>
+          <ion-button fill="clear" size="small" color="custom" (click)="delikePost(item)" *ngIf="item.isLike">
+            <ion-icon name="thumbs-up"></ion-icon>
+            <div>{{item.likes}} Like</div>
+          </ion-button>
+        </ion-col>
+        <ion-col size="3">
+          <ion-button fill="clear" size="small" color="dark" (click)="disikePost(item)" *ngIf="!item.isdisLike">
+            <ion-icon  name="thumbs-down"></ion-icon>
+            <div> {{item.dislikes}} Dislike </div>
+          </ion-button>
+          <ion-button fill="clear" size="small" color="custom" (click)="dedislikePost(item)" *ngIf="item.isdisLike">
+            <ion-icon  name="thumbs-down"></ion-icon>
+            <div>{{item.dislikes}} Dislike</div>
+          </ion-button>
+        </ion-col>
+
+        <ion-col size="3">
+
+          <ion-button fill="clear" size="small" color="dark" (click)="commentPost(item)" *ngIf="!item.isComment">
+            <ion-icon  name="text"></ion-icon>
+            <div>{{item.comments}} Comment</div>
+          </ion-button>
+          <ion-button fill="clear" size="small" color="custom" (click)="commentPost(item)" *ngIf="item.isComment">
+            <ion-icon   name="text"></ion-icon>
+            <div>{{item.comments}} Comment</div>
+          </ion-button>
+        </ion-col>
+
+        <ion-col size="3">
+
+          <ion-button fill="clear" size="small" color="dark" (click)="commentPost(item)" *ngIf="!item.isComment">
+            <ion-icon  name="share-alt"></ion-icon>
+            <div>{{item.comments}} Share</div>
+          </ion-button>
+          <ion-button fill="clear" size="small" color="custom" (click)="commentPost(item)" *ngIf="item.isComment">
+            <ion-icon  name="share-alt"></ion-icon>
+            <div>{{item.comments}} Share</div>
+          </ion-button>
+        </ion-col>
+
+      </ion-row>
+    </ion-footer>
   </ion-card>
 </ion-content>

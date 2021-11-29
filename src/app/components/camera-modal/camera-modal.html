@@ -1,0 +1,130 @@
+<!--<ion-content>
+  <div class="content" (click)="close()" tappable>
+    <img src={{image}}/>
+  </div>
+</ion-content>-->
+<!-- home.page.html -->
+
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">Cancel</ion-button>
+    </ion-buttons>
+    <ion-title>
+      Photo Filter
+    </ion-title>
+    <ion-buttons slot="end" *ngIf="image">
+      <ion-button (click)="saveImage()">Done</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen]="true" id="cameraPreview">
+
+  <!-- Big preview of selected filter -->
+  <div id="preview" *ngIf="image">
+
+    <web-photo-filter [class.no-original]="selectedFilter != ''"
+                      [class.only-original]="selectedFilter == ''"
+                      [src]="image"
+                      keep="true"
+                      [filter]="selectedFilter"
+                      (filterLoad)="imageLoaded($event)">
+    </web-photo-filter>
+  </div>
+
+  <!-- Slides with thumbnail preview of all filters -->
+  <ion-slides [options]="slideOpts" *ngIf="image">
+
+    <ion-slide *ngFor="let opts of filterOptions; let i = index;" tappable (click)="filter(i)">
+      <ion-text [class.selected]="i == selectedIndex">{{ opts.name }}</ion-text>
+      <div id="preview">
+        <web-photo-filter [class.no-original]="i > 0"
+                          [src]="image"
+                          keep="false"
+                          [filter]="opts.value">
+        </web-photo-filter>
+      </div>
+    </ion-slide>
+
+  </ion-slides>
+
+  <!--<ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-button color="primary" (click)="startCameraAbove()">Start Front</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button color="primary" (click)="startCameraBelow()">Start Back</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button color="danger" (click)="stopCamera()">Stop Camera</ion-button>
+      </ion-col>
+      <ion-col>
+
+        <ion-label>Color Effect:</ion-label>
+        <ion-select interface="popover" placeholder="Select Effect" [(ngModel)]="colorEffect"
+                    (ionChange)="changeColorEffect()">
+          <ion-select-option value="none">none</ion-select-option>
+          <ion-select-option value="aqua">aqua</ion-select-option>
+          <ion-select-option value="blackboard">blackboard</ion-select-option>
+          <ion-select-option value="mono">mono</ion-select-option>
+          <ion-select-option value="negative">negative</ion-select-option>
+          <ion-select-option value="posterize">posterize</ion-select-option>
+          <ion-select-option value="sepia">sepia</ion-select-option>
+          <ion-select-option value="solarize">solarize</ion-select-option>
+          <ion-select-option value="whiteboard">whiteboard</ion-select-option>
+        </ion-select>
+
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button color="success" (click)="takePicture()">Take Picture</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button color="warning" (click)="switchCamera()">Switch</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-button color="danger" (click)="hide()">Hide</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button color="tertiary" (click)="show()">Show</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button color="primary" (click)="showSupportedPictureSizes()">Supported Sizes</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-label>Flash:</ion-label>
+        <ion-select interface="popover" placeholder="Select Flash" [(ngModel)]="flashMode"
+                    (ionChange)="changeFlashMode()">
+          <ion-select-option value="off">Off</ion-select-option>
+          <ion-select-option value="on">On</ion-select-option>
+          <ion-select-option value="auto">Auto</ion-select-option>
+          <ion-select-option value="torch">Torch</ion-select-option>
+        </ion-select>
+      </ion-col>
+      <ion-col>
+        <ion-label>Zoom:</ion-label>
+        <ion-range min="1" max="100" pin color="secondary" [(ngModel)]="setZoom" (ionChange)="changeZoom()">
+          <ion-icon slot="start" size="small" name="search-outline"></ion-icon>
+          <ion-icon slot="end" name="search-outline"></ion-icon>
+        </ion-range>
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="IMAGE_PATH">
+      <ion-col>
+        <img [src]="IMAGE_PATH">
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>-->
+
+</ion-content>

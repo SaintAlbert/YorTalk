@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { GroupPage } from './group';
+import { GroupPageRoutingModule } from './group-routing.module';
+import { PipesModule } from '../../pipes.module';
 
 
 
@@ -12,7 +14,10 @@ import { GroupPage } from './group';
     CommonModule,
     FormsModule,
     IonicModule,
+    PipesModule,
+    GroupPageRoutingModule
   ],
-  declarations: [GroupPage]
+  declarations: [GroupPage],
+ // exports: [GroupPage]
 })
 export class GroupPageModule {}

@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { NewMessagePage } from './new-message';
+import { NewMessagePageRoutingModule } from './new-message-routing.module';
+import { PipesModule } from '../../pipes.module';
 
-//import { FriendsPageRoutingModule } from './friends-routing.module';
 
 
 @NgModule({
@@ -12,8 +13,10 @@ import { NewMessagePage } from './new-message';
     CommonModule,
     FormsModule,
     IonicModule,
-   // FriendsPageRoutingModule
+    PipesModule,
+    NewMessagePageRoutingModule
   ],
-  declarations: [NewMessagePage]
+  declarations: [NewMessagePage],
+  //exports: [NewMessagePage],
 })
 export class NewMessagePageModule {}

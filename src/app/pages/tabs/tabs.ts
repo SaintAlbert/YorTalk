@@ -1,11 +1,14 @@
 import {Component} from '@angular/core';
-import {NavController, NavParams} from '@ionic/angular';
+//import {NavController} from '@ionic/angular';
 
 import {DataProvider} from '../../services/data';
 
 import {Badge} from '@ionic-native/badge';
 
-import * as firebase from 'firebase';
+//import * as firebase from 'firebase';
+import { Nav } from '../../services/nav';
+import  firebase from 'firebase/app';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'page-tabs',
@@ -13,31 +16,33 @@ import * as firebase from 'firebase';
   styleUrls:['tabs.scss']
 })
 export class TabsPage {
-  //messages: any = MessagesPage;
-  //groups: any = GroupsPage;
-  //friends: any = FriendsPage;
-  //profile: any = HomePage;
-  //timeline: any = TimelinePage;
-  private unreadMessagesCount: any;
-  private friendRequestCount: any;
-  private unreadGroupMessagesCount: any;
-  private groupList: any;
-  private groupsInfo: any;
-  private conversationList: any;
-  private conversationsInfo: any;
+
+   unreadMessagesCount: any;
+   friendRequestCount: any;
+   unreadGroupMessagesCount: any;
+   groupList: any;
+   groupsInfo: any;
+   conversationList: any;
+  conversationsInfo: any;
+  //currentUser;
   // TabsPage
   // This is the page where we set our tabs.
-  constructor(public navCtrl: NavController, 
-    public navParams: NavParams, 
+  constructor(
+    public navCtrl: Nav,
+    //public navParams: NavParams, 
     public dataProvider: DataProvider,
     private badge: Badge) {
+    //this.dataProvider.getCurrentUserPromise().then(user => this.currentUser = user);
   }
 
-  ionViewDidLoad() {
+  ngOnInit() {
     // Get friend requests count.
-    this.dataProvider.getRequests(firebase.auth().currentUser.uid).subscribe((requests) => {
-      if (requests.friendRequests) {
-        this.friendRequestCount = requests.friendRequests.length;
+    
+    this.dataProvider.getRequests(firebase.auth().currentUser.uid)
+      .subscribe((requests:any) => {
+        console.log("Data CurrentUser", requests)
+      if (requests?.friendRequests) {
+        this.friendRequestCount = requests?.friendRequests.length;
       } else {
         this.friendRequestCount = null;
       }
@@ -52,8 +57,13 @@ export class TabsPage {
       if (conversationsInfo.length > 0) {
         this.conversationsInfo = conversationsInfo;
         conversationsInfo.forEach((conversationInfo) => {
-          this.dataProvider.getConversation(conversationInfo.conversationId).subscribe((conversation) => {
-            if (conversation.$exists()) {
+          this.dataProvider.getConversation(conversationInfo.conversationId)
+            .snapshotChanges()
+            .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+            .subscribe((conversation: any) => {
+              //console.log(conversation)
+            if (conversation.$exists) {
+                //console.log(conversation)
               this.addOrUpdateConversation(conversation);
             }
           });
@@ -62,15 +72,15 @@ export class TabsPage {
     });
 
     this.dataProvider.getGroups().subscribe((groupIds) => {
-      if (groupIds.length > 0) {
+      if (groupIds?.length > 0) {
         this.groupsInfo = groupIds;
         if (this.groupList && this.groupList.length > groupIds.length) {
           // User left/deleted a group, clear the list and add or update each group again.
           this.groupList = null;
         }
-        groupIds.forEach((groupId) => {
-          this.dataProvider.getGroup(groupId.$key).subscribe((group) => {
-            if (group.$exists()) {
+        groupIds?.forEach((groupId: any) => {
+          this.dataProvider.getGroup(groupId.$key).valueChanges().subscribe((group:any) => {
+            if (group?.$exists) {
               this.addOrUpdateGroup(group);
             }
           });

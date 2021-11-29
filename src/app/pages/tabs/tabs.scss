@@ -12,4 +12,43 @@
     background: #fff;
     border-top: solid 0.25em var(--ion-color-medium);
   }
+
+  ion-tab-bar {
+    /*   background-color: black;*/
+    /* border: unset;*/
+    background-color: transparent;
+    border: hidden;
+  }
+
+  ion-tab-button {
+    /* border: solid;
+   */
+    /*  margin-top: 5.3vw;*/
+
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+  }
+
+  ion-tab-button.tab-selected {
+    /* ion-icon, ion-label {
+      color: var(--ion-color-secondary) !important;
+      --ion-color-base: var(--ion-color-secondary) !important;
+    }*/
+    /*  border: solid;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;*/
+  }
+
+  ion-tabs {
+    border: hidden;
+    background-color: var(--ion-color-light);
+  }
+
+  #tab-button-tab1 {
+    border-top-left-radius: 15px;
+  }
+
+  #tab-button-tab4 {
+    border-top-right-radius: 15px;
+  }
 }

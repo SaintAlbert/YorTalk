@@ -6,9 +6,8 @@ import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
 import {ImageProvider} from '../../services/image';
 import {AngularFireDatabase} from 'angularfire2/database';
-import * as firebase from 'firebase';
-//import {UserInfoPage} from '../user-info/user-info';
-import {ImageModalPage} from '../image-modal/image-modal';
+
+import { ImageModalPage } from '../../components/image-modal/image-modal';
 import {AlertProvider} from '../../services/alert';
 import {Camera} from '@ionic-native/camera';
 import {Keyboard} from '@ionic-native/keyboard';
@@ -22,6 +21,8 @@ import {File} from '@ionic-native/file';
 import _ from 'lodash';
 import { Nav } from '../../services/nav';
 import { Router } from '@angular/router';
+import { AngularFireStorage } from 'angularfire2/storage';
+import firebase from 'firebase/app';
 
 
 @Component({
@@ -49,12 +50,13 @@ export class MessagePage {
   myTracks: any;
   allTracks: any;
   selectedTrack: any;
+  //currentUser;
   // MessagePage
   // This is the page where the user can chat with a friend.
   constructor(public navCtrl: Nav, public actionSheetCtrl: ActionSheetController, private router: Router,
     private socialSharing: SocialSharing, private mediaCapture: MediaCapture, private file: File,
     public dataProvider: DataProvider, public angularDb: AngularFireDatabase, public admob: AdMobFree,
-    public alertProvider: AlertProvider,
+    public alertProvider: AlertProvider, private angularFireStorage: AngularFireStorage,
     public loadingProvider: LoadingProvider, public alertCtrl: AlertController, public imageProvider: ImageProvider, public camera: Camera,
     public keyboard: Keyboard, public videoProvider: VideoProvider, private _audioProvider: NativeAudio) {
     // this.myTracks = [{
@@ -63,31 +65,33 @@ export class MessagePage {
     //  {
     //    src: 'https://archive.org/download/JM2013-10-05.flac16/V0/jm2013-10-05-t30-MP3-V0.mp3',
     //  }];
+    //this.dataProvider.getCurrentUserPromise().then(user => this.currentUser = user);
   }
 
-  ionViewDidLoad() {
+  ngOnInit () {
     this.userId = this.navCtrl.get('userId');
+   // alert(this.userId)
     this.launchInterstitial()
     // Get friend details.
-    this.dataProvider.getUser(this.userId).subscribe((user) => {
+    this.dataProvider.getUser(this.userId).valueChanges().subscribe((user:any) => {
       this.title = user.name;
       this.toUserUniqueId = user.uniqueId;
       this.isOnline = user.isOnline;
     });
 
     // Get conversationInfo with friend.
-    this.angularDb.object('/accounts/' + firebase.auth().currentUser.uid + '/conversations/' + this.userId).subscribe((conversation) => {
-      if (conversation.$exists()) {
+    this.angularDb.object('/accounts/' + firebase.auth().currentUser.uid + '/conversations/' + this.userId).valueChanges().subscribe((conversation: any) => {
+      if (conversation.$exists) {
         // User already have conversation with this friend, get conversation
         this.conversationId = conversation.conversationId;
 
         // Get conversation
-        this.dataProvider.getConversationMessages(this.conversationId).subscribe((messages) => {
+        this.dataProvider.getConversationMessages(this.conversationId).subscribe((messages:any) => {
           if (this.messages) {
             // Just append newly added messages to the bottom of the view.
             if (messages.length > this.messages.length) {
               let message = messages[messages.length - 1];
-              this.dataProvider.getUser(message.sender).subscribe((user) => {
+              this.dataProvider.getUser(message.sender).valueChanges().subscribe((user:any) => {
                 message.avatar = user.img;
                 message.isOnline = user.isOnline;
               });
@@ -101,7 +105,7 @@ export class MessagePage {
             // Get all messages, this will be used as reference object for messagesToShow.
             this.messages = [];
             messages.forEach((message) => {
-              this.dataProvider.getUser(message.sender).subscribe((user) => {
+              this.dataProvider.getUser(message.sender).valueChanges().subscribe((user:any) => {
                 message.avatar = user.img;
                 message.isOnline = user.isOnline;
 
@@ -178,7 +182,7 @@ export class MessagePage {
       // Set scroll direction to top.
       that.scrollDirection = 'top';
       // Populate list again.
-      that.ionViewDidLoad();
+      that.ngOnInit();
     }, 1000);
   }
 
@@ -194,7 +198,7 @@ export class MessagePage {
     if (this.router.url !== "/home") {
       // Update user's messagesRead on database.
       var totalMessagesCount;
-      this.dataProvider.getConversationMessages(this.conversationId).subscribe((messages) => {
+      this.dataProvider.getConversationMessages(this.conversationId).subscribe((messages:any) => {
         totalMessagesCount = messages.length;
       });
       this.angularDb.object('/accounts/' + firebase.auth().currentUser.uid + '/conversations/' + this.userId).update({
@@ -247,7 +251,8 @@ export class MessagePage {
 
   // Back
   back() {
-    this.navCtrl.pop("messages");
+    this.navCtrl.back();
+    //this.navCtrl.pop("messages");
   }
 
   // Send message, if there's no conversation yet, create a new conversation.
@@ -473,7 +478,7 @@ export class MessagePage {
           'contentType': 'audio/amr'
         };
         // Generate filename and upload to Firebase Storage.
-        firebase.storage().ref().child('audio/' + this.userId + this.generateAudioname()).put(audioBlob, metadata).then((snapshot) => {
+        this.angularFireStorage.storage.ref().child('audio/' + this.userId + this.generateAudioname()).put(audioBlob, metadata).then((snapshot) => {
           let url = snapshot.metadata.downloadURLs[0];
           this.sendAudioMessage(url)
         }, (error) => {

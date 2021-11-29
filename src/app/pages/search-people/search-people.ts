@@ -4,9 +4,10 @@ import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
 import {AlertProvider} from '../../services/alert';
 import {FirebaseProvider} from '../../services/firebase';
-import {AngularFireDatabase} from 'angularfire2/database';
+
 
 import { Nav } from '../../services/nav';
+import { AngularFireDatabase } from 'angularfire2/database';
 
 @Component({
   selector: 'page-search-people',
@@ -14,27 +15,36 @@ import { Nav } from '../../services/nav';
   styleUrls: ['search-people.scss']
 })
 export class SearchPeoplePage {
-  private accounts: any;
+  private accounts: any=[];
   private alert: any;
   private account: any;
-  private excludedIds: any;
+  private excludedIds: any = [];
   private requestsSent: any;
   private friendRequests: any;
   private searchUser: any;
+
+  peopleItems = [];
+  itemPeopleChunkData = [];
+  defaultPeopleItems = [];
+  page_number = 0;
+  page_limit = 30;
   // SearchPeoplePage
   // This is the page where the user can search for other users and send a friend request.
   constructor(public navCtrl: Nav, public dataProvider: DataProvider, public loadingProvider: LoadingProvider,
     public alertCtrl: AlertController, public angularDb:AngularFireDatabase, public alertProvider: AlertProvider, public firebaseProvider: FirebaseProvider) { }
 
-  ionViewDidLoad() {
+  ngOnInit () {
     // Initialize
     this.loadingProvider.show();
     this.searchUser = '';
     // Get all users.
     this.dataProvider.getUsers().subscribe((accounts) => {
-      this.loadingProvider.hide();
-      this.accounts = accounts;
-      this.dataProvider.getCurrentUser().subscribe((account) => {
+      //this.loadingProvider.hide();
+      //this.accounts = accounts;
+      
+      this.itemPeopleChunkData = this.dataProvider.paginate(accounts, this.page_limit)
+     
+      this.dataProvider.getCurrentUser().subscribe((account:any) => {
         // Add own userId as exludedIds.
         this.excludedIds = [];
         this.account = account;
@@ -50,17 +60,68 @@ export class SearchPeoplePage {
           });
         }
         // Get requests of the currentUser.
-        this.dataProvider.getRequests(account.$key).subscribe((requests) => {
+        this.dataProvider.getRequests(account.$key).subscribe((requests:any) => {
           this.requestsSent = requests.requestsSent;
           this.friendRequests = requests.friendRequests;
         });
+
+        console.log(this.excludedIds)
+        this.getPeople(false, "");
+        this.peopleItems = accounts.filter((account) => this.excludedIds.indexOf(account.userId) == -1);
+        //this.loadingProvider.hide()
       });
+     
     });
   }
 
+  getPeople(isFirstLoad, event) {
+    console.log(this.page_number)
+    for (let i = 0; i < this.itemPeopleChunkData.length; i++) {
+      if (this.page_number == i) {
+        //let items = this.itemPeopleData[this.page_number]
+        let items = this.itemPeopleChunkData[this.page_number].filter((account) => this.excludedIds.indexOf(account.userId) == -1);
+        items.forEach((v) => {
+          this.accounts.push(v);
+          })
+        
+        //console.log(this.accounts)
+        this.defaultPeopleItems = this.accounts;
+        this.page_number++;
+        break;
+      }
+    }
+
+    if (isFirstLoad)
+      event.target.complete();
+    else
+      this.loadingProvider.hide()
+
+   // this.page_number++;
+  }
+
+  doInfinite(event) {
+    this.getPeople(true, event);
+  }
+
+  filterPeopleItems(searchText) {
+
+    this.accounts= this.peopleItems.filter(it => {
+        return it.name?.toLowerCase().includes(searchText.detail.value) ||
+          it.username?.toLowerCase().includes(searchText.detail.value);
+      });
+    //console.log(searchText.detail.value,s)
+  }
+
+  showDefaultItems() {
+    this.searchUser = '';
+    this.accounts=this.defaultPeopleItems;
+  }
+
+
+
   // Back
   back() {
-    this.navCtrl.popToRoot();
+    this.navCtrl.back();
   }
 
   // Get the status of the user in relation to the logged in user.
@@ -153,7 +214,7 @@ export class SearchPeoplePage {
   }
 
   // View user.
-viewUser(userId) {
+ viewUser(userId) {
   this.navCtrl.push('userinfo', {userId: userId});
   }
 

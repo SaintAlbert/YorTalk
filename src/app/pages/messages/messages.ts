@@ -1,12 +1,13 @@
 import {Component} from '@angular/core';
 //import {App, NavController, NavParams} from '@ionic/angular';
-import {AngularFireDatabase} from 'angularfire2/database';
+//import {AngularFireDatabase} from 'angularfire2/database';
 import {LoadingProvider} from '../../services/loading';
 import {DataProvider} from '../../services/data';
-import {NewMessagePage} from '../new-message/new-message';
-import {MessagePage} from '../message/message';
-import * as firebase from 'firebase';
+//import {NewMessagePage} from '../new-message/new-message';
+//import {MessagePage} from '../message/message';
+import firebase from 'firebase/app';
 import { Nav } from '../../services/nav';
+import { AngularFireDatabase } from 'angularfire2/database';
 
 @Component({
   selector: 'page-messages',
@@ -17,12 +18,13 @@ export class MessagesPage {
   private conversations: any;
   private updateDateTime: any;
   private searchFriend: any;
+  //currentUser;
   // MessagesPage
   // This is the page where the user can see their current conversations with their friends.
   // The user can also start a new conversation.
-  constructor(public navCtrl: Nav,  public angularDb:AngularFireDatabase, public loadingProvider: LoadingProvider, public dataProvider: DataProvider) { }
+  constructor(public navCtrl: Nav, public angularDb: AngularFireDatabase, public loadingProvider: LoadingProvider, public dataProvider: DataProvider) { }
 
-  ionViewDidLoad() {
+  ngOnInit () {
     // Create userData on the database if it doesn't exist yet.
     this.searchFriend = '';
     this.loadingProvider.show();
@@ -31,12 +33,12 @@ export class MessagesPage {
     this.dataProvider.getConversations().subscribe((conversations) => {
       if (conversations.length > 0) {
         conversations.forEach((conversation) => {
-          if (conversation.$exists()) {
+          if (conversation.$exists) {
             // Get conversation partner info.
-            this.dataProvider.getUser(conversation.$key).subscribe((user) => {
+            this.dataProvider.getUser(conversation.$key).valueChanges().subscribe((user) => {
               conversation.friend = user;
               // Get conversation info.
-              this.dataProvider.getConversation(conversation.conversationId).subscribe((obj) => {
+              this.dataProvider.getConversation(conversation.conversationId).valueChanges().subscribe((obj:any) => {
                 // Get last message of conversation.
                 let lastMessage = obj.messages[obj.messages.length - 1];
                 conversation.date = lastMessage.date;
@@ -126,12 +128,12 @@ export class MessagesPage {
   // New conversation.
   newMessage() {
     //this.app.getRootNav().push(NewMessagePage);
-    this.navCtrl.push('messages/new-message')
+    this.navCtrl.push('new-message')
   }
 
   // Open chat with friend.
   message(userId) {
-    this.navCtrl.push('messages/message', { userId: userId })
+    this.navCtrl.push('message', { userId: userId })
     //this.app.getRootNav().push(MessagePage, { userId: userId });
   }
 

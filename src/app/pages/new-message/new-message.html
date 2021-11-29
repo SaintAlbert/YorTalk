@@ -1,17 +1,17 @@
 <ion-header>
-  <ion-navbar hideBackButton="true">
+  <ion-toolbar hideBackButton="true">
     <ion-buttons>
-      <button ion-button tappable (click)="back()">Back</button>
+      <ion-button tappable (click)="back()">Back</ion-button>
     </ion-buttons>
     <ion-title>New Message</ion-title>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 <ion-content>
   <!-- No friends yet to start a conversation with -->
   <div class="empty-list" *ngIf="friends && friends.length == 0">
     <h1><ion-icon name="md-contacts"></ion-icon></h1>
     <p>Uh-oh! You have not added any friends yet.</p>
-    <button ion-button icon-left tappable (click)="searchPeople()"><ion-icon name="md-search"></ion-icon>Search People</button>
+    <ion-button icon-left tappable (click)="searchPeople()"><ion-icon name="md-search"></ion-icon>Search People</ion-button>
   </div>
   <!-- Show friends to start a conversation with -->
   <ion-list class="avatar-list" *ngIf="friends && friends.length > 0">

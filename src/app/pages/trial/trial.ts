@@ -3,11 +3,13 @@ import {AlertController} from '@ionic/angular';
 import {LogoutProvider} from '../../services/logout';
 import {LoadingProvider} from '../../services/loading';
 import {AlertProvider} from '../../services/alert';
-import * as firebase from 'firebase';
+//import * as firebase from 'firebase';
+import firebase from 'firebase/app';
 import {Facebook} from 'ng2-cordova-oauth/core';
 import {OauthCordova} from 'ng2-cordova-oauth/platform/cordova';
 import {Login} from '../../login';
-import {GooglePlus} from '@ionic-native/google-plus';
+import { GooglePlus } from '@ionic-native/google-plus';
+//import { AngularFireAuth } from 'angular/fire/auth';
 //import {LoginPage} from '../login/login';
 import { Nav } from '../../services/nav';
 
@@ -27,8 +29,9 @@ export class TrialPage {
     appScope: ["email"]
   });
 
-  constructor(public navCtrl: Nav, public alertCtrl: AlertController, 
-    public logoutProvider: LogoutProvider, public loadingProvider: LoadingProvider, public alertProvider: AlertProvider, public googlePlus: GooglePlus) {
+  constructor(public navCtrl: Nav, public alertCtrl: AlertController,
+    public logoutProvider: LogoutProvider, public loadingProvider: LoadingProvider,
+    public alertProvider: AlertProvider, public googlePlus: GooglePlus) {
     // Hook our logout provider with the app.
     this.logoutProvider.setApp(this.navCtrl);
     this.oauth = new OauthCordova();
@@ -37,9 +40,9 @@ export class TrialPage {
   // Shows popup to ask user for Facebook credential, afterwhich, upgrade the guest account to full account.
   linkFacebook() {
     this.oauth.logInVia(this.facebookProvider).then(success => {
-      let credential = firebase.auth.FacebookAuthProvider.credential(success['access_token']);
+      let credential =  firebase.auth.FacebookAuthProvider.credential(success['access_token']);
       this.loadingProvider.show();
-      firebase.auth().currentUser.link(credential)
+      firebase.auth().currentUser.linkWithCredential(credential)
         .then((success) => {
           this.loadingProvider.hide();
           // Check if emailVerification is enabled, if enabled, check and redirect to verificationPage
@@ -69,7 +72,7 @@ export class TrialPage {
       'webClientId': Login.googleClientId
     }).then((success) => {
       let credential = firebase.auth.GoogleAuthProvider.credential(success['idToken'], null);
-      firebase.auth().currentUser.link(credential)
+      firebase.auth().currentUser.linkWithCredential(credential)
         .then((success) => {
           this.loadingProvider.hide();
           // Check if emailVerification is enabled, if enabled, check and redirect to verificationPage

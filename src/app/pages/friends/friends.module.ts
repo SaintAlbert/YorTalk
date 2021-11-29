@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { FriendsPage } from './friends';
 
 import { FriendsPageRoutingModule } from './friends-routing.module';
+import { PipesModule } from '../../pipes.module';
 
 
 @NgModule({
@@ -12,8 +13,10 @@ import { FriendsPageRoutingModule } from './friends-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    FriendsPageRoutingModule
+    PipesModule,
+    FriendsPageRoutingModule,
   ],
-  declarations: [FriendsPage]
+  declarations: [FriendsPage],
+  //exports: [FriendsPage]
 })
 export class FriendsPageModule {}

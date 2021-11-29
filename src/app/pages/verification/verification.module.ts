@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { VerificationPage } from './verification';
+import { PipesModule } from '../../pipes.module';
 
 //import { FriendsPageRoutingModule } from './friends-routing.module';
 
@@ -12,8 +13,10 @@ import { VerificationPage } from './verification';
     CommonModule,
     FormsModule,
     IonicModule,
+    PipesModule,
    // FriendsPageRoutingModule
   ],
-  declarations: [VerificationPage]
+  declarations: [VerificationPage],
+  //exports: [VerificationPage],
 })
 export class VerificationPageModule {}

@@ -1,17 +1,17 @@
 <ion-header>
-  <ion-navbar>
+  <ion-toolbar>
     <ion-title>Messages</ion-title>
-    <ion-buttons end>
-      <button ion-button icon-only tappable (click)="newMessage()"><ion-icon name="ios-create"></ion-icon></button>
+    <ion-buttons slot="primary">
+      <ion-button icon-only tappable (click)="newMessage()"><ion-icon name="ios-create"></ion-icon></ion-button>
     </ion-buttons>
-  </ion-navbar>
+  </ion-toolbar>
 </ion-header>
 <ion-content>
   <!-- No conversations to show -->
   <div class="empty-list" *ngIf="conversations && conversations.length <= 0">
     <h1><ion-icon name="md-text"></ion-icon></h1>
     <p>Uh-oh! You are not part of any conversation yet.</p>
-    <button ion-button icon-left tappable (click)="newMessage()"><ion-icon name="md-add"></ion-icon>New Conversation</button>
+    <ion-button icon-left tappable (click)="newMessage()"><ion-icon name="md-add"></ion-icon>New Conversation</ion-button>
   </div>
   <!-- Show conversations -->
   <ion-list class="avatar-list" *ngIf="conversations && conversations.length > 0">

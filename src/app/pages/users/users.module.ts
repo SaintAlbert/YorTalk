@@ -3,6 +3,8 @@ import { IonicModule } from '@ionic/angular';
 import {UsersPage} from './users';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UsersPageRoutingModule } from './user-routing.module';
+import { PipesModule } from '../../pipes.module';
 
 @NgModule({
   declarations: [
@@ -12,9 +14,11 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     FormsModule,
     IonicModule,
+    PipesModule,
+    UsersPageRoutingModule
   ],
-  exports: [
-    UsersPage
-  ]
+  //exports: [
+  //  UsersPage
+  //]
 })
 export class UsersPageModule {}

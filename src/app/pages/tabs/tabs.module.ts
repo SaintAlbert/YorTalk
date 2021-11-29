@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { TabsPage } from './tabs';
 
 import { TabsPageRoutingModule } from './tabs-routing.module';
+import { PipesModule } from '../../pipes.module';
 
 
 @NgModule({
@@ -12,8 +13,11 @@ import { TabsPageRoutingModule } from './tabs-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    TabsPageRoutingModule
+    PipesModule,
+    TabsPageRoutingModule,
+
   ],
-  declarations: [TabsPage]
+  declarations: [TabsPage],
+  //exports: [TabsPage],
 })
 export class TabsPageModule {}

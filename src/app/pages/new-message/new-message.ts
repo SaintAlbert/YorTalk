@@ -1,7 +1,5 @@
 import {Component} from '@angular/core';
-//import {App, NavController, NavParams} from '@ionic/angular';
-//import {SearchPeoplePage} from '../search-people/search-people';
-//import {MessagePage} from '../message/message';
+
 import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
 import { Nav } from '../../services/nav';
@@ -20,16 +18,16 @@ export class NewMessagePage {
   constructor(public navCtrl: Nav,  public dataProvider: DataProvider,
     public loadingProvider: LoadingProvider) { }
 
-  ionViewDidLoad() {
+  ngOnInit () {
     // Initialize
     this.searchFriend = '';
     this.loadingProvider.show();
 
     // Get user's friends.
-    this.dataProvider.getCurrentUser().subscribe((account) => {
+    this.dataProvider.getCurrentUser().subscribe((account:any) => {
       if (account.friends) {
         for (var i = 0; i < account.friends.length; i++) {
-          this.dataProvider.getUser(account.friends[i]).subscribe((friend) => {
+          this.dataProvider.getUser(account.friends[i]).valueChanges().subscribe((friend) => {
             this.addOrUpdateFriend(friend);
           });
         }
@@ -42,7 +40,8 @@ export class NewMessagePage {
 
   // Back
   back() {
-    this.navCtrl.pop("messages");
+    this.navCtrl.back();
+    //this.navCtrl.pop("messages");
   }
 
   // Add or update friend for real-time sync.
@@ -72,6 +71,6 @@ export class NewMessagePage {
 
   // Open chat with this user.
   message(userId) {
-    this.navCtrl.push('messages/message', { userId: userId });
+    this.navCtrl.push('message', { userId: userId });
   }
 }

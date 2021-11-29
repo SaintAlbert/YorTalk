@@ -1,17 +1,19 @@
-import {Component} from '@angular/core';
-import { ActionSheetController, AlertController} from '@ionic/angular';
-import {DataProvider} from '../../services/data';
-import {LoadingProvider} from '../../services/loading';
-import {ImageProvider} from '../../services/image';
-import {AlertProvider} from '../../services/alert';
-import {ImageModalPage} from '../image-modal/image-modal';
-import {AddMembersPage} from '../add-members/add-members';
-import {UserInfoPage} from '../user-info/user-info';
-import * as firebase from 'firebase';
-import {AngularFireDatabase} from 'angularfire2/database';
-import {Camera} from '@ionic-native/camera';
+import { Component } from '@angular/core';
+import { ActionSheetController, AlertController } from '@ionic/angular';
+import { DataProvider } from '../../services/data';
+import { LoadingProvider } from '../../services/loading';
+import { ImageProvider } from '../../services/image';
+import { AlertProvider } from '../../services/alert';
+import { ImageModalPage } from '../../components/image-modal/image-modal';
+//import {AddMembersPage} from '../add-members/add-members';
+//import {UserInfoPage} from '../user-info/user-info';
+import firebase from 'firebase/app';
+import { AngularFireDatabase } from 'angularfire2/database';
+//import { AngularFireDatabase } from "@angular/fire/database";
+import { Camera } from '@ionic-native/camera';
 import _ from 'lodash'
 import { Nav } from '../../services/nav';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'page-group-info',
@@ -25,32 +27,37 @@ export class GroupInfoPage {
   private alert: any;
   private user: any;
   private subscription: any;
-  isAdmin:any;
+  //currentUser: any;
+  isAdmin: any;
   // GroupInfoPage
   // This is the page where the user can view group information, change group information, add members, and leave/delete group.
   constructor(public dataProvider: DataProvider,
     public loadingProvider: LoadingProvider, public nav: Nav, public alertCtrl: AlertController,
-    public alertProvider: AlertProvider,public angularDb:AngularFireDatabase, public imageProvider: ImageProvider, public camera: Camera,
-     public actionSheetCtrl: ActionSheetController) { }
+    public alertProvider: AlertProvider, public angularDb: AngularFireDatabase, public imageProvider: ImageProvider, public camera: Camera,
+    public actionSheetCtrl: ActionSheetController) { }
 
-  ionViewDidLoad() {
+  ngOnInit() {
+
     // Initialize
     this.groupId = this.nav.get('groupId');
 
     // Get group details.
-    this.subscription = this.dataProvider.getGroup(this.groupId).subscribe((group) => {
-      if (group.$exists()) {
+    this.subscription = this.dataProvider.getGroup(this.groupId)
+      .snapshotChanges()
+      .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+      .subscribe((group) => {
+      if (group.$exists) {
         this.loadingProvider.show();
         this.group = group;
-        if(group.admin){
-            let index = _.indexOf(group.admin,firebase.auth().currentUser.uid);
-            if(index>-1){
-              this.isAdmin = true;
-            }
+        if (group.admin) {
+          let index = _.indexOf(group.admin, firebase.auth().currentUser.uid);
+          if (index > -1) {
+            this.isAdmin = true;
+          }
         }
         if (group.members) {
           group.members.forEach((memberId) => {
-            this.dataProvider.getUser(memberId).subscribe((member) => {
+            this.dataProvider.getUser(memberId).valueChanges().subscribe((member) => {
               this.addUpdateOrRemoveMember(member);
             });
           });
@@ -58,8 +65,7 @@ export class GroupInfoPage {
         this.loadingProvider.hide();
       } else {
         // Group is deleted, go back.
-        this.nav.pop('groups')
-        //this.navCtrl.popToRoot();
+        this.nav.back();
       }
     });
 
@@ -69,16 +75,11 @@ export class GroupInfoPage {
     });
   }
 
-  // Delete subscription.
-  // ionViewDidLeave() {
-  //   if(this.deleteSubscription)
-  //
-  // }
 
   // check user is admin or not 
-  isAdminOrNot(member){
-    let index = _.indexOf(this.group.admin,member.userId);
-    if(index>-1){
+  isAdminOrNot(member) {
+    let index = _.indexOf(this.group.admin, member.userId);
+    if (index > -1) {
       return true
     } else {
       return false;
@@ -86,110 +87,110 @@ export class GroupInfoPage {
   }
 
   // Assign new addmin 
-  async assignNewAdmin(member){
-    if(this.isAdmin && this.user.userId !== member.userId){
+  async assignNewAdmin(member) {
+    if (this.isAdmin && this.user.userId !== member.userId) {
 
-      if(this.isAdminOrNot(member)){
+      if (this.isAdminOrNot(member)) {
         let actionSheet = this.actionSheetCtrl.create({
           header: 'Remove Admin',
-         buttons: [
-           {
-             text: 'Remove Admin',
-             role: 'share',
-             handler: () => {
-               // share message 
-               // Check if sharing via email is supported
+          buttons: [
+            {
+              text: 'Remove Admin',
+              role: 'share',
+              handler: () => {
+                // share message 
+                // Check if sharing via email is supported
                 this.loadingProvider.show();
 
-                let index = _.indexOf(this.group.admin,member.userId);
-                if(index>=0){
-                   this.group.messages.push({
+                let index = _.indexOf(this.group.admin, member.userId);
+                if (index >= 0) {
+                  this.group.messages.push({
                     date: new Date().toString(),
                     sender: this.user.$key,
                     type: 'system',
                     message: this.user.name + ' has removed ' + member.name + ' as admin.',
                     icon: 'md-contacts'
                   });
-                   this.group.admin.splice(index,1);
-                   this.dataProvider.getGroup(this.groupId).update({
+                  this.group.admin.splice(index, 1);
+                  this.dataProvider.getGroup(this.groupId).update({
                     admin: this.group.admin,
                     messages: this.group.messages
                   }).then(() => {
-                  // Back.
-                  this.loadingProvider.hide();
-                    this.nav.pop('groups');
-                });
-                }else{
-                  this.loadingProvider.hide();
-                  this.alertProvider.showAlert('Failed',"Member not admin.")
-                }
-               
-             }
-           },
-        
-           {
-             text: 'Cancel',
-             role: 'cancel',
-             handler: () => {
-             }
-           }
-         ]
-       });
-       (await actionSheet).present();
-      }else{
-       let actionSheet = this.actionSheetCtrl.create({
-           header: 'Assign New Admin',
-           buttons: [
-             {
-               text: 'Make Admin',
-               role: 'share',
-               handler: () => {
-                 // share message 
-                 // Check if sharing via email is supported
-                  this.loadingProvider.show();
-
-                  let index = _.indexOf(this.group.admin,member.userId);
-                  if(index<0){
-                     this.group.messages.push({
-                      date: new Date().toString(),
-                      sender: this.user.$key,
-                      type: 'system',
-                      message: this.user.name + ' has make ' + member.name + ' as admin.',
-                      icon: 'md-contacts'
-                    });
-                     let _tempAdmin = this.group.admin;
-                     _tempAdmin.push(member.userId)
-                     this.dataProvider.getGroup(this.groupId).update({
-                      admin: _tempAdmin,
-                      messages: this.group.messages
-                    }).then(() => {
                     // Back.
                     this.loadingProvider.hide();
-                      this.nav.pop('groups');
+                    this.nav.back();
                   });
-                  }else{
+                } else {
+                  this.loadingProvider.hide();
+                  this.alertProvider.showAlert('Failed', "Member not admin.")
+                }
+
+              }
+            },
+
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              handler: () => {
+              }
+            }
+          ]
+        });
+        (await actionSheet).present();
+      } else {
+        let actionSheet = this.actionSheetCtrl.create({
+          header: 'Assign New Admin',
+          buttons: [
+            {
+              text: 'Make Admin',
+              role: 'share',
+              handler: () => {
+                // share message 
+                // Check if sharing via email is supported
+                this.loadingProvider.show();
+
+                let index = _.indexOf(this.group.admin, member.userId);
+                if (index < 0) {
+                  this.group.messages.push({
+                    date: new Date().toString(),
+                    sender: this.user.$key,
+                    type: 'system',
+                    message: this.user.name + ' has make ' + member.name + ' as admin.',
+                    icon: 'md-contacts'
+                  });
+                  let _tempAdmin = this.group.admin;
+                  _tempAdmin.push(member.userId)
+                  this.dataProvider.getGroup(this.groupId).update({
+                    admin: _tempAdmin,
+                    messages: this.group.messages
+                  }).then(() => {
+                    // Back.
                     this.loadingProvider.hide();
-                    this.alertProvider.showAlert('Failed',"Member alerday admin.")
-                  }
-                 
-               }
-             },
-          
-             {
-               text: 'Cancel',
-               role: 'cancel',
-               handler: () => {
-               }
-             }
-           ]
-         });
-         (await actionSheet).present();
+                    this.nav.back();
+                  });
+                } else {
+                  this.loadingProvider.hide();
+                  this.alertProvider.showAlert('Failed', "Member alerday admin.")
+                }
+
+              }
+            },
+
+            {
+              text: 'Cancel',
+              role: 'cancel',
+              handler: () => {
+              }
+            }
+          ]
+        });
+        (await actionSheet).present();
       }
     }
-     
+
   }
 
-   // Get names of the members to be added to the group.
+  // Get names of the members to be added to the group.
 
   // Check if user exists in the group then add/update user.
   // If the user has already left the group, remove user from the list.
@@ -231,21 +232,19 @@ export class GroupInfoPage {
   // View user info.
   viewUser(userId) {
     if (firebase.auth().currentUser.uid != userId)
-      this.nav.push('groups/group-info', { userId: userId })
-      //this.navCtrl.push(UserInfoPage, { userId: userId });
+      this.nav.push('group-info', { userId: userId })
   }
 
   // Back
   back() {
     this.subscription.unsubscribe();
-    this.nav.pop('groups');
+    //this.navCtrl.pop();
+    this.nav.back()
   }
 
   // Enlarge group image.
   enlargeImage(img) {
     this.nav.openModal(ImageModalPage, { img: img });
-    //let imageModal = this.modalCtrl.create(ImageModalPage, { img: img });
-    //imageModal.present();
   }
 
   // Change group name.
@@ -449,9 +448,9 @@ export class GroupInfoPage {
                             // Pop this view because user already has left this group.
                             this.group = null;
                             setTimeout(() => {
-                                this.loadingProvider.hide();
-                                //this.navCtrl.popToRoot();
-                                this.nav.pop('groups');
+                              this.loadingProvider.hide();
+                              this.nav.back()
+                              
                             }, 300);
                         });
                     }).catch((error) => {
@@ -494,8 +493,9 @@ export class GroupInfoPage {
   }
 
   // Add members.
-  addMembers() {
-    this.nav.push('groups/addmember', { groupId: this.groupId })
+   addMembers() {
+    this.nav.push('addmember', { groupId: this.groupId })
     //this.navCtrl.push(AddMembersPage, { groupId: this.groupId });
   }
+  
 }

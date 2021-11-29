@@ -1,44 +1,53 @@
 <ion-header>
-  <ion-navbar hideBackButton="true">
-    <ion-buttons>
-      <button ion-button tappable (click)="back()">Back</button>
+  <ion-toolbar hideBackButton="true">
+    <ion-buttons slot="start">
+      <ion-button tappable (click)="back()">Back</ion-button>
     </ion-buttons>
-    <ion-title>Search People</ion-title>
-  </ion-navbar>
+    <!--<ion-title>Search People</ion-title>-->
+    <ion-searchbar vertical="center" (ionCancel)="showDefaultItems()"
+               (ionChange)="filterPeopleItems($event)" [(ngModel)]="searchUser" placeholder="Search people for name or username" focus="true" cancelButtonText="Done"></ion-searchbar>
+  </ion-toolbar>
 </ion-header>
 <ion-content>
   <!-- No other users to send friend request right now. -->
   <div class="empty-list" *ngIf="accounts && (accounts.length == 0 || (accounts.length == excludedIds.length))">
     <h1><ion-icon name="md-search"></ion-icon></h1>
     <p>Uh-oh! Sorry but we can't find other users right now. Try again later.</p>
-    <button ion-button icon-left tappable (click)="back()"><ion-icon name="md-arrow-round-back"></ion-icon>Go Back</button>
+    <ion-button *ngIf="searchUser==''" icon-left tappable (click)="back()"><ion-icon name="md-arrow-round-back"></ion-icon>Go Back</ion-button>
+    <ion-button *ngIf="searchUser.length > 0" icon-left tappable (click)="showDefaultItems()"><ion-icon name="md-close"></ion-icon>Cancel</ion-button>
   </div>
-  <!-- Show other users excluding yourself, and friends with the help of searchFilter pipe. -->
-  <ion-list class="avatar-list" *ngIf="accounts && accounts.length > 0">
-    <ion-searchbar *ngIf="accounts.length != excludedIds.length" [(ngModel)]="searchUser" placeholder="Search for name or username" showCancelButton="true" cancelButtonText="Done"></ion-searchbar>
-    <ion-item *ngFor="let account of accounts | searchFilter: [excludedIds, searchUser]" no-lines tappable (click)="viewUser(account.$key)">
-      <ion-fab middle right style="position: absolute; right: 0 ;">
-        <!-- Show appropriate buttons depending on the status of this user in relation to the current user. -->
-        <!-- // Returns:
-        // 0 when user can be requested as friend.
-        // 1 when a friend request was already sent to this user.
-        // 2 when this user has a pending friend request. -->
-        <button ion-fab mini tappable (click)="sendFriendRequest(account); $event.stopPropagation();" *ngIf="getStatus(account) == 0">
-          <ion-icon name="md-add-circle" class="success"></ion-icon>
-        </button>
-        <button ion-fab mini tappable (click)="cancelFriendRequest(account); $event.stopPropagation();" *ngIf="getStatus(account) == 1">
-          <ion-icon name="md-close-circle" class="danger"></ion-icon>
-        </button>
-        <button ion-fab mini tappable (click)="acceptFriendRequest(account); $event.stopPropagation();" *ngIf="getStatus(account) == 2">
-          <ion-icon name="md-checkmark-circle" class="success"></ion-icon>
-        </button>
-      </ion-fab>
-      <ion-avatar item-left>
+  <!-- Show other users excluding yourself, and friends with the help of searchFilter pipe. *ngIf="accounts.length != excludedIds.length"  -->
+  <ion-list class="avatar-list" *ngIf=" accounts.length > 0">
+    <!--<ion-searchbar (ionCancel)="showDefaultItems()"
+                   (ionChange)="filterPeopleItems($event)" [(ngModel)]="searchUser" placeholder="Search for name or username" focus="true" cancelButtonText="Done"></ion-searchbar>-->
+    <ion-item *ngFor="let account of accounts " lines="none" (click)="viewUser(account.$key)">
+      <!--<ion-item *ngFor="let account of accounts | searchFilter: [searchUser,excludedIds]" no-lines tappable (click)="viewUser(account.$key)">-->
+      <!--//Show appropriate buttons depending on the status of this user in relation to the current user.
+      //Returns:
+      //0 when user can be requested as friend.
+      //1 when a friend request was already sent to this user.
+      //2 when this user has a pending friend request.
+      -->
+
+      <ion-button slot="end" fill="clear" vertical="center" (click)="sendFriendRequest(account); $event.stopPropagation();" item-right *ngIf="getStatus(account) == 0"><ion-icon slot="icon-only" name="md-add-circle" class="success"></ion-icon></ion-button>
+      <ion-button slot="end" fill="clear" vertical="center" (click)="cancelFriendRequest(account); $event.stopPropagation();" item-right *ngIf="getStatus(account) == 1"><ion-icon slot="icon-only" name="md-close-circle" class="danger"></ion-icon></ion-button>
+      <ion-button slot="end" fill="clear" vertical="center" (click)="acceptFriendRequest(account); $event.stopPropagation();" item-right *ngIf="getStatus(account) == 2"><ion-icon slot="icon-only" name="md-checkmark-circle" class="success"></ion-icon></ion-button>
+
+      <ion-avatar slot="start">
         <ion-icon name="radio-button-on" class="online" [ngClass]="account.isOnline?'isOnline' : 'isOffline'"></ion-icon>
         <img src="{{account.img}}">
       </ion-avatar>
-      <h2>{{account.name}}</h2>
-      <p>@{{account.username}}</p>
+      <ion-label ion-text-wrap>
+        <h2>{{ account.name }}</h2>
+        <ion-note>{{ account.username }}</ion-note>
+      </ion-label>
     </ion-item>
   </ion-list>
+
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="doInfinite($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"
+                                 loadingText="Loading more data...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>

@@ -9,6 +9,7 @@
  * https://ionicframework.com/docs/layout/global-stylesheets
  */
 
+
 /* Core CSS required for Ionic components to work properly */
 @import "~@ionic/angular/css/core.css";
 
@@ -18,6 +19,8 @@
 @import "~@ionic/angular/css/typography.css";
 @import '~@ionic/angular/css/display.css';
 
+
+
 /* Optional CSS utils that can be commented out */
 @import "~@ionic/angular/css/padding.css";
 @import "~@ionic/angular/css/float-elements.css";
@@ -25,22 +28,9 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+@import "./theme/variables.scss";
 
 
-// http://ionicframework.com/docs/v2/theming/
-// App Global Sass
-// --------------------------------------------------
-// Put style rules here that you want to apply globally. These
-// styles are for the entire app and not just one component.
-// Additionally, this file can be also used as an entry point
-// to import other Sass files to be included in the output CSS.
-//
-// Shared Sass variables, which can be used to adjust Ionic's
-// default Sass variables, belong in "theme/variables.scss".
-//
-// To declare rules for a specific mode, create a child rule
-// for the .md, .ios, or .wp mode classes. The mode class is
-// automatically applied to the <body> element in the app.
 
 //Background of the screens
 .scroll-content {
@@ -62,8 +52,9 @@
 //Set header buttons and title to white
 ion-header {
   button,
+  ion-button,
   ion-title p {
-    color: #fff !important;
+    //color: #fff !important;
   }
 }
 
@@ -76,7 +67,7 @@ ion-header {
 
   h1,
   p {
-    color: var(--ion-color-medium);
+    color: var(--gray);
   }
 
   h1 {
@@ -90,13 +81,22 @@ ion-header {
     margin-right: auto;
   }
 
+  ion-button {
+    background: var(--dark);
+  }
+
+  ion-button.activated,
+  ion-button:active {
+    background: var(--dark-active);
+  }
+
   button {
-    background: var(--ion-color-dark);
+    background: var(--dark);
   }
 
   button.activated,
   button:active {
-    background: var(--ion-color-medium) ;
+    background: var(--dark-active);
   }
 }
 
@@ -106,61 +106,77 @@ ion-list.avatar-list {
     background: rgba(0, 0, 0, 0.3) !important;
 
     h2 {
-      color: #fff;
+      /* color: #fff;*/
+      /* font-weight:bold;*/
+      color: var(--primary);
     }
 
     h3 {
-      color: var(--ion-color-medium);
+      color: val(--dark-active);
 
       ion-icon.selected {
-        color: var(--ion-color-primary);
+        color: var(--primary);
       }
     }
 
     p {
-      color: var(--ion-color-primary) !important;
+      /*color: var(--primary) !important;*/
       max-width: 68vw;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
     }
-
-    ion-avatar {
+    /* ion-avatar {
       img {
         width: 2.5em !important;
         height: 2.5em !important;
       }
-    }
-  }
-
-  ion-item.selected,
-  ion-item:active {
-    opacity: 0.5;
-  }
-
-  ion-fab button,
-  ion-fab button.activated {
-    background: transparent !important;
-  }
-
-  ion-fab button.activated ion-icon {
-    opacity: 0.5 !important;
-  }
-
-  ion-fab button ion-icon {
-    font-size: 2em !important;
-    color: var(--ion-color-primary);
-  }
-
-  ion-icon.success {
-    color: var(--ion-color-primary);
-  }
-
-  ion-icon.danger {
-    color: var(--ion-color-danger);
+    }*/
   }
 }
 
+ion-item.selected,
+ion-item:active {
+  opacity: 0.5;
+}
+
+
+ion-fab ion-button,
+ion-fab ion-button.activated {
+  background: var(--primary) !important;
+}
+
+ion-fab button,
+ion-fab button.activated {
+  background: var(--primary) !important;
+}
+
+ion-fab ion-button.activated ion-icon {
+  opacity: 0.5 !important;
+}
+
+ion-fab ion-button ion-icon {
+  font-size: 2em !important;
+  color: var(--primary);
+}
+
+ion-fab button.activated ion-icon {
+  opacity: 0.5 !important;
+}
+
+ion-fab button ion-icon {
+  font-size: 2em !important;
+  color: var(--primary);
+}
+
+ion-icon.success {
+  color: var(--primary);
+}
+
+ion-icon.danger {
+  color: var(--ion-color-danger);
+}
+/*}*/
 //Messages Content for message.html and group.html
 div.messages {
   p.center {
@@ -169,7 +185,7 @@ div.messages {
 
     span {
       padding: 0.25em 0.5em;
-      background: var(--ion-color-secondary);
+      background: var(--secondary);
       color: #fff;
       border-radius: 0.4em;
     }
@@ -178,7 +194,7 @@ div.messages {
   p.center.activated,
   p.center:active {
     span {
-      background: var(--ion-color-secondary);
+      background: var(--primary);
     }
   }
 
@@ -187,9 +203,9 @@ div.messages {
     font-size: 90%;
 
     p {
-      background: transparent !important;
+      /* background: var(--primary) !important;*/
       max-width: 90vw;
-      color: var(--ion-color-primary);
+      /* color: var(--primary);*/
     }
 
     span {
@@ -221,14 +237,14 @@ div.messages {
       padding: 0.5em;
       border-radius: 0.5em;
       margin-bottom: 0.5em;
-      background: var(--ion-color-dark);
+      background: var(-dark-active);
       display: block;
     }
 
     span {
       display: block;
       text-align: left;
-      color: var(--ion-color-medium);
+      color: var(--gray);
       font-size: 85%;
       padding-left: 0.5em;
     }
@@ -236,7 +252,7 @@ div.messages {
 
   ion-col.sender {
     p {
-      background: var(--ion-color-primary);
+      background: var(--primary);
     }
 
     span {
@@ -273,10 +289,8 @@ div.messages {
     }
   }
 }
-
 //Footer Bar for message.html and group.html
 ion-footer.footer {
-
   background-image: url('/assets/images/background.png');
   background-position: initial initial;
   background-repeat: initial initial;
@@ -298,7 +312,7 @@ ion-footer.footer {
 
   ion-fab button,
   ion-fab button.activated {
-    background: transparent !important;
+    background: var(--primary) !important;
   }
 
   ion-fab button.activated ion-icon {
@@ -307,7 +321,7 @@ ion-footer.footer {
 
   ion-fab button ion-icon {
     font-size: 2em !important;
-    color: var(--ion-color-primary);
+    color: var(--primary);
   }
 }
 
@@ -342,7 +356,7 @@ ion-footer.footer {
 
   .alert-button {
     width: 100%;
-    background-color: var(--ion-color-primary);
+    background-color: var(--primary);
     color: #fff;
   }
 }
@@ -359,7 +373,7 @@ ion-footer.footer {
 
 .online {
   position: absolute;
-  bottom: 3px;
+  bottom: 10px;
 }
 
 .isOnline {
@@ -372,4 +386,147 @@ ion-footer.footer {
 
 .alert-md .alert-button .button-inner {
   justify-content: 'space-around' !important;
+}
+
+
+.bottom-sheet
+{
+.img {
+  max-width: 100%;
+  height: auto;
+}
+
+.header {
+  padding: 24px;
+  background-color: #009688;
+}
+
+.wrap {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+ul.menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+}
+
+.bottomoverlay {
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.16);
+  opacity: 0;
+  transition: all 450ms cubic-bezier(0.32,1,0.23,1) 0ms;
+
+  .social {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
+    padding: 8px 24px 16px;
+    box-sizing: border-box;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.22), 0px 14px 56px rgba(0, 0, 0, 0.25);
+    transform: translate(0,100%);
+    transition: all 450ms cubic-bezier(0.32,1,0.23,1) 100ms;
+
+    ul {
+      text-align: justify;
+      columns: 74px 3;
+      vertical-align: bottom;
+
+      li {
+        width: 74px;
+        display: inline-block;
+      }
+
+      a {
+        display: block;
+        margin: 8px 0;
+        color: gray;
+        text-decoration: none;
+        text-align: center;
+
+        span {
+          display: inline-block;
+          width: 100%;
+        }
+      }
+    }
+
+    .facebook span {
+      color: #3b5998;
+    }
+
+    .twitter span {
+      color: #00aced;
+    }
+
+    .linkedin span {
+      color: #007bb5;
+    }
+
+    .reddit span {
+      display: block;
+      width: 48px;
+      height: 48px;
+      margin: 0 auto;
+      border-radius: 2px;
+      background-color: #cee3f8;
+      color: #fff;
+      text-shadow: 1px 1px #000, -1px -1px #000, -1px 1px #000, 1px -1px #000;
+
+      &::after {
+        content: "";
+        display: block;
+        height: 4px;
+        width: 4px;
+        background-color: red;
+        border-radius: 50%;
+        position: relative;
+        top: -24px;
+        left: 16px;
+        box-shadow: 12px 0 red;
+      }
+    }
+
+    .whatsapp span {
+      color: #4dc247;
+    }
+  }
+
+  .btn-close {
+    color: #666;
+    transform: scale(0,0);
+    transition: all 450ms ease-in-out 0;
+  }
+
+  &:target {
+    // Active animate in modal
+
+    display: block;
+    position: fixed;
+    top: 0;
+    opacity: 1;
+
+    .social {
+      transform: translate(0, 0);
+      z-index: 9;
+    }
+
+    .btn-close {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      outline: 0 none;
+      transform: scale(1,1);
+    }
+  }
 }

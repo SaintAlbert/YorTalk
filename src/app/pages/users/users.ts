@@ -2,9 +2,9 @@ import {Component} from '@angular/core';
 import {AlertController} from '@ionic/angular';
 import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
-import {AngularFireDatabase} from 'angularfire2/database';
 import {AlertProvider} from '../../services/alert';
 import { Nav } from '../../services/nav';
+import { AngularFireDatabase } from 'angularfire2/database';
 
 /**
  * Generated class for the UsersPage page.
@@ -31,7 +31,7 @@ export class UsersPage {
     public dataProvider: DataProvider,) {
   }
 
-  ionViewDidLoad() {
+  ngOnInit () {
     console.log('ionViewDidLoad UsersPage');
     this.loadingProvider.show();
     this.dataProvider.getUsers().subscribe((user) => {

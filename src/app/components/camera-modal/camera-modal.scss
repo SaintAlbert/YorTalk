@@ -1,0 +1,43 @@
+:host {
+
+  ion-slides {
+    margin-top: 50px;
+  }
+
+  ion-slide {
+    flex-direction: column;
+    font-size: small;
+
+    ion-text {
+      padding: 5px;
+    }
+
+    .selected {
+      font-weight: 600;
+    }
+  }
+
+  .scroll-content {
+    background-image: none;
+  }
+
+  ion-content {
+    --background: transparent;
+  }
+
+  .custom-ion-content {
+    --background: transparent;
+  }
+
+  .content {
+    height: 100vh;
+    width: 100vw;
+    background: rgba(0, 0, 0, 0.7) !important;
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 100%;
+    }
+  }
+}

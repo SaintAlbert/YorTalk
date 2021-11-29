@@ -2,9 +2,9 @@ import {Component} from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import {DataProvider} from '../../services/data';
 import {LoadingProvider} from '../../services/loading';
-import {AngularFireModule} from 'angularfire2';
+//import {AngularFireModule} from 'angularfire2';
 import {AlertProvider} from '../../services/alert';
-import {AngularFireDatabase} from 'angularfire2/database';
+import { AngularFireDatabase } from "angularfire2/database";
 import { Nav } from '../../services/nav';
 
 @Component({
@@ -26,11 +26,11 @@ export class AddMembersPage {
   // The user can only add their friends to the group.
   constructor( public navParams: Nav, public dataProvider: DataProvider,
     public loadingProvider: LoadingProvider,
-    public angularfire: AngularFireModule,
+    //public angularfire: AngularFireModule,
     public angularDb: AngularFireDatabase, public alertCtrl: AlertController,
     public alertProvider: AlertProvider) { }
 
-  ionViewDidLoad() {
+  ngOnInit () {
     // Initialize
     this.groupId = this.navParams.get('groupId');
     this.searchFriend = '';
@@ -43,13 +43,13 @@ export class AddMembersPage {
     });
 
     // Get group information
-    this.dataProvider.getGroup(this.groupId).subscribe((group) => {
+    this.dataProvider.getGroup(this.groupId).valueChanges().subscribe((group:any) => {
       this.group = group;
       this.groupMembers = null;
       // Get group members
       if (group.members) {
         group.members.forEach((memberId) => {
-          this.dataProvider.getUser(memberId).subscribe((member) => {
+          this.dataProvider.getUser(memberId).valueChanges().subscribe((member) => {
             this.addOrUpdateMember(member);
           });
         });
@@ -57,7 +57,7 @@ export class AddMembersPage {
         this.dataProvider.getCurrentUser().subscribe((account) => {
           if (account.friends) {
             for (var i = 0; i < account.friends.length; i++) {
-              this.dataProvider.getUser(account.friends[i]).subscribe((friend) => {
+              this.dataProvider.getUser(account.friends[i]).valueChanges().subscribe((friend) => {
                 // Only friends that are not yet a member of this group can be added.
                 if (!this.isMember(friend))
                   this.addOrUpdateFriend(friend);
@@ -73,7 +73,10 @@ export class AddMembersPage {
       }
       this.loadingProvider.hide();
     });
+
   }
+
+
 
   // Check if friend is a member of the group or not.
   isMember(friend) {
@@ -159,7 +162,7 @@ export class AddMembersPage {
   // Back
   back() {
     //this.navCtrl.pop();
-    this.navParams.pop('groups');
+    this.navParams.popToRoot()//.pop('groups');
   }
 
   // Get names of the members to be added to the group.
@@ -208,7 +211,8 @@ export class AddMembersPage {
                     }).then(() => {
                         // Back.
                         this.loadingProvider.hide();
-                      this.navParams.pop('groups');
+                        //this.navCtrl.pop();
+                        this.navParams.popToRoot();
                     });
                 }
             }

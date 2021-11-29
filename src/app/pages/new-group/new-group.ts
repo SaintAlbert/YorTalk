@@ -7,11 +7,10 @@ import {DataProvider} from '../../services/data';
 import {AlertProvider} from '../../services/alert';
 import {Validator} from '../../validator';
 import {Camera} from '@ionic-native/camera';
-import {AngularFireDatabase} from 'angularfire2/database';
-import {GroupPage} from '../group/group';
-import * as firebase from 'firebase';
-import {SearchPeoplePage} from '../search-people/search-people';
+//import * as firebase from 'firebase';
 import { Nav } from '../../services/nav';
+import { AngularFireDatabase } from 'angularfire2/database';
+import firebase from 'firebase/app';
 
 @Component({
   selector: 'page-new-group',
@@ -25,6 +24,7 @@ export class NewGroupPage {
   private searchFriend: any;
   private groupMembers: any;
   private alert: any;
+  //currentUser;
   // NewGroupPage
   // This is the page where the user can start a new group chat with their friends.
   constructor(public navCtrl: Nav,public imageProvider: ImageProvider, public dataProvider: DataProvider, public formBuilder: FormBuilder,
@@ -34,9 +34,11 @@ export class NewGroupPage {
       name: Validator.groupNameValidator,
       description: Validator.groupDescriptionValidator
     });
+
+    //this.dataProvider.getCurrentUserPromise().then(user => this.currentUser = user);
   }
 
-  ionViewDidLoad() {
+  ngOnInit () {
     // Initialize
     this.group = {
       img: ''
@@ -44,13 +46,13 @@ export class NewGroupPage {
     this.searchFriend = '';
 
     // Get user's friends to add to the group.
-    this.dataProvider.getCurrentUser().subscribe((account) => {
+    this.dataProvider.getCurrentUser().subscribe((account:any) => {
       if (!this.groupMembers) {
         this.groupMembers = [account]
       }
       if (account.friends) {
         for (var i = 0; i < account.friends.length; i++) {
-          this.dataProvider.getUser(account.friends[i]).subscribe((friend) => {
+          this.dataProvider.getUser(account.friends[i]).valueChanges().subscribe((friend) => {
             this.addOrUpdateFriend(friend);
           });
         }

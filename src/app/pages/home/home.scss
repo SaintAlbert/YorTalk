@@ -1,6 +1,6 @@
 :host {
   .scroll-content {
-    background: url('../../../assets/images/background.png') !important;
+    background: url('/assets/images/background.png') !important;
   }
 
   .profile {
@@ -89,7 +89,7 @@
 
     ion-item {
       background: rgba(0, 0, 0, 0.3) !important;
-      color: #fff !important;
+      /*color: #fff !important;*/
     }
 
     ion-item.activated {

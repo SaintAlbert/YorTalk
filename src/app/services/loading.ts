@@ -10,19 +10,23 @@ export class LoadingProvider {
   // Set your spinner/loading indicator type here
   // List of Spinners: https://ionicframework.com/docs/v2/api/components/spinner/Spinner/
   private spinner = {
-    spinner: 'circles'
+    //spinner: 'circles'
+    content: 'Please wait...'
   };
   private loading;
   constructor(public loadingController: LoadingController) {
   }
 
   //Show loading
-  show() {
+  async show() {
     if (!this.loading) {
- 
-      //this.loading = this.loadingController.create(this.spinner);
-      this.loading = this.loadingController.create();
-      this.loading.present();
+      this.loadingController.create({}).then((opt) => {
+        this.loading = opt;
+        this.loading.present();
+      });
+      //this.loading = 
+      //this.loading = await this.loadingController.create();
+      //this.loading.present();
     }
   }
 

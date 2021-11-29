@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { AddMembersPage } from './add-members';
+import { AddMembersPageRoutingModule } from './add-members-routing.module';
+import { PipesModule } from '../../pipes.module';
 
 //import { MessagesPageRoutingModule } from './messages-routing.module';
 
@@ -12,8 +14,12 @@ import { AddMembersPage } from './add-members';
     CommonModule,
     FormsModule,
     IonicModule,
-    //MessagesPageRoutingModule
+    PipesModule,
+    AddMembersPageRoutingModule
   ],
-  declarations: [AddMembersPage]
+  declarations: [AddMembersPage],
+  //exports: [
+  //  AddMembersPage
+  //]
 })
 export class AddMembersPageModule {}

@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { SearchPeoplePage } from './search-people';
+import { SearchPeoplePageRoutingModule } from './search-people-routing.module';
+import { PipesModule } from '../../pipes.module';
 
-//import { FriendsPageRoutingModule } from './friends-routing.module';
 
 
 @NgModule({
@@ -12,8 +13,10 @@ import { SearchPeoplePage } from './search-people';
     CommonModule,
     FormsModule,
     IonicModule,
-   // FriendsPageRoutingModule
+    PipesModule,
+    SearchPeoplePageRoutingModule
   ],
-  declarations: [SearchPeoplePage]
+  declarations: [SearchPeoplePage],
+  //exports: [SearchPeoplePage],
 })
 export class SearchPeoplePageModule {}

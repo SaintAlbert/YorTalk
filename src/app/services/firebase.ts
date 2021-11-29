@@ -1,14 +1,14 @@
-import {Injectable} from '@angular/core';
-import {AngularFireDatabase} from 'angularfire2/database';
-import {LoadingProvider} from './loading';
-import {AlertProvider} from './alert';
-import {DataProvider} from './data';
-import * as firebase from 'firebase';
-import 'rxjs/add/operator/take';
 
-@Injectable({
-  providedIn: 'root'
-})
+import { Injectable } from '@angular/core';
+import { AngularFireDatabase } from 'angularfire2/database';
+import { LoadingProvider } from './loading';
+import { AlertProvider } from './alert';
+import { DataProvider } from './data';
+import firebase from 'firebase/app';
+import 'rxjs/add/operator/take';
+import { map } from 'rxjs/operators';
+
+@Injectable()
 export class FirebaseProvider {
   // Firebase Provider
   // This is the provider class for most of the Firebase updates in the app.
@@ -26,7 +26,7 @@ export class FirebaseProvider {
 
     var requestsSent;
     // Use take(1) so that subscription will only trigger once.
-    this.dataProvider.getRequests(loggedInUserId).take(1).subscribe((requests:any) => {
+    this.dataProvider.getRequests(loggedInUserId).take(1).subscribe((requests) => {
       requestsSent = requests.requestsSent;
       if (!requestsSent) {
         requestsSent = [userId];
@@ -39,7 +39,7 @@ export class FirebaseProvider {
         requestsSent: requestsSent
       }).then((success) => {
         var friendRequests;
-        this.dataProvider.getRequests(userId).take(1).subscribe((requests:any) => {
+        this.dataProvider.getRequests(userId).take(1).subscribe((requests) => {
           friendRequests = requests.friendRequests;
           if (!friendRequests) {
             friendRequests = [loggedInUserId];
@@ -69,7 +69,7 @@ export class FirebaseProvider {
     this.loadingProvider.show();
 
     var requestsSent;
-    this.dataProvider.getRequests(loggedInUserId).take(1).subscribe((requests:any) => {
+    this.dataProvider.getRequests(loggedInUserId).take(1).subscribe((requests) => {
       requestsSent = requests.requestsSent;
       requestsSent.splice(requestsSent.indexOf(userId), 1);
       // Update requestSent information.
@@ -77,18 +77,25 @@ export class FirebaseProvider {
         requestsSent: requestsSent
       }).then((success) => {
         var friendRequests;
-        this.dataProvider.getRequests(userId).take(1).subscribe((requests:any) => {
-          friendRequests = requests.friendRequests;
-          friendRequests.splice(friendRequests.indexOf(loggedInUserId), 1);
-          // Update friendRequests information.
-          this.angularDb.object('/requests/' + userId).update({
-            friendRequests: friendRequests
-          }).then((success) => {
-            this.loadingProvider.hide();
+        this.dataProvider.getRequests(userId).take(1).subscribe((requests) => {
+          if (requests.$exists) {
+            friendRequests = requests.friendRequests;
+            console.log(requests)
+            friendRequests.splice(friendRequests.indexOf(loggedInUserId), 1);
+            // Update friendRequests information.
+            this.angularDb.object('/requests/' + userId).update({
+              friendRequests: friendRequests
+            }).then((success) => {
+              this.loadingProvider.hide();
+              this.alertProvider.showFriendRequestRemoved();
+            }).catch((error) => {
+              this.loadingProvider.hide();
+            });
+          } else {
             this.alertProvider.showFriendRequestRemoved();
-          }).catch((error) => {
             this.loadingProvider.hide();
-          });
+          }
+          
         });
       }).catch((error) => {
         this.loadingProvider.hide();
@@ -102,7 +109,7 @@ export class FirebaseProvider {
     this.loadingProvider.show();
 
     var friendRequests;
-    this.dataProvider.getRequests(loggedInUserId).take(1).subscribe((requests: any) => {
+    this.dataProvider.getRequests(loggedInUserId).take(1).subscribe((requests) => {
       friendRequests = requests.friendRequests;
       friendRequests.splice(friendRequests.indexOf(userId), 1);
       // Update friendRequests information.
@@ -110,7 +117,7 @@ export class FirebaseProvider {
         friendRequests: friendRequests
       }).then((success) => {
         var requestsSent;
-        this.dataProvider.getRequests(userId).take(1).subscribe((requests: any) => {
+        this.dataProvider.getRequests(userId).take(1).subscribe((requests) => {
           requestsSent = requests.requestsSent;
           requestsSent.splice(requestsSent.indexOf(loggedInUserId), 1);
           // Update requestsSent information.
@@ -137,7 +144,11 @@ export class FirebaseProvider {
     this.deleteFriendRequest(userId);
 
     this.loadingProvider.show();
-    this.dataProvider.getUser(loggedInUserId).take(1).subscribe((account: any) => {
+    this.dataProvider.getUser(loggedInUserId)
+      //.valueChanges().take(1)
+      .snapshotChanges().take(1)
+      .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+      .subscribe((account: any) => {
       var friends = account.friends;
       if (!friends) {
         friends = [userId];
@@ -148,7 +159,11 @@ export class FirebaseProvider {
       this.dataProvider.getUser(loggedInUserId).update({
         friends: friends
       }).then((success) => {
-        this.dataProvider.getUser(userId).take(1).subscribe((account: any) => {
+        this.dataProvider.getUser(userId)
+          //.valueChanges().take(1)
+          .snapshotChanges().take(1)
+          .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+          .subscribe((account: any) => {
           var friends = account.friends;
           if (!friends) {
             friends = [loggedInUserId];
@@ -172,7 +187,10 @@ export class FirebaseProvider {
   // TimeLine
   timeline(timelineId) {
     let loggedInUserId = firebase.auth().currentUser.uid;
-    this.dataProvider.getUser(loggedInUserId).take(1).subscribe((account: any) => {
+    this.dataProvider.getUser(loggedInUserId)
+      .snapshotChanges().take(1)
+      .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+      .subscribe((account: any) => {
       var timeline = account.timeline;
       if (!timeline) {
         timeline = [timelineId];
@@ -193,29 +211,37 @@ export class FirebaseProvider {
   // ==== Like postBy
   likePost(key) {
     return new Promise((resolve, reject) => {
-      this.dataProvider.postLike(key).take(1).subscribe((likes: any) => {
-        var likes = likes;
-        if (!likes.length) {
-          likes = [firebase.auth().currentUser.uid];
-        } else {
-          likes.push(firebase.auth().currentUser.uid);
-        }
-        // Add both users as friends.
-        this.dataProvider.postLike(key).update(likes).then((success) => {
-          // alert('sc')
-          resolve(true)
-        }).catch((error) => {
-          this.loadingProvider.hide();
-          reject(false)
+      // this.dataProvider.postLike(key).valueChanges().take(1).subscribe((likes) => {
+      this.dataProvider.postLike(key).snapshotChanges().take(1)
+        .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+        .subscribe((likes) => {
+          console.log(likes)
+          var likes = likes;
+          if (!likes?.length) {
+            likes = [firebase.auth().currentUser.uid];
+          } else {
+            likes.push(firebase.auth().currentUser.uid);
+          }
+          // Add both users as friends.
+          this.dataProvider.postLike(key).update(likes).then((success) => {
+            // alert('sc')
+            resolve(true)
+          }).catch((error) => {
+            this.loadingProvider.hide();
+            reject(false)
+          });
         });
-      });
     })
   }
 
   // ==== Like postBy
   delikePost(key) {
     return new Promise((resolve, reject) => {
-      this.dataProvider.postLike(key).take(1).subscribe((likes: any) => {
+      this.dataProvider.postLike(key)
+        //.valueChanges().take(1)
+        .snapshotChanges().take(1)
+        .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+        .subscribe((likes: any) => {
         likes.splice(likes.indexOf(firebase.auth().currentUser.uid), 1);
         if (likes.length) {
           //alert(likes.length)
@@ -240,8 +266,11 @@ export class FirebaseProvider {
   // ====== Dislike
   dislikePost(key) {
     return new Promise((resolve, reject) => {
-      this.dataProvider.postdisLike(key).take(1).subscribe((dislikes: any) => {
-
+      this.dataProvider.postdisLike(key)
+        //.valueChanges().take(1)
+        .snapshotChanges().take(1)
+        .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+        .subscribe((dislikes: any) => {
         var dislikes = dislikes;
         if (!dislikes.length) {
           dislikes = [firebase.auth().currentUser.uid];
@@ -263,7 +292,11 @@ export class FirebaseProvider {
   // ===== Deldislike
   dedislikePost(key) {
     return new Promise((resolve, reject) => {
-      this.dataProvider.postdisLike(key).take(1).subscribe((dislikes: any) => {
+      this.dataProvider.postdisLike(key)
+        //.valueChanges().take(1)
+        .snapshotChanges().take(1)
+        .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+        .subscribe((dislikes: any) => {
         dislikes.splice(dislikes.indexOf(firebase.auth().currentUser.uid), 1);
         if (dislikes.length) {
           //alert(likes.length)
@@ -286,7 +319,7 @@ export class FirebaseProvider {
 
   commentPost(key, comment) {
     return new Promise((resolve, reject) => {
-      this.dataProvider.getComments(key).take(1).subscribe((comments: any) => {
+      this.dataProvider.getComments(key).take(1).subscribe((comments) => {
         var comments = comments;
         if (!comments) {
           comments = [comment];
@@ -307,7 +340,11 @@ export class FirebaseProvider {
   reportPost(post, loginUser) {
     return new Promise((resolve, reject) => {
 
-      this.dataProvider.getTimeline(post.$key).take(1).subscribe((suc: any) => {
+      this.dataProvider.getTimeline(post.$key)
+        //.valueChanges().take(1)
+        .snapshotChanges().take(1)
+        .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+        .subscribe((suc: any) => {
         console.log("timeline", suc)
         if (suc.postBy) {
           this.dataProvider.getReportPost(post.$key).take(1).subscribe((res) => {

@@ -5,15 +5,17 @@ import {
 import { DataProvider } from '../../services/data';
 import { ImageProvider } from '../../services/image';
 import { LoadingProvider } from '../../services/loading';
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
 //import { UserInfoPage } from '../user-info/user-info';
 //import { GroupInfoPage } from '../group-info/group-info';
-import { ImageModalPage } from '../image-modal/image-modal';
-import { AngularFireModule } from 'angularfire2';
+import { ImageModalPage } from '../../components/image-modal/image-modal';
+//import { AngularFireModule } from 'angularfire2';
 import { Camera } from '@ionic-native/camera';
 import { Keyboard } from '@ionic-native/keyboard';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { SocialSharing } from '@ionic-native/social-sharing';
+//import { AngularFireDatabase } from "@angular/fire/database";
+import { AngularFireStorage } from 'angularfire2/storage'
 import _ from 'lodash'
 //import { AudioProvider } from 'ionic-audio';
 import { CaptureError, CaptureImageOptions, MediaCapture, MediaFile } from '@ionic-native/media-capture';
@@ -21,6 +23,7 @@ import { File } from '@ionic-native/file';
 import { Router } from '@angular/router';
 import { Nav } from '../../services/nav';
 import { NativeAudio } from '@ionic-native/native-audio';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'page-group',
@@ -46,10 +49,13 @@ export class GroupPage {
   allTracks: any;
   selectedTrack: any;
   userId;
+  //currentUser;
+  // 
   // GroupPage
   // This is the page where the user can chat with other group members and view group info.
   constructor(public navCtrl: Nav, public dataProvider: DataProvider,
-     public angularfire: AngularFireModule, public angularDb: AngularFireDatabase, public alertCtrl: AlertController,
+    public fireStorage: AngularFireStorage,
+    public angularDb: AngularFireDatabase, public alertCtrl: AlertController,
     public imageProvider: ImageProvider, public loadingProvider: LoadingProvider, public camera: Camera, public keyboard: Keyboard,
     private socialSharing: SocialSharing, public actionSheetCtrl: ActionSheetController, private _audioProvider: NativeAudio,
     private mediaCapture: MediaCapture, private file: File, private router: Router,private nav:Nav ) {
@@ -58,15 +64,20 @@ export class GroupPage {
     },
     {
       src: 'https://archive.org/download/JM2013-10-05.flac16/V0/jm2013-10-05-t30-MP3-V0.mp3',
-    }];
+      }];
+    //this.dataProvider.getCurrentUserPromise().then(user => this.currentUser = user);
   }
 
-  ionViewDidLoad() {
+   ngOnInit () {
+
     // Get group details
     this.groupId = this.navCtrl.get('groupId');
     this.userId = firebase.auth().currentUser.uid;
-    this.subscription = this.dataProvider.getGroup(this.groupId).subscribe((group) => {
-      if (group.$exists()) {
+    this.subscription = this.dataProvider.getGroup(this.groupId)
+      .snapshotChanges()
+      .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+      .subscribe((group) => {
+      if (group.$exists) {
         if (group.admin) {
           let index = _.indexOf(group.admin, firebase.auth().currentUser.uid);
           if (index > -1) {
@@ -81,7 +92,7 @@ export class GroupPage {
             if (messages.length > this.messages.length) {
               let message = messages[messages.length - 1];
 
-              this.dataProvider.getUser(message.sender).subscribe((user) => {
+              this.dataProvider.getUser(message.sender).valueChanges().subscribe((user:any) => {
                 message.avatar = user.img;
                 message.name = user.name;
               });
@@ -95,7 +106,7 @@ export class GroupPage {
             // Get all messages, this will be used as reference object for messagesToShow.
             this.messages = [];
             messages.forEach((message) => {
-              this.dataProvider.getUser(message.sender).subscribe((user) => {
+              this.dataProvider.getUser(message.sender).valueChanges().subscribe((user:any) => {
                 message.avatar = user.img;
                 message.name = user.name;
               });
@@ -154,7 +165,7 @@ export class GroupPage {
       // Set scroll direction to top.
       that.scrollDirection = 'top';
       // Populate list again.
-      that.ionViewDidLoad();
+      that.ngOnInit();
     }, 1000);
   }
 
@@ -167,98 +178,97 @@ export class GroupPage {
   async share(message, index) {
 
     if (this.isAdmin) {
+      let actionSheet = await this.actionSheetCtrl.create({
+          header: 'Message',
+          buttons: [
+              {
+                  text: 'Share',
+                  role: 'share',
+                  handler: () => {
+                      // share message
+                      // Check if sharing via email is supported
+                      if (message.type == 'text') {
+                          this.socialSharing.share(message.message, "", "", "").then(() => {
+                              // Sharing via email is possible
+                          }).catch(() => {
+                              // Sharing via email is not possible
+                          });
+                      } else {
+                          this.socialSharing.share(message.message, "Communicater Share", message.url.toString(), message.url).then(() => {
+                              // Sharing via email is possible
+                          }).catch(() => {
+                              // Sharing via email is not possible
+                          });
+                      }
 
-      let actionSheet = this.actionSheetCtrl.create({
-        header: 'Message',
-        buttons: [
-          {
-            text: 'Share',
-            role: 'share',
-            handler: () => {
-              // share message
-              // Check if sharing via email is supported
-              if (message.type == 'text') {
-                this.socialSharing.share(message.message, "", "", "").then(() => {
-                  // Sharing via email is possible
-                }).catch(() => {
-                  // Sharing via email is not possible
-                });
-              } else {
-                this.socialSharing.share(message.message, "Communicater Share", message.url.toString(), message.url).then(() => {
-                  // Sharing via email is possible
-                }).catch(() => {
-                  // Sharing via email is not possible
-                });
+
+                  }
+              },
+              {
+                  text: 'Delete',
+                  role: 'delete',
+                  handler: () => {
+                      // share message
+                      let messages = JSON.parse(JSON.stringify(this.messages));
+                      messages.splice(index, 1);
+                      // Update group messages.
+                      this.dataProvider.getGroup(this.groupId).update({
+                          messages: messages
+                      });
+                      this.messagesToShow.splice(index, 1);
+                      // Clear messagebox.
+                      this.message = '';
+
+                  }
+              },
+              {
+                  text: 'Cancel',
+                  role: 'cancel',
+                  handler: () => {
+                  }
               }
-
-
-            }
-          },
-          {
-            text: 'Delete',
-            role: 'delete',
-            handler: () => {
-              // share message
-              let messages = JSON.parse(JSON.stringify(this.messages));
-              messages.splice(index, 1);
-              // Update group messages.
-              this.dataProvider.getGroup(this.groupId).update({
-                messages: messages
-              });
-              this.messagesToShow.splice(index, 1)
-              // Clear messagebox.
-              this.message = '';
-
-            }
-          },
-          {
-            text: 'Cancel',
-            role: 'cancel',
-            handler: () => {
-            }
-          }
-        ]
+          ]
       });
 
-      (await actionSheet).present();
+      actionSheet.present();
     } else {
-      let actionSheet = this.actionSheetCtrl.create({
-        header: 'Share Message',
-        buttons: [
-          {
-            text: 'Share',
-            role: 'share',
-            handler: () => {
-              // share message
-              // Check if sharing via email is supported
-              if (message.type == 'text') {
-                this.socialSharing.share(message.message, "", "", "").then(() => {
-                  // Sharing via email is possible
-                }).catch(() => {
-                  // Sharing via email is not possible
-                });
-              } else {
-                this.socialSharing.share(message.message, "", message.url, "").then(() => {
-                  // Sharing via email is possible
-                }).catch(() => {
-                  // Sharing via email is not possible
-                });
+      let actionSheet = await this.actionSheetCtrl.create({
+          header: 'Share Message',
+          buttons: [
+              {
+                  text: 'Share',
+                  role: 'share',
+                  handler: () => {
+                      // share message
+                      // Check if sharing via email is supported
+                      if (message.type == 'text') {
+                          this.socialSharing.share(message.message, "", "", "").then(() => {
+                              // Sharing via email is possible
+                          }).catch(() => {
+                              // Sharing via email is not possible
+                          });
+                      } else {
+                          this.socialSharing.share(message.message, "", message.url, "").then(() => {
+                              // Sharing via email is possible
+                          }).catch(() => {
+                              // Sharing via email is not possible
+                          });
+                      }
+
+
+                  }
+              },
+
+              {
+                  text: 'Cancel',
+                  role: 'cancel',
+                  handler: () => {
+                  }
               }
-
-
-            }
-          },
-
-          {
-            text: 'Cancel',
-            role: 'cancel',
-            handler: () => {
-            }
-          }
-        ]
+          ]
       });
 
-      (await actionSheet).present();
+      actionSheet.present();
     }
   }
 
@@ -273,6 +283,7 @@ export class GroupPage {
     }
   }
 
+
   // Check if 'return' button is pressed and send the message.
   onType(keyCode) {
     if (keyCode == 13) {
@@ -284,7 +295,7 @@ export class GroupPage {
   // Back
   back() {
     this.subscription.unsubscribe();
-    this.navCtrl.pop('groups');
+    this.navCtrl.back();
   }
 
   // Scroll to bottom of page after a short delay.
@@ -356,10 +367,8 @@ export class GroupPage {
   }
 
   // Enlarge image messages.
-  async enlargeImage(img) {
+    enlargeImage(img) {
     this.nav.openModal(ImageModalPage, { img: img })
-    //let imageModal = await this.modalCtrl.create(ImageModalPage, { img: img });
-    //imageModal.present();
   }
 
   // Send photoMessage.
@@ -491,5 +500,6 @@ export class GroupPage {
     }
     return text + ".amr";
   }
+
 
 }

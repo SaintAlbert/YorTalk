@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { NewGroupPage } from './new-group';
+import { NewGroupPageRoutingModule } from './new-group-routing.module';
+import { PipesModule } from '../../pipes.module';
 
 
 @NgModule({
@@ -10,8 +12,10 @@ import { NewGroupPage } from './new-group';
     CommonModule,
     FormsModule,
     IonicModule,
-  
+    PipesModule,
+    NewGroupPageRoutingModule
   ],
-  declarations: [NewGroupPage]
+  declarations: [NewGroupPage],
+  //exports: [NewGroupPage],
 })
 export class NewGroupPageModule {}

@@ -1,22 +1,24 @@
-import {Component} from "@angular/core";
+import { Component } from "@angular/core";
 import {
-  ActionSheetController, AlertController, 
+  ActionSheetController, AlertController,
   Platform
 } from "@ionic/angular";
 //import {AddPostPage} from "../add-post/add-post";
-import {LoadingProvider} from "../../services/loading";
-import {DataProvider} from "../../services/data";
-import {AngularFireDatabase} from "angularfire2/database";
-import * as firebase from "firebase";
-import {FirebaseProvider} from "../../services/firebase";
+import { LoadingProvider } from "../../services/loading";
+import { DataProvider } from "../../services/data";
+import firebase from "firebase/app";
+import { FirebaseProvider } from "../../services/firebase";
 import * as _ from "lodash";
-import {CommentsPage} from "../comments/comments";
-import {ImageModalPage} from "../image-modal/image-modal";
-import {AlertProvider} from "../../services/alert";
-import {UpdateContactPage} from "../update-contact/update-contact";
+
+import { AlertProvider } from "../../services/alert";
+import { UpdateContactPage } from "../../components/update-contact/update-contact";
 //import {LoginPage} from "../login/login";
-import {LogoutProvider} from "../../services/logout";
+import { LogoutProvider } from "../../services/logout";
 import { Nav } from "../../services/nav";
+import { AngularFireDatabase } from "angularfire2/database";
+import { CommentsPage } from "../../components/comments/comments";
+import { ImageModalPage } from "../../components/image-modal/image-modal";
+import { map } from "rxjs/operators";
 
 declare var AccountKitPlugin: any;
 
@@ -37,6 +39,7 @@ export class TimelinePage {
   public timelineData: any;
   public friendsList: any;
   isFirstTime;
+  //currentUser;
   constructor(
     public navCtrl: Nav,
     public loadingProvider: LoadingProvider,
@@ -50,6 +53,7 @@ export class TimelinePage {
     public platform: Platform
   ) {
     this.platform.ready().then(() => {
+      //this.dataProvider.getCurrentUserPromise().then(user => this.currentUser = user);
       this.platform.pause.subscribe(() => {
         this.isFirstTime = false;
         if (this.user.userId) {
@@ -59,12 +63,13 @@ export class TimelinePage {
             .update({
               isOnline: false
             })
-            .then(success => {})
+            .then(success => { })
             .catch(error => {
               //this.alertProvider.showErrorMessage('profile/error-update-profile');
             });
         }
       });
+
 
       this.platform.resume.subscribe(() => {
         this.isFirstTime = false;
@@ -75,29 +80,31 @@ export class TimelinePage {
             .update({
               isOnline: true
             })
-            .then(success => {})
+            .then(success => { })
             .catch(error => {
               //this.alertProvider.showErrorMessage('profile/error-update-profile');
             });
         }
       });
 
-      this.dataProvider.getData("userData").then( (data:any) => {
-        if (data.phoneNumber == "") {
+      this.dataProvider.getData("userData").then((data: any) => {
+        if (data?.phoneNumber == "") {
           this.navCtrl.openModal(UpdateContactPage, {
             userData: data
           });
-         
+
         }
       });
     });
   }
 
-  ionViewDidLoad() {
+  ngOnInit() {
     this.isFirstTime = true;
     this.getTimeline();
-    this.dataProvider.getCurrentUser().subscribe(user => {
+    this.dataProvider.getCurrentUser().subscribe((userData: any) => {
+      var user = userData
       console.log("==user", user);
+      
       if (user.isBlock) {
         this.logoutProvider.logout().then(res => {
           this.dataProvider.clearData();
@@ -120,6 +127,7 @@ export class TimelinePage {
       this.user = <any>user;
       console.log("timline user", this.user);
       this.dataProvider.getContact().then(data => {
+        //console.log("timline user 2", data);
         if (data && this.user.phoneNumber != "") {
           this.dataProvider.setContactWithCountryCode(this.user.countryCode);
         }
@@ -133,9 +141,10 @@ export class TimelinePage {
     // Get Friend  List
     this.dataProvider.getFriends().subscribe(friends => {
       // Get timeline by user
+     
       this.dataProvider.getTimelinePost().subscribe(post => {
         this.loadingProvider.hide();
-
+       
         if (this.timelineData) {
           let timeline = post[post.length - 1];
           let tempData = <any>{};
@@ -149,7 +158,8 @@ export class TimelinePage {
             friendIndex ||
             timeline.postBy == firebase.auth().currentUser.uid
           ) {
-            this.dataProvider.getUser(timeline.postBy).subscribe(user => {
+            this.dataProvider.getUser(timeline.postBy).valueChanges().subscribe((user: any) => {
+            
               tempData.avatar = user.img;
               tempData.name = user.name;
             });
@@ -223,8 +233,13 @@ export class TimelinePage {
         } else {
           this.timelineData = [];
           post.forEach(data => {
-            this.dataProvider.getTimeline(data.$key).subscribe(timeline => {
-              if (timeline.$exists()) {
+           // console.log("timline timelineData", data);
+            this.dataProvider.getTimeline(data.$key)
+              .snapshotChanges()
+              .pipe(map(p => { return this.dataProvider.extractFBData(p) }))
+              .subscribe(timeline => {
+               // console.log("timline getTimeline", timeline);
+              if (timeline.$exists) {
                 let tempData = <any>{};
                 tempData = timeline;
                 let friendIndex = _.findKey(friends, data => {
@@ -235,7 +250,9 @@ export class TimelinePage {
                   friendIndex ||
                   timeline.postBy == firebase.auth().currentUser.uid
                 ) {
-                  this.dataProvider.getUser(timeline.postBy).subscribe(user => {
+                  this.dataProvider.getUser(timeline.postBy)
+                    .valueChanges()
+                    .subscribe((user: any) => {
                     tempData.avatar = user.img;
                     tempData.name = user.name;
                   });
@@ -330,7 +347,7 @@ export class TimelinePage {
     //       this.timelineData = []
     //       timelineIds.forEach((timelineId)=>{
     //           this.dataProvider.getTimeline(timelineId.$value).subscribe((timeline)=>{
-    //             if(timeline.$exists()){
+    //             if(timeline.$exists){
     //               let tempData = <any>{};
     //               tempData = timeline;
     //               this.dataProvider.getUser(timeline.postBy).subscribe((user) => {
@@ -350,6 +367,7 @@ export class TimelinePage {
 
     // get all time line
   }
+
 
   // report to admin
   async reportPost(item) {
@@ -407,7 +425,7 @@ export class TimelinePage {
             name = user.displayName;
             name = providerData.displayName;
           } else {
-            name = "ionSocial User";
+            name = "YorTalk User";
           }
 
           // Set default username based on name and userId.
@@ -434,7 +452,7 @@ export class TimelinePage {
           email = user.email;
 
           // Set default description.
-          let description = "Hello! I am a new Communicaters user.";
+          let description = "Hello! I am a new YorTalk user.";
           let uniqueId = Math.floor(Math.random() * 10000000000);
           let tempData = {
             userId: userId,
@@ -502,8 +520,8 @@ export class TimelinePage {
                   .update({
                     isOnline: true
                   })
-                  .then(success => {})
-                  .catch(error => {});
+                  .then(success => { })
+                  .catch(error => { });
               }, 500);
             }
           }
@@ -552,7 +570,7 @@ export class TimelinePage {
   }
 
   addPost() {
-    this.navCtrl.push('timeline/add-post');
+    this.navCtrl.push('add-post');
     //this.navCtrl.push(AddPostPage);
   }
 

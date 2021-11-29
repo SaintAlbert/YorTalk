@@ -10,8 +10,8 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es5",
-    "module": "es2020",
+    "module": "commonjs",
+    "target": "es6",
     "lib": [ "es2018", "dom" ]
   },
   "angularCompilerOptions": {
@@ -19,6 +19,11 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
-    "enableIvy": false
-  }
+    "enableIvy": false,
+    "types": [
+      "node"
+    ]
+  },
+  "esModuleInterop": true,
+  "allowSyntheticDefaultImports": true,
 }

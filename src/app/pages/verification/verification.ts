@@ -3,10 +3,10 @@ import { AlertController} from "@ionic/angular";
 import {LogoutProvider} from "../../services/logout";
 import {LoadingProvider} from "../../services/loading";
 import {AlertProvider} from "../../services/alert";
-import {AngularFireDatabase} from "angularfire2/database";
 import {Validator} from "../../validator";
-import * as firebase from "firebase";
+import firebase from 'firebase/app';
 import { Nav } from "../../services/nav";
+import { AngularFireDatabase } from "angularfire2/database";
 
 @Component({
   selector: "page-verification",
@@ -36,7 +36,7 @@ export class VerificationPage {
     this.logoutProvider.setApp(this.navCtrl);
   }
 
-  ionViewDidLoad() {
+  ngOnInit () {
     // Set our routeGuard variables to false, to not allow rereouting.
     this.emailVerified = false;
     this.isLoggingOut = false;
@@ -160,8 +160,8 @@ export class VerificationPage {
                                         this.loadingProvider.hide();
                                         // Clear the existing interval because when we call ionViewDidLoad, another interval will be created.
                                         clearInterval(this.checkVerified);
-                                        // Call ionViewDidLoad again to update user on the markup and automatically send verification mail.
-                                        this.ionViewDidLoad();
+                                      // Call ionViewDidLoad again to update user on the markup and automatically send verification mail.
+                                      this.ngOnInit();
                                         // Update the user data on the database if it exists.
                                         firebase
                                             .database()
